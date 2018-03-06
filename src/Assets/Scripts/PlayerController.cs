@@ -7,12 +7,6 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField]
-    private float movementSpeed = 1000f;
-
-    [SerializeField]
-    private float jumpForce = 10f;
-
-    [SerializeField]
     private float slowestTimeFactor = 0.1f;
 
     [SerializeField]
@@ -76,23 +70,25 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
+        // body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
 
-        if (jump)
-        {
-            jump = false;
-            body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        }
+        // if (jump)
+        // {
+        //     jump = false;
+        //     body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        // }
+
+        // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
     private void GetInput()
     {
-        movement = player.GetAxis("Move");
+        // movement = player.GetAxis("Move");
 
-        if (!jump && grounded)
-        {
-            jump = player.GetButtonDown("Jump");
-        }
+        // if (!jump && grounded)
+        // {
+        //     jump = player.GetButtonDown("Jump");
+        // }
 
         if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
         {

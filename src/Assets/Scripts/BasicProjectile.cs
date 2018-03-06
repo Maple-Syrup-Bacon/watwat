@@ -25,6 +25,11 @@ public class BasicProjectile : MonoBehaviour
         {
             Instantiate(collisionEffect, transform.position, collisionEffect.transform.rotation);
 
+            if (other.CompareTag("Enemy"))
+            {
+                Destroy(other.gameObject);
+            }
+
             Destroy(GetComponent<Collider>());
             Destroy(GetComponent<Rigidbody>());
             Destroy(gameObject, 1f);

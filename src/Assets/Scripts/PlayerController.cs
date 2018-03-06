@@ -42,7 +42,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float punchCooldown = 1f;
 
+    [SerializeField]
+    private float timeHitCooldown = 1f;
+
     private Rewired.Player player;
+    private GameManager gameManager;
 
     private Rigidbody body;
     private float movement;
@@ -52,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private float currentCurveTime = 1.0f;
     private float nextLightProjectile;
     private float nextPunch;
+    private float nextTimeHit;
 
     // Use this for initialization
     private void Start()
@@ -59,13 +64,14 @@ public class PlayerController : MonoBehaviour
         player = ReInput.players.GetPlayer(0);
         body = GetComponent<Rigidbody>();
         originalFixedDelta = Time.fixedDeltaTime;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     private void Update()
     {
         GetInput();
-        // DoTime();
+        DoTime();
     }
 
     private void FixedUpdate()
@@ -81,9 +87,19 @@ public class PlayerController : MonoBehaviour
         // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Enemy") && nextTimeHit < Time.time)
+        {
+            nextTimeHit = Time.time + timeHitCooldown;
+
+            gameManager.SubtractTime(5f);
+        }
+    }
+
     private void GetInput()
     {
-        // movement = player.GetAxis("Move");
+        movement = player.GetAxis("Move");
 
         // if (!jump && grounded)
         // {
@@ -156,7 +172,8 @@ public class PlayerController : MonoBehaviour
             currentCurveTime -= Time.unscaledDeltaTime;
         }
 
-        currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
+        // currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
+        currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
 
         if (jump)
         {

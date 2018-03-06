@@ -8,22 +8,45 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float movementSpeed = 1000f;
+
     [SerializeField]
     private float jumpForce = 10f;
+
     [SerializeField]
     private float slowestTimeFactor = 0.1f;
+
     [SerializeField]
     private float speedUpFactor = 0.1f;
+
     [SerializeField]
     private float speedUpExponent = 2f;
+
     [SerializeField]
     private float slowDownFactor = 0.1f;
+
     [SerializeField]
     private float slowDownExponent = 2f;
+
     [SerializeField]
     private float magnitudeFactor = 4f;
+
     [SerializeField]
     private AnimationCurve curve;
+
+    [SerializeField]
+    private GameObject lightProjectile;
+
+    [SerializeField]
+    private float lightProjectileSpeed = 50f;
+
+    [SerializeField]
+    private float lightProjectileCooldown = 1.5f;
+
+    [SerializeField]
+    private GameObject punchEffect;
+
+    [SerializeField]
+    private float punchCooldown = 1f;
 
     private Rewired.Player player;
 
@@ -33,6 +56,8 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
     private float originalFixedDelta;
     private float currentCurveTime = 1.0f;
+    private float nextLightProjectile;
+    private float nextPunch;
 
     // Use this for initialization
     private void Start()
@@ -46,7 +71,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         GetInput();
-        DoTime();
+        // DoTime();
     }
 
     private void FixedUpdate()
@@ -67,6 +92,21 @@ public class PlayerController : MonoBehaviour
         if (!jump && grounded)
         {
             jump = player.GetButtonDown("Jump");
+        }
+
+        if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
+        {
+            nextLightProjectile = Time.time + lightProjectileCooldown;
+
+            var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
+            instance.GetComponent<Rigidbody>().AddForce(Vector3.right * lightProjectileSpeed, ForceMode.Impulse);
+        }
+
+        if (player.GetButtonDown("Punch") && nextPunch < Time.time)
+        {
+            nextPunch = Time.time + punchCooldown;
+
+            Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
         }
     }
 
@@ -111,18 +151,23 @@ public class PlayerController : MonoBehaviour
         //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
         // }
 
-        if (body.velocity.magnitude != 0f)
+        if (movement != 0.0f)
         {
-            currentCurveTime += Time.unscaledDeltaTime;
+            currentCurveTime = Mathf.Abs(movement);
         }
         else
         {
             currentCurveTime -= Time.unscaledDeltaTime;
         }
 
-        currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
+        currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
 
-        // Debug.Log("Current Time: " + currentCurveTime);
+        if (jump)
+        {
+            currentCurveTime = 1f;
+        }
+
+        currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
 
         Time.timeScale = Mathf.Clamp(curve.Evaluate(currentCurveTime), slowestTimeFactor, 1f);
         Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;

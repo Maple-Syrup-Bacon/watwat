@@ -67,7 +67,7 @@ namespace RootMotion.Demos
             highFrictionMaterial = new PhysicMaterial();
 
             // Making sure rigidbody rotation is fixed
-            r.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionZ;
+            r.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         }
 
         // Spherecast from the root to find ground height

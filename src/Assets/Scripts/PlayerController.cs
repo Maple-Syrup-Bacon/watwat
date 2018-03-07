@@ -49,7 +49,8 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
 
     private Rigidbody body;
-    private float movement;
+    private Vector2 leftAnalogStick;
+    private Vector2 aimer;
     private bool jump;
     private bool grounded;
     private float originalFixedDelta;
@@ -65,6 +66,8 @@ public class PlayerController : MonoBehaviour
         body = GetComponent<Rigidbody>();
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        leftAnalogStick = new Vector2();
+        aimer = Vector2.right;
     }
 
     // Update is called once per frame
@@ -100,7 +103,13 @@ public class PlayerController : MonoBehaviour
 
     private void GetInput()
     {
-        movement = player.GetAxis("Move");
+        leftAnalogStick.x = player.GetAxis("Move X");
+        leftAnalogStick.y = player.GetAxis("Move Y");
+
+        if (leftAnalogStick != Vector2.zero)
+        {
+            aimer = leftAnalogStick;
+        }
 
         // if (!jump && grounded)
         // {
@@ -112,7 +121,7 @@ public class PlayerController : MonoBehaviour
             nextLightProjectile = Time.time + lightProjectileCooldown;
 
             var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
-            instance.GetComponent<Rigidbody>().AddForce(transform.forward * lightProjectileSpeed, ForceMode.Impulse);
+            instance.GetComponent<Rigidbody>().AddForce(aimer.normalized * lightProjectileSpeed, ForceMode.Impulse);
         }
 
         if (player.GetButtonDown("Punch") && nextPunch < Time.time)
@@ -164,22 +173,24 @@ public class PlayerController : MonoBehaviour
         //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
         // }
 
-        if (movement != 0.0f)
-        {
-            currentCurveTime = Mathf.Abs(movement);
-        }
-        else
-        {
-            currentCurveTime -= Time.unscaledDeltaTime;
-        }
+        // if (leftAnalogStick.x != 0.0f)
+        // {
+        //     currentCurveTime = Mathf.Abs(leftAnalogStick.x);
+        // }
+        // else
+        // {
+        //     currentCurveTime -= Time.unscaledDeltaTime;
+        // }
 
-        // currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
-        currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
+        // currentCurveTime = Mathf.Abs(leftAnalogStick.x) * Time.unscaledDeltaTime;
+        currentCurveTime -= Time.unscaledDeltaTime;
+        currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
+        // currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
 
-        if (jump)
-        {
-            currentCurveTime = 1f;
-        }
+        // if (jump)
+        // {
+        //     currentCurveTime = 1f;
+        // }
 
         currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
 

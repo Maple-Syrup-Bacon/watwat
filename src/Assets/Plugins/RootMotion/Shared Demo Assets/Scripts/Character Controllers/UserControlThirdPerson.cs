@@ -42,9 +42,9 @@ namespace RootMotion.Demos
         {
             // read inputs
             state.crouch = canCrouch && Input.GetKey(KeyCode.C);
-            state.jump = canJump && Input.GetButton("Jump");
+            state.jump = canJump && player.GetButton("Jump");
 
-            float movement = player.GetAxis("Move");
+            float movement = player.GetAxis("Move X");
             // float v = Input.GetAxisRaw("Vertical");
 
             // calculate move direction

@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     private float nextLightProjectile;
     private float nextPunch;
     private float nextTimeHit;
+    private float prevX;
 
     // Use this for initialization
     private void Start()
@@ -103,6 +104,8 @@ public class PlayerController : MonoBehaviour
 
     private void GetInput()
     {
+        prevX = leftAnalogStick.x;
+
         leftAnalogStick.x = player.GetAxis("Move X");
         leftAnalogStick.y = player.GetAxis("Move Y");
 
@@ -211,7 +214,7 @@ public class PlayerController : MonoBehaviour
         //     currentCurveTime = 1f;
         // }
 
-        if (leftAnalogStick.x != 0f)
+        if (prevX <= leftAnalogStick.x)
         {
             currentCurveTime += Time.unscaledDeltaTime;
             currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, Mathf.Abs(leftAnalogStick.x));

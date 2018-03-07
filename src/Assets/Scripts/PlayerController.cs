@@ -109,6 +109,8 @@ public class PlayerController : MonoBehaviour
         if (leftAnalogStick != Vector2.zero)
         {
             aimer = leftAnalogStick;
+            float snappedAngle = SnapAngle(GetAngle(aimer, Vector3.right));
+            aimer = Quaternion.AngleAxis(snappedAngle, Vector3.forward) * Vector3.right;
         }
 
         // if (!jump && grounded)
@@ -130,6 +132,23 @@ public class PlayerController : MonoBehaviour
 
             Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
         }
+    }
+
+    private float GetAngle(Vector3 from, Vector3 to)
+    {
+        var angle = Vector3.Angle(from, to);
+
+        if (from.y < 0)
+        {
+            angle = 360 - angle;
+        }
+
+        return angle;
+    }
+
+    private float SnapAngle(float angle)
+    {
+        return Mathf.RoundToInt(angle / 22.5f) * 22.5f;
     }
 
     private void DoTime()
@@ -183,14 +202,26 @@ public class PlayerController : MonoBehaviour
         // }
 
         // currentCurveTime = Mathf.Abs(leftAnalogStick.x) * Time.unscaledDeltaTime;
-        currentCurveTime -= Time.unscaledDeltaTime;
-        currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
+        // currentCurveTime -= Time.unscaledDeltaTime;
+        // currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
         // currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
 
         // if (jump)
         // {
         //     currentCurveTime = 1f;
         // }
+
+        if (leftAnalogStick.x != 0f)
+        {
+            currentCurveTime += Time.unscaledDeltaTime;
+            currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, Mathf.Abs(leftAnalogStick.x));
+        }
+        else
+        {
+            currentCurveTime -= Time.unscaledDeltaTime;
+        }
+
+        // currentCurveTime += body.velocity.sqrMagnitude * Time.unscaledDeltaTime;
 
         currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
 

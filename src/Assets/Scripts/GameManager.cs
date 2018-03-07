@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
         timer.text = timerValue.ToString();
 
-        StartCoroutine(tickTimer());
+        // StartCoroutine(tickTimer());
     }
 
     // Update is called once per frame

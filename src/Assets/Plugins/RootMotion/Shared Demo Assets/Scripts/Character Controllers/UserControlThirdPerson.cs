@@ -53,8 +53,10 @@ namespace RootMotion.Demos
             // Flatten move vector to the character.up plane
             if (move != Vector3.zero)
             {
-                Vector3 normal = transform.up;
-                Vector3.OrthoNormalize(ref normal, ref move);
+                // Vector3 normal = transform.up;
+                Vector3 worldNormal = Vector3.forward;
+                // Vector3.OrthoNormalize(ref normal, ref move);
+                Vector3.OrthoNormalize(ref worldNormal, ref move);
                 state.move = move;
             }
             else state.move = Vector3.zero;
@@ -65,6 +67,7 @@ namespace RootMotion.Demos
             // float walkMultiplier = (walkByDefault ? walkToggle ? 1 : 0.5f : walkToggle ? 0.5f : 1);
 
             // state.move *= walkMultiplier;
+            state.move *= Mathf.Abs(movement);
 
             // calculate the head look target position
             state.lookPos = transform.position + cam.forward * 100f;

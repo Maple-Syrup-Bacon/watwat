@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
         // }
 
         // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        body.MovePosition(new Vector3(body.position.x, body.position.y, 0f));
     }
 
     void OnCollisionEnter(Collision other)
@@ -111,7 +112,7 @@ public class PlayerController : MonoBehaviour
             nextLightProjectile = Time.time + lightProjectileCooldown;
 
             var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
-            instance.GetComponent<Rigidbody>().AddForce(Vector3.right * lightProjectileSpeed, ForceMode.Impulse);
+            instance.GetComponent<Rigidbody>().AddForce(transform.forward * lightProjectileSpeed, ForceMode.Impulse);
         }
 
         if (player.GetButtonDown("Punch") && nextPunch < Time.time)

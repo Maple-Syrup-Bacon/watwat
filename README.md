@@ -18,29 +18,42 @@ The timer ticks down in correspondance with the timewarp and when you take damag
 
 ## Stuff
 * 2.5D
-    * Maybe end up with pure 2D
+   * Maybe end up with pure 2D
 * Sidescroller
-    * Maybe skewed viewport
+   * Maybe skewed viewport
 * Spells
-    * Magic punch (Basic attack, low cooldown)
-    * Magic missile (Basic attack, low cooldown)
-    * Magic rope (ninja rope) (Utility, no cooldown)
-    * Shield (Defensive, medium cooldown)
-    * Explosive missile (Heavy attack, high cooldown)
+   * Magic punch (Basic attack, low cooldown)
+   * Magic missile (Basic attack, low cooldown)
+   * Magic rope (ninja rope) (Utility, no cooldown)
+   * Shield (Defensive, medium cooldown)
+   * Explosive missile (Heavy attack, high cooldown)
+   * Mana/Energy/Fuel
+        * Charge spells
+   * Spell explosive force
+        * Push enemies back
 * Timewarped (Superhot ripoff)
-    * End-goal is to revert the timewarping
+   * End-goal is to revert the timewarping
 * Multiple levels 
-    * Different parts of the tower
-    * Can select which level to play out from completed levels
+   * Different parts of the tower
+   * Can select which level to play out from completed levels
+* Levels
+   * Moving platforms/obstacles
 * Enemies
-    * Stationary and mobile
+   * Stationary and mobile
         * Magic turrets
         * Enemy berserkers
 * Leveltimer
-    * Your lifesource
+   * Your lifesource
         * Timer goes down X amount when you take damage
-    * Goes down in regards to timewarp
-    * Leaderboard?
+   * Goes down in regards to timewarp
+   * Gain time from pickups
+        * Myabe dropeed by enimes
+   * Leaderboard?
+* Special movement ideas
+   * Wall jumping
+   * Force ragdoll (some sort of dodge)
+   * Double jump
+   * Ninja rope
 
 ## Prototyping
 

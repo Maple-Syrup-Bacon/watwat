@@ -33,11 +33,12 @@ public class EnemyController : MonoBehaviour
         if (direction.magnitude < maxDistanceToPlayer && Mathf.Abs(direction.y) <= maxHeightDifferenceToPlayer)
         {
             direction = direction.normalized;
-            body.velocity = new Vector3(direction.x * speed * Time.fixedDeltaTime, body.velocity.y);
+            body.MovePosition(body.position + new Vector3(direction.x * speed * Time.fixedDeltaTime, 0f));
+            // body.velocity = new Vector3(direction.x * speed * Time.fixedDeltaTime, body.velocity.y);
         }
         else
         {
-            body.velocity = Vector3.zero;
+            // body.velocity = Vector3.zero;
         }
     }
 }

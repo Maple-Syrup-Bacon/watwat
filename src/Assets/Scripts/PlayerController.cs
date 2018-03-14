@@ -7,60 +7,229 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField]
-    private float movementSpeed = 1000f;
+    private float slowestTimeFactor = 0.1f;
+
     [SerializeField]
-    private float jumpForce = 10f;
+    private float speedUpFactor = 0.1f;
+
+    [SerializeField]
+    private float speedUpExponent = 2f;
+
+    [SerializeField]
+    private float slowDownFactor = 0.1f;
+
+    [SerializeField]
+    private float slowDownExponent = 2f;
+
+    [SerializeField]
+    private float magnitudeFactor = 4f;
+
+    [SerializeField]
+    private AnimationCurve curve;
+
+    [SerializeField]
+    private GameObject lightProjectile;
+
+    [SerializeField]
+    private float lightProjectileSpeed = 50f;
+
+    [SerializeField]
+    private float lightProjectileCooldown = 1.5f;
+
+    [SerializeField]
+    private GameObject punchEffect;
+
+    [SerializeField]
+    private float punchCooldown = 1f;
+
+    [SerializeField]
+    private float timeHitCooldown = 1f;
 
     private Rewired.Player player;
+    private GameManager gameManager;
 
     private Rigidbody body;
-    private float movement;
+    private Vector2 leftAnalogStick;
+    private Vector2 aimer;
     private bool jump;
     private bool grounded;
+    private float originalFixedDelta;
+    private float currentCurveTime = 1.0f;
+    private float nextLightProjectile;
+    private float nextPunch;
+    private float nextTimeHit;
+    private float prevX;
 
     // Use this for initialization
     private void Start()
     {
         player = ReInput.players.GetPlayer(0);
         body = GetComponent<Rigidbody>();
+        originalFixedDelta = Time.fixedDeltaTime;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        leftAnalogStick = new Vector2();
+        aimer = Vector2.right;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        movement = 0.0f;
-
-        if (player.GetButton("Move Left"))
-        {
-            movement += -1.0f;
-        }
-        if (player.GetButton("Move Right"))
-        {
-            movement += 1.0f;
-        }
-
-        if (!jump && grounded)
-        {
-            jump = player.GetButton("Jump");
-        }
+        GetInput();
+        DoTime();
     }
 
     private void FixedUpdate()
     {
-        if (movement != 0.0f)
+        // body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
+
+        // if (jump)
+        // {
+        //     jump = false;
+        //     body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+        // }
+
+        // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        body.MovePosition(new Vector3(body.position.x, body.position.y, 0f));
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Enemy") && nextTimeHit < Time.time)
         {
-            body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
+            nextTimeHit = Time.time + timeHitCooldown;
+
+            gameManager.SubtractTime(5f);
+        }
+    }
+
+    private void GetInput()
+    {
+        prevX = leftAnalogStick.x;
+
+        leftAnalogStick.x = player.GetAxis("Move X");
+        leftAnalogStick.y = player.GetAxis("Move Y");
+
+        if (leftAnalogStick != Vector2.zero)
+        {
+            aimer = leftAnalogStick;
+            float snappedAngle = SnapAngle(GetAngle(aimer, Vector3.right));
+            aimer = Quaternion.AngleAxis(snappedAngle, Vector3.forward) * Vector3.right;
+        }
+
+        // if (!jump && grounded)
+        // {
+        //     jump = player.GetButtonDown("Jump");
+        // }
+
+        if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
+        {
+            nextLightProjectile = Time.time + lightProjectileCooldown;
+
+            var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
+            instance.GetComponent<Rigidbody>().AddForce(aimer.normalized * lightProjectileSpeed, ForceMode.Impulse);
+        }
+
+        if (player.GetButtonDown("Punch") && nextPunch < Time.time)
+        {
+            nextPunch = Time.time + punchCooldown;
+
+            Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
+        }
+    }
+
+    private float GetAngle(Vector3 from, Vector3 to)
+    {
+        var angle = Vector3.Angle(from, to);
+
+        if (from.y < 0)
+        {
+            angle = 360 - angle;
+        }
+
+        return angle;
+    }
+
+    private float SnapAngle(float angle)
+    {
+        return Mathf.RoundToInt(angle / 22.5f) * 22.5f;
+    }
+
+    private void DoTime()
+    {
+        // if (movement != 0.0f)
+        // {
+        //     Time.timeScale += Mathf.Pow(speedUpFactor * Time.unscaledDeltaTime, speedUpExponent);
+        // }
+        // else
+        // {
+        //     Time.timeScale -= Mathf.Pow(slowDownFactor * Time.unscaledDeltaTime, slowDownExponent);
+        // }
+
+        // if (movement != 0.0f)
+        // {
+        //     Time.timeScale = Mathf.Lerp(Time.timeScale, Mathf.Abs(movement), Time.unscaledDeltaTime);
+        // }
+        // else
+        // {
+        //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
+        // }
+
+        // float factor = body.velocity.magnitude / magnitudeFactor;
+        // factor = Mathf.Clamp(factor, 0f, 1f);
+
+        // if (factor != 0.0f)
+        // {
+        //     Time.timeScale += Mathf.Pow(factor * speedUpFactor * Time.unscaledDeltaTime, speedUpExponent);
+        // }
+        // else
+        // {
+        //     Time.timeScale -= Mathf.Pow(slowDownFactor * Time.unscaledDeltaTime, slowDownExponent);
+        // }
+
+        // if (movement != 0.0f)
+        // {
+        //     Time.timeScale = Mathf.Lerp(Time.timeScale, Mathf.Abs(movement), Time.unscaledDeltaTime);
+        // }
+        // else
+        // {
+        //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
+        // }
+
+        // if (leftAnalogStick.x != 0.0f)
+        // {
+        //     currentCurveTime = Mathf.Abs(leftAnalogStick.x);
+        // }
+        // else
+        // {
+        //     currentCurveTime -= Time.unscaledDeltaTime;
+        // }
+
+        // currentCurveTime = Mathf.Abs(leftAnalogStick.x) * Time.unscaledDeltaTime;
+        // currentCurveTime -= Time.unscaledDeltaTime;
+        // currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
+        // currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
+
+        // if (jump)
+        // {
+        //     currentCurveTime = 1f;
+        // }
+
+        if (prevX <= leftAnalogStick.x)
+        {
+            currentCurveTime += Time.unscaledDeltaTime;
+            currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, Mathf.Abs(leftAnalogStick.x));
         }
         else
         {
-            body.velocity = new Vector3(0.0f, body.velocity.y, 0.0f);
+            currentCurveTime -= Time.unscaledDeltaTime;
         }
 
-        if (jump)
-        {
-            jump = false;
-            body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        }
+        // currentCurveTime += body.velocity.sqrMagnitude * Time.unscaledDeltaTime;
+
+        currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
+
+        Time.timeScale = Mathf.Clamp(curve.Evaluate(currentCurveTime), slowestTimeFactor, 1f);
+        Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;
     }
 
     public void SetGrounded(bool grounded)

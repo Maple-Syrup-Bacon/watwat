@@ -6,6 +6,9 @@ using Rewired;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
+    private int playerID;
+
+    [SerializeField]
     private float movementSpeed = 10f;
 
     [SerializeField]
@@ -61,7 +64,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
-        player = ReInput.players.GetPlayer(0);
+        player = ReInput.players.GetPlayer(playerID);
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();

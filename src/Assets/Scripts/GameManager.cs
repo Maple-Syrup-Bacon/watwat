@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     private Rewired.Player player;
     private TMP_Text timer;
+    public PlayerController[] players { get; set; }
 
     private void Awake()
     {
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviour
         player = ReInput.players.GetPlayer(0);
 
         // planets = GameObject.FindObjectsOfType<PlanetGravity>();
+
+        players = GameObject.FindObjectsOfType<PlayerController>();
 
         timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
 

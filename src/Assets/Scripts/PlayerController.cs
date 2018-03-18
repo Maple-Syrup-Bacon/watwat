@@ -5,24 +5,17 @@ using Rewired;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private float movementSpeed = 10f;
+
+    [SerializeField]
+    private float jumpForce = 10f;
+
+    [SerializeField]
+    private float maxSpeed = 200f;
 
     [SerializeField]
     private float slowestTimeFactor = 0.1f;
-
-    [SerializeField]
-    private float speedUpFactor = 0.1f;
-
-    [SerializeField]
-    private float speedUpExponent = 2f;
-
-    [SerializeField]
-    private float slowDownFactor = 0.1f;
-
-    [SerializeField]
-    private float slowDownExponent = 2f;
-
-    [SerializeField]
-    private float magnitudeFactor = 4f;
 
     [SerializeField]
     private AnimationCurve curve;
@@ -47,8 +40,10 @@ public class PlayerController : MonoBehaviour
 
     private Rewired.Player player;
     private GameManager gameManager;
+    private Rigidbody2D body;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
-    private Rigidbody body;
     private Vector2 leftAnalogStick;
     private Vector2 aimer;
     private bool jump;
@@ -59,12 +54,17 @@ public class PlayerController : MonoBehaviour
     private float nextPunch;
     private float nextTimeHit;
     private float prevX;
+    private float movement;
+    private float yExtent;
 
     // Use this for initialization
     private void Start()
     {
+        yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(0);
-        body = GetComponent<Rigidbody>();
+        body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
@@ -74,22 +74,42 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        GroundCheck();
         GetInput();
-        DoTime();
+        // DoTime();
     }
 
     private void FixedUpdate()
     {
-        // body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
+        if (movement != 0.0f)
+        {
+            spriteRenderer.flipX = (movement < 0.0f);
 
-        // if (jump)
-        // {
-        //     jump = false;
-        //     body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        // }
+            var localVelocity = transform.InverseTransformDirection(body.velocity);
+            localVelocity.x = movement * movementSpeed * Time.fixedDeltaTime;
 
-        // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        body.MovePosition(new Vector3(body.position.x, body.position.y, 0f));
+            body.velocity = transform.TransformDirection(localVelocity);
+        }
+        else
+        {
+            // animator.SetLayerWeight(1, 0.0f);
+
+            var localVelocity = transform.InverseTransformDirection(body.velocity);
+            localVelocity.x = 0.0f;
+
+            body.velocity = transform.TransformDirection(localVelocity);
+        }
+
+        if (jump)
+        {
+            jump = false;
+            body.AddRelativeForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+        }
+
+        if (maxSpeed < body.velocity.magnitude)
+        {
+            body.velocity = body.velocity.normalized * maxSpeed;
+        }
     }
 
     void OnCollisionEnter(Collision other)
@@ -104,22 +124,12 @@ public class PlayerController : MonoBehaviour
 
     private void GetInput()
     {
-        prevX = leftAnalogStick.x;
+        movement = player.GetAxis("Move X");
 
-        leftAnalogStick.x = player.GetAxis("Move X");
-        leftAnalogStick.y = player.GetAxis("Move Y");
-
-        if (leftAnalogStick != Vector2.zero)
+        if (!jump && grounded)
         {
-            aimer = leftAnalogStick;
-            float snappedAngle = SnapAngle(GetAngle(aimer, Vector3.right));
-            aimer = Quaternion.AngleAxis(snappedAngle, Vector3.forward) * Vector3.right;
+            jump = player.GetButtonDown("Jump");
         }
-
-        // if (!jump && grounded)
-        // {
-        //     jump = player.GetButtonDown("Jump");
-        // }
 
         if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
         {
@@ -134,6 +144,41 @@ public class PlayerController : MonoBehaviour
             nextPunch = Time.time + punchCooldown;
 
             Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
+        }
+
+        if (player.GetButtonDown("Primary"))
+        {
+            var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
+            var mouseDirection = (worldMousePos - transform.position).normalized;
+
+            var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
+            instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
+        }
+
+        if (player.GetButtonDown("Secondary"))
+        {
+            Instantiate(punchEffect, transform.position, lightProjectile.transform.rotation);
+        }
+    }
+
+    private void GroundCheck()
+    {
+        var start = transform.position;
+        start -= yExtent * transform.up;
+
+        var end = start;
+        end -= transform.up;
+
+        Debug.DrawLine(start, end);
+        var ray = Physics2D.Linecast(start, end);
+
+        if (ray.collider != null && ray.collider.CompareTag("Planet"))
+        {
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
         }
     }
 

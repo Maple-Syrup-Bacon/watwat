@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class ParticleSystemAutoDestroy : MonoBehaviour
 {
+    [SerializeField]
+    private float lifespan = 15.0f;
+
     private ParticleSystem ps;
+    private float currentTime;
 
     private void Start()
     {
@@ -13,7 +17,9 @@ public class ParticleSystemAutoDestroy : MonoBehaviour
 
     private void Update()
     {
-        if (ps && !ps.IsAlive())
+        currentTime += Time.deltaTime;
+
+        if (lifespan <= currentTime || (ps && !ps.IsAlive()))
         {
             Destroy(gameObject);
         }

@@ -7,17 +7,38 @@ using Rewired;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     [SerializeField]
     private float timerValue = 60f;
+
     [SerializeField]
     private float timerTickStep = 0.1f;
+
+    // public PlanetGravity[] planets { get; set; }
+
     private Rewired.Player player;
     private TMP_Text timer;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Use this for initialization
     void Start()
     {
         player = ReInput.players.GetPlayer(0);
+
+        // planets = GameObject.FindObjectsOfType<PlanetGravity>();
+
         timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
 
         timer.text = timerValue.ToString();

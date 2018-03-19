@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public float timeHitCooldown = 1f;
 
     public bool IsGrounded { get; set; }
+    public PlanetGravity CurrentPlanet { get; set; }
 
     private Rewired.Player player;
     private GameManager gameManager;
@@ -221,10 +222,14 @@ public class PlayerController : MonoBehaviour
         if (ray.collider != null && ray.collider.CompareTag("Planet"))
         {
             IsGrounded = true;
+            transform.parent = ray.collider.transform;
+            CurrentPlanet = ray.collider.gameObject.GetComponent<PlanetGravity>();
         }
         else
         {
             IsGrounded = false;
+            transform.parent = null;
+            CurrentPlanet = null;
         }
     }
 

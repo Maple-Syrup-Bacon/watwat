@@ -36,6 +36,28 @@ public class ObjectGravity : MonoBehaviour
             return;
         }
 
+        if (playerController && playerController.IsGrounded)
+        {
+            GroundedPlayer();
+        }
+        else
+        {
+            ObjectInSpace();
+        }
+
+    }
+
+    private void GroundedPlayer()
+    {
+        var diff = playerController.CurrentPlanet.transform.position - transform.position;
+
+        transform.up = -diff.normalized;
+
+        body.AddForce(diff.normalized * playerController.CurrentPlanet.GetGravityPull() * Time.fixedDeltaTime);
+    }
+
+    private void ObjectInSpace()
+    {
         var closest = Vector3.positiveInfinity;
 
         foreach (var planet in planets)
@@ -61,7 +83,6 @@ public class ObjectGravity : MonoBehaviour
         {
             // transform.up = body.velocity;
         }
-
     }
 
     public void AddPlanet(PlanetGravity planet)

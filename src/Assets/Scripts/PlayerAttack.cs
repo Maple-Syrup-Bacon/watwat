@@ -11,17 +11,6 @@ public class PlayerAttack : MonoBehaviour
         players = new List<PlayerController>();
     }
 
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    void Update()
-    {
-        if (transform.parent.GetComponent<PlayerController>().playerID == 0)
-        {
-            Debug.Log(players.Count);
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.isTrigger && other.CompareTag("Player"))

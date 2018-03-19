@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour
     {
         var midpoint = Vector3.zero;
         var greatestDistance = 1f;
+        var numberOfAlivePlayers = 0;
 
         foreach (var player in GameManager.instance.players)
         {
@@ -25,6 +26,7 @@ public class CameraController : MonoBehaviour
             }
 
             midpoint += player.transform.position;
+            numberOfAlivePlayers++;
 
             var myGreatestDistance = 0f;
 
@@ -49,7 +51,10 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        midpoint /= GameManager.instance.players.Length;
+        if (numberOfAlivePlayers != 0)
+        {
+            midpoint /= numberOfAlivePlayers;
+        }
 
         // Distance between objects
         // float distance = (t1.position - t2.position).magnitude;

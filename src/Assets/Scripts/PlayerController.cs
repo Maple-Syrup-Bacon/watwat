@@ -187,26 +187,6 @@ public class PlayerController : MonoBehaviour
             jump = player.GetButtonDown("Jump");
         }
 
-        if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
-        {
-            nextLightProjectile = Time.time + lightProjectileCooldown;
-
-            var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
-            instance.GetComponent<Rigidbody>().AddForce(aimer.normalized * lightProjectileSpeed, ForceMode.Impulse);
-        }
-
-        if (player.GetButtonDown("Punch") && nextPunch < Time.time)
-        {
-            nextPunch = Time.time + punchCooldown;
-
-            Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
-
-            foreach (var player in playerAttack.players)
-            {
-                player.Damage(punchDamage, (isFacingRight ? transform.right : -transform.right));
-            }
-        }
-
         if (player.GetButtonDown("Primary"))
         {
             var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
@@ -219,6 +199,11 @@ public class PlayerController : MonoBehaviour
         if (player.GetButtonDown("Secondary"))
         {
             Instantiate(punchEffect, transform.position, lightProjectile.transform.rotation);
+
+            foreach (var player in playerAttack.players)
+            {
+                player.Damage(punchDamage, (isFacingRight ? transform.right : -transform.right));
+            }
         }
     }
 
@@ -341,7 +326,7 @@ public class PlayerController : MonoBehaviour
     public void Damage(float amount, Vector2 direction)
     {
         damageTotal += amount;
-        body.AddForce(direction.normalized * amount, ForceMode2D.Impulse);
+        body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
     }
 
     public void SetGrounded(bool grounded)

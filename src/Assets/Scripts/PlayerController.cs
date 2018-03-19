@@ -95,19 +95,6 @@ public class PlayerController : MonoBehaviour
         {
             var attackTriggerPos = playerAttack.transform.localPosition;
 
-            if (movement.x < 0.0f)
-            {
-                spriteRenderer.flipX = true;
-                attackTriggerPos.x = attackTriggerXLeft;
-                isFacingRight = false;
-            }
-            else
-            {
-                spriteRenderer.flipX = false;
-                attackTriggerPos.x = attackTriggerXRight;
-                isFacingRight = true;
-            }
-
             playerAttack.transform.localPosition = attackTriggerPos;
 
 
@@ -118,11 +105,36 @@ public class PlayerController : MonoBehaviour
 
                 // body.velocity = transform.TransformDirection(localVelocity);
 
-                body.velocity = movement * movementSpeed * Time.fixedDeltaTime;
+                var localVelocity = transform.InverseTransformDirection(body.velocity);
+
+                var scaledMovment = (movement - new Vector2(transform.up.x, transform.up.y));
+
+                scaledMovment = (scaledMovment * movementSpeed * Time.fixedDeltaTime);
+
+                localVelocity = transform.InverseTransformDirection(scaledMovment);
+                localVelocity.y = 0.0f;
+
+                isFacingRight = (0.0f <= localVelocity.x);
+
+                body.velocity = transform.TransformDirection(localVelocity);
             }
             else
             {
                 body.AddForce(movement * movementSpeed * Time.fixedDeltaTime);
+
+                var localMovement = transform.InverseTransformDirection(movement);
+                isFacingRight = (0.0f <= localMovement.x);
+            }
+
+            if (isFacingRight)
+            {
+                spriteRenderer.flipX = false;
+                attackTriggerPos.x = attackTriggerXRight;
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+                attackTriggerPos.x = attackTriggerXLeft;
             }
         }
         else
@@ -141,6 +153,7 @@ public class PlayerController : MonoBehaviour
         if (jump)
         {
             jump = false;
+            Deground();
             body.AddForce(transform.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
         }
 
@@ -227,7 +240,7 @@ public class PlayerController : MonoBehaviour
             start -= yExtent * transform.up;
 
             var end = start;
-            end -= transform.up * 0.5f;
+            end -= transform.up * 0.1f;
 
             Debug.DrawLine(start, end);
             var ray = Physics2D.Linecast(start, end);
@@ -342,13 +355,17 @@ public class PlayerController : MonoBehaviour
         Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;
     }
 
+    private void Deground()
+    {
+        degrounded = true;
+        IsGrounded = false;
+        degroundedTimer = Time.time + degroundedTime;
+    }
+
     public void Damage(float amount, Vector2 direction)
     {
         damageTotal += amount;
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
-        degrounded = true;
-        IsGrounded = false;
-        degroundedTimer = Time.time + degroundedTime;
     }
 
     public void SetGrounded(bool grounded)

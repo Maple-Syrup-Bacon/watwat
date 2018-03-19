@@ -69,7 +69,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1273866823190736}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.39, y: -1.35, z: 3.3614578}
+  m_LocalPosition: {x: -10.98, y: 0.18, z: 3.3614578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4017728099505460}
@@ -204,6 +204,7 @@ MonoBehaviour:
   isDead: 0
   movementSpeed: 250
   jumpForce: 500
+  degroundedTime: 0.25
   maxSpeed: 50
   slowestTimeFactor: 0.1
   curve:

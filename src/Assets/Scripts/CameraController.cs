@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public float zoomSpeed = 2f;
+    public float followSpeed = 2f;
     public float zoomFactor = 1.5f;
     public float minSize = 5f;
     public float maxSize = 15f;
@@ -14,7 +15,7 @@ public class CameraController : MonoBehaviour
     void FixedCameraFollowSmooth()
     {
         var midpoint = Vector3.zero;
-        var greatestDistance = 0f;
+        var greatestDistance = 1f;
 
         foreach (var player in GameManager.instance.players)
         {
@@ -29,19 +30,16 @@ public class CameraController : MonoBehaviour
 
             foreach (var otherPlayer in GameManager.instance.players)
             {
-                if (otherPlayer.isDead)
+                if (otherPlayer.isDead || player == otherPlayer)
                 {
                     continue;
                 }
 
-                if (player != otherPlayer)
-                {
-                    var distance = (player.transform.position - otherPlayer.transform.position).magnitude;
+                var distance = (player.transform.position - otherPlayer.transform.position).magnitude;
 
-                    if (myGreatestDistance < distance)
-                    {
-                        myGreatestDistance = distance;
-                    }
+                if (myGreatestDistance < distance)
+                {
+                    myGreatestDistance = distance;
                 }
             }
 
@@ -69,7 +67,7 @@ public class CameraController : MonoBehaviour
         }
 
         // You specified to use MoveTowards instead of Slerp
-        Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, cameraDestination, Time.unscaledDeltaTime);
+        Camera.main.transform.position = Vector3.Slerp(Camera.main.transform.position, cameraDestination, followSpeed * Time.unscaledDeltaTime);
 
         // Snap when close enough to prevent annoying slerp behavior
         if ((cameraDestination - Camera.main.transform.position).magnitude <= 0.05f)

@@ -6,6 +6,7 @@ using Rewired;
 public class PlayerController : MonoBehaviour
 {
     public int playerID;
+    public float damageTotal;
     public bool isDead = false;
     public float movementSpeed = 10f;
     public float jumpForce = 10f;
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public float lightProjectileSpeed = 50f;
     public float lightProjectileCooldown = 1.5f;
     public GameObject punchEffect;
+    public float punchDamage = 10f;
     public float punchCooldown = 1f;
     public float timeHitCooldown = 1f;
 
@@ -39,12 +41,17 @@ public class PlayerController : MonoBehaviour
     private float prevX;
     private float movement;
     private float yExtent;
-    private bool respawn = false;
     private float sqrMaxSpeed;
+    private bool attacking;
+    private PlayerAttack playerAttack;
+    private float attackTriggerXRight;
+    private float attackTriggerXLeft;
+    private bool isFacingRight = true;
 
     // Use this for initialization
     private void Start()
     {
+        playerAttack = transform.GetChild(0).GetComponent<PlayerAttack>();
         objectGravity = GetComponent<ObjectGravity>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
@@ -56,6 +63,8 @@ public class PlayerController : MonoBehaviour
         leftAnalogStick = new Vector2();
         aimer = Vector2.right;
         sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
+        attackTriggerXRight = playerAttack.transform.localPosition.x;
+        attackTriggerXLeft = -attackTriggerXRight;
     }
 
     // Update is called once per frame
@@ -77,17 +86,25 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        else if (respawn)
-        {
-            respawn = false;
-
-            // var index = Random.Range(0, GameManager.instance.planets.Length);
-            // body.MovePosition(GameManager.instance.planets[index].transform.position);
-        }
 
         if (movement != 0.0f)
         {
-            spriteRenderer.flipX = (movement < 0.0f);
+            var attackTriggerPos = playerAttack.transform.localPosition;
+
+            if (movement < 0.0f)
+            {
+                spriteRenderer.flipX = true;
+                attackTriggerPos.x = attackTriggerXLeft;
+                isFacingRight = false;
+            }
+            else
+            {
+                spriteRenderer.flipX = false;
+                attackTriggerPos.x = attackTriggerXRight;
+                isFacingRight = true;
+            }
+
+            playerAttack.transform.localPosition = attackTriggerPos;
 
             var amount = movement * movementSpeed * Time.fixedDeltaTime;
 
@@ -155,7 +172,6 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Respawn()
     {
         yield return new WaitForSeconds(GameManager.instance.respawnTime);
-        respawn = true;
         isDead = false;
 
         var index = Random.Range(0, GameManager.instance.planets.Length);
@@ -184,6 +200,11 @@ public class PlayerController : MonoBehaviour
             nextPunch = Time.time + punchCooldown;
 
             Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
+
+            foreach (var player in playerAttack.players)
+            {
+                player.Damage(punchDamage, (isFacingRight ? transform.right : -transform.right));
+            }
         }
 
         if (player.GetButtonDown("Primary"))
@@ -315,6 +336,12 @@ public class PlayerController : MonoBehaviour
 
         Time.timeScale = Mathf.Clamp(curve.Evaluate(currentCurveTime), slowestTimeFactor, 1f);
         Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;
+    }
+
+    public void Damage(float amount, Vector2 direction)
+    {
+        damageTotal += amount;
+        body.AddForce(direction.normalized * amount, ForceMode2D.Impulse);
     }
 
     public void SetGrounded(bool grounded)

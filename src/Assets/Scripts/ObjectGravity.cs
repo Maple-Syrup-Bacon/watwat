@@ -22,11 +22,11 @@ public class ObjectGravity : MonoBehaviour
 
     private void Update()
     {
-        var rot = transform.rotation.eulerAngles;
-        rot.x = 0.0f;
-        rot.y = 0.0f;
+        // var rot = transform.rotation.eulerAngles;
+        // rot.x = 0.0f;
+        // // rot.y = 0.0f;
 
-        transform.rotation = Quaternion.Euler(rot);
+        // transform.rotation = Quaternion.Euler(rot);
     }
 
     private void FixedUpdate()

@@ -61676,6 +61676,7 @@ GameObject:
   - component: {fileID: 1635289146}
   - component: {fileID: 1635289147}
   - component: {fileID: 1635289152}
+  - component: {fileID: 1635289153}
   m_Layer: 10
   m_Name: Player 0
   m_TagString: Player
@@ -61697,7 +61698,7 @@ MonoBehaviour:
   playerID: 0
   isDead: 0
   movementSpeed: 250
-  jumpForce: 5000
+  jumpForce: 500
   maxSpeed: 50
   slowestTimeFactor: 0.1
   curve:
@@ -61865,6 +61866,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useRatio: 1
+--- !u!61 &1635289153
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1635289145}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.74, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.046875, y: 1.453125}
+    newSize: {x: 6.7734375, y: 8.2734375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.78, y: 1.07}
+  m_EdgeRadius: 0
 --- !u!1001 &1707859025
 Prefab:
   m_ObjectHideFlags: 0

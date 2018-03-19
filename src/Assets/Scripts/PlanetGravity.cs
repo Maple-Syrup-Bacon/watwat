@@ -61,7 +61,7 @@ public class PlanetGravity : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<ObjectGravity>().AddPlanet(this);
+            // other.GetComponent<ObjectGravity>().AddPlanet(this);
         }
     }
 
@@ -69,7 +69,7 @@ public class PlanetGravity : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<ObjectGravity>().RemovePlanet(this);
+            // other.GetComponent<ObjectGravity>().RemovePlanet(this);
         }
     }
 

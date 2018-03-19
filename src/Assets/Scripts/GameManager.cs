@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public float cloudXEnd;
     public float cloudYOffset;
 
-    public PlanetGravity[] planets { get; set; }
+    public PointEffector2D[] planets { get; set; }
     public PlayerController[] players { get; set; }
 
     private Rewired.Player player;
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     {
         player = ReInput.players.GetPlayer(0);
 
-        planets = GameObject.FindObjectsOfType<PlanetGravity>();
+        planets = GameObject.FindObjectsOfType<PointEffector2D>();
 
         players = GameObject.FindObjectsOfType<PlayerController>();
 

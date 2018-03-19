@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public bool isDead = false;
     public float movementSpeed = 10f;
     public float jumpForce = 10f;
+    public float degroundedTime = 0.25f;
     public float maxSpeed = 200f;
     public float slowestTimeFactor = 0.1f;
     public AnimationCurve curve;
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour
     private float nextPunch;
     private float nextTimeHit;
     private float prevX;
-    private float movement;
+    private Vector2 movement;
     private float yExtent;
     private float sqrMaxSpeed;
     private bool attacking;
@@ -48,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private float attackTriggerXRight;
     private float attackTriggerXLeft;
     private bool isFacingRight = true;
+    private bool degrounded = false;
+    private float degroundedTimer;
 
     // Use this for initialization
     private void Start()
@@ -88,11 +91,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (movement != 0.0f)
+        if (movement != Vector2.zero)
         {
             var attackTriggerPos = playerAttack.transform.localPosition;
 
-            if (movement < 0.0f)
+            if (movement.x < 0.0f)
             {
                 spriteRenderer.flipX = true;
                 attackTriggerPos.x = attackTriggerXLeft;
@@ -107,18 +110,19 @@ public class PlayerController : MonoBehaviour
 
             playerAttack.transform.localPosition = attackTriggerPos;
 
-            var amount = movement * movementSpeed * Time.fixedDeltaTime;
 
             if (IsGrounded)
             {
-                var localVelocity = transform.InverseTransformDirection(body.velocity);
-                localVelocity.x = amount;
+                // var localVelocity = transform.InverseTransformDirection(body.velocity);
+                // localVelocity.x = movement.x * movementSpeed * Time.fixedDeltaTime;
 
-                body.velocity = transform.TransformDirection(localVelocity);
+                // body.velocity = transform.TransformDirection(localVelocity);
+
+                body.velocity = movement * movementSpeed * Time.fixedDeltaTime;
             }
             else
             {
-                body.AddRelativeForce(new Vector2(amount, 0.0f));
+                body.AddForce(movement * movementSpeed * Time.fixedDeltaTime);
             }
         }
         else
@@ -163,7 +167,6 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("DEATH");
         isDead = true;
         body.velocity = Vector2.zero;
 
@@ -175,13 +178,16 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(GameManager.instance.respawnTime);
         isDead = false;
 
+        damageTotal = 0;
+
         var index = Random.Range(0, GameManager.instance.planets.Length);
         transform.position = GameManager.instance.planets[index].transform.position;
     }
 
     private void GetInput()
     {
-        movement = player.GetAxis("Move X");
+        movement.x = player.GetAxis("Move X");
+        movement.y = player.GetAxis("Move Y");
 
         if (!jump && IsGrounded)
         {
@@ -210,26 +216,34 @@ public class PlayerController : MonoBehaviour
 
     private void GroundCheck()
     {
-        var start = transform.position;
-        start -= yExtent * transform.up;
-
-        var end = start;
-        end -= transform.up * 0.5f;
-
-        Debug.DrawLine(start, end);
-        var ray = Physics2D.Linecast(start, end);
-
-        if (ray.collider != null && ray.collider.CompareTag("Planet"))
+        if (degrounded && degroundedTimer < Time.time)
         {
-            IsGrounded = true;
-            transform.parent = ray.collider.transform;
-            CurrentPlanet = ray.collider.gameObject.GetComponent<PlanetGravity>();
+            degrounded = false;
         }
-        else
+
+        if (!degrounded)
         {
-            IsGrounded = false;
-            transform.parent = null;
-            CurrentPlanet = null;
+            var start = transform.position;
+            start -= yExtent * transform.up;
+
+            var end = start;
+            end -= transform.up * 0.5f;
+
+            Debug.DrawLine(start, end);
+            var ray = Physics2D.Linecast(start, end);
+
+            if (ray.collider != null && ray.collider.CompareTag("Planet"))
+            {
+                IsGrounded = true;
+                transform.parent = ray.collider.transform;
+                // CurrentPlanet = ray.collider.gameObject.GetComponent<PlanetGravity>();
+            }
+            else
+            {
+                IsGrounded = false;
+                transform.parent = null;
+                // CurrentPlanet = null;
+            }
         }
     }
 
@@ -332,6 +346,9 @@ public class PlayerController : MonoBehaviour
     {
         damageTotal += amount;
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
+        degrounded = true;
+        IsGrounded = false;
+        degroundedTimer = Time.time + degroundedTime;
     }
 
     public void SetGrounded(bool grounded)

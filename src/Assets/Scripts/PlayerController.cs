@@ -5,52 +5,32 @@ using Rewired;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private int playerID;
+    public int playerID;
+    public bool isDead = false;
+    public float movementSpeed = 10f;
+    public float jumpForce = 10f;
+    public float maxSpeed = 200f;
+    public float slowestTimeFactor = 0.1f;
+    public AnimationCurve curve;
+    public GameObject lightProjectile;
+    public float lightProjectileSpeed = 50f;
+    public float lightProjectileCooldown = 1.5f;
+    public GameObject punchEffect;
+    public float punchCooldown = 1f;
+    public float timeHitCooldown = 1f;
 
-    [SerializeField]
-    private float movementSpeed = 10f;
-
-    [SerializeField]
-    private float jumpForce = 10f;
-
-    [SerializeField]
-    private float maxSpeed = 200f;
-
-    [SerializeField]
-    private float slowestTimeFactor = 0.1f;
-
-    [SerializeField]
-    private AnimationCurve curve;
-
-    [SerializeField]
-    private GameObject lightProjectile;
-
-    [SerializeField]
-    private float lightProjectileSpeed = 50f;
-
-    [SerializeField]
-    private float lightProjectileCooldown = 1.5f;
-
-    [SerializeField]
-    private GameObject punchEffect;
-
-    [SerializeField]
-    private float punchCooldown = 1f;
-
-    [SerializeField]
-    private float timeHitCooldown = 1f;
+    public bool IsGrounded { get; set; }
 
     private Rewired.Player player;
     private GameManager gameManager;
     private Rigidbody2D body;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private ObjectGravity objectGravity;
 
     private Vector2 leftAnalogStick;
     private Vector2 aimer;
     private bool jump;
-    private bool grounded;
     private float originalFixedDelta;
     private float currentCurveTime = 1.0f;
     private float nextLightProjectile;
@@ -59,10 +39,13 @@ public class PlayerController : MonoBehaviour
     private float prevX;
     private float movement;
     private float yExtent;
+    private bool respawn = false;
+    private float sqrMaxSpeed;
 
     // Use this for initialization
     private void Start()
     {
+        objectGravity = GetComponent<ObjectGravity>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
         body = GetComponent<Rigidbody2D>();
@@ -72,11 +55,17 @@ public class PlayerController : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
         aimer = Vector2.right;
+        sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         GroundCheck();
         GetInput();
         // DoTime();
@@ -84,52 +73,100 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDead)
+        {
+            return;
+        }
+        else if (respawn)
+        {
+            respawn = false;
+
+            // var index = Random.Range(0, GameManager.instance.planets.Length);
+            // body.MovePosition(GameManager.instance.planets[index].transform.position);
+        }
+
         if (movement != 0.0f)
         {
             spriteRenderer.flipX = (movement < 0.0f);
 
-            var localVelocity = transform.InverseTransformDirection(body.velocity);
-            localVelocity.x = movement * movementSpeed * Time.fixedDeltaTime;
+            var amount = movement * movementSpeed * Time.fixedDeltaTime;
 
-            body.velocity = transform.TransformDirection(localVelocity);
+            if (IsGrounded)
+            {
+                var localVelocity = transform.InverseTransformDirection(body.velocity);
+                localVelocity.x = amount;
+
+                body.velocity = transform.TransformDirection(localVelocity);
+            }
+            else
+            {
+                body.AddRelativeForce(new Vector2(amount, 0.0f));
+            }
         }
         else
         {
             // animator.SetLayerWeight(1, 0.0f);
 
-            var localVelocity = transform.InverseTransformDirection(body.velocity);
-            localVelocity.x = 0.0f;
+            if (IsGrounded)
+            {
+                var localVelocity = transform.InverseTransformDirection(body.velocity);
+                localVelocity.x = 0.0f;
 
-            body.velocity = transform.TransformDirection(localVelocity);
+                body.velocity = transform.TransformDirection(localVelocity);
+            }
         }
 
         if (jump)
         {
             jump = false;
-            body.AddRelativeForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            body.AddForce(transform.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
         }
 
-        if (maxSpeed < body.velocity.magnitude)
+        if (sqrMaxSpeed < body.velocity.sqrMagnitude)
         {
-            body.velocity = body.velocity.normalized * maxSpeed;
+            // var breakSpeed = body.velocity.magnitude - maxSpeed;
+            // var breakVector = body.velocity.normalized * breakSpeed;
+
+            // body.AddForce(-breakVector);
+
+            // body.velocity = body.velocity.normalized * maxSpeed;
+
+            // body.velocity = Vector3.ClampMagnitude(body.velocity, maxSpeed);
         }
     }
 
-    void OnCollisionEnter(Collision other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Enemy") && nextTimeHit < Time.time)
+        if (other.CompareTag("Border"))
         {
-            nextTimeHit = Time.time + timeHitCooldown;
-
-            gameManager.SubtractTime(5f);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        Debug.Log("DEATH");
+        isDead = true;
+        body.velocity = Vector2.zero;
+
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(GameManager.instance.respawnTime);
+        respawn = true;
+        isDead = false;
+
+        var index = Random.Range(0, GameManager.instance.planets.Length);
+        transform.position = GameManager.instance.planets[index].transform.position;
     }
 
     private void GetInput()
     {
         movement = player.GetAxis("Move X");
 
-        if (!jump && grounded)
+        if (!jump && IsGrounded)
         {
             jump = player.GetButtonDown("Jump");
         }
@@ -170,18 +207,18 @@ public class PlayerController : MonoBehaviour
         start -= yExtent * transform.up;
 
         var end = start;
-        end -= transform.up;
+        end -= transform.up * 0.5f;
 
         Debug.DrawLine(start, end);
         var ray = Physics2D.Linecast(start, end);
 
         if (ray.collider != null && ray.collider.CompareTag("Planet"))
         {
-            grounded = true;
+            IsGrounded = true;
         }
         else
         {
-            grounded = false;
+            IsGrounded = false;
         }
     }
 
@@ -282,6 +319,6 @@ public class PlayerController : MonoBehaviour
 
     public void SetGrounded(bool grounded)
     {
-        this.grounded = grounded;
+        this.IsGrounded = grounded;
     }
 }

@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
-    private float zoomFactor = 1.5f;
-
-    [SerializeField]
-    private float minSize = 5f;
-
-    [SerializeField]
-    private float maxSize = 15f;
+    public float zoomSpeed = 2f;
+    public float zoomFactor = 1.5f;
+    public float minSize = 5f;
+    public float maxSize = 15f;
 
     private Transform[] players;
 
@@ -22,12 +18,22 @@ public class CameraController : MonoBehaviour
 
         foreach (var player in GameManager.instance.players)
         {
+            if (player.isDead)
+            {
+                continue;
+            }
+
             midpoint += player.transform.position;
 
             var myGreatestDistance = 0f;
 
             foreach (var otherPlayer in GameManager.instance.players)
             {
+                if (otherPlayer.isDead)
+                {
+                    continue;
+                }
+
                 if (player != otherPlayer)
                 {
                     var distance = (player.transform.position - otherPlayer.transform.position).magnitude;
@@ -52,12 +58,14 @@ public class CameraController : MonoBehaviour
 
         // Move camera a certain distance
         Vector3 cameraDestination = midpoint - Camera.main.transform.forward * greatestDistance * zoomFactor;
+        cameraDestination.z = -10;
 
         // Adjust ortho size if we're using one of those
         if (Camera.main.orthographic)
         {
-            // The camera's forward vector is irrelevant, only this size will matter
-            Camera.main.orthographicSize = (greatestDistance < minSize ? minSize : (maxSize < greatestDistance ? maxSize : greatestDistance));
+            var sizeTarget = (greatestDistance < minSize ? minSize : (maxSize < greatestDistance ? maxSize : greatestDistance));
+
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, sizeTarget, zoomSpeed * Time.unscaledDeltaTime);
         }
 
         // You specified to use MoveTowards instead of Slerp

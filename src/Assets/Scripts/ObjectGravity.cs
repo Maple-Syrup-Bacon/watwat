@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class ObjectGravity : MonoBehaviour
 {
+    public bool useRatio = false;
+
     private Rigidbody2D body;
+    private PlayerController playerController;
     private float lastPlanetDistance = float.PositiveInfinity;
     private List<PlanetGravity> planets;
     private float offset;
 
     private void Start()
     {
+        playerController = GetComponent<PlayerController>();
         planets = new List<PlanetGravity>();
         body = GetComponent<Rigidbody2D>();
         offset = GetComponent<BoxCollider2D>().bounds.extents.y;
@@ -27,6 +31,11 @@ public class ObjectGravity : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (playerController && playerController.isDead)
+        {
+            return;
+        }
+
         var closest = Vector3.positiveInfinity;
 
         foreach (var planet in planets)
@@ -36,7 +45,7 @@ public class ObjectGravity : MonoBehaviour
             var orbitDiff = (diff.magnitude - planet.GetPlanetRadius() - offset);
             var ratio = Mathf.Abs(1 - (orbitDiff / planet.GetRadiusDifference()));
 
-            body.AddForce(diff.normalized * planet.GetGravityPull() * ratio * Time.fixedDeltaTime);
+            body.AddForce(diff.normalized * planet.GetGravityPull() * (useRatio ? ratio : 1) * Time.fixedDeltaTime);
 
             if (diff.magnitude < closest.magnitude)
             {
@@ -48,6 +57,11 @@ public class ObjectGravity : MonoBehaviour
         {
             transform.up = -closest.normalized;
         }
+        else
+        {
+            // transform.up = body.velocity;
+        }
+
     }
 
     public void AddPlanet(PlanetGravity planet)

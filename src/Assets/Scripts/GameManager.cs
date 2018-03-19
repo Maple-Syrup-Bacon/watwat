@@ -8,18 +8,22 @@ using Rewired;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public float respawnTime = 3f;
+    public float timerValue = 60f;
+    public float timerTickStep = 0.1f;
+    public float cloudSpawnRate = 0.8f;
+    public float cloudSpeedMin = 10f;
+    public float cloudSpeedMax = 30f;
+    public GameObject[] clouds;
+    public float cloudXStart;
+    public float cloudXEnd;
+    public float cloudYOffset;
 
-    [SerializeField]
-    private float timerValue = 60f;
-
-    [SerializeField]
-    private float timerTickStep = 0.1f;
-
-    // public PlanetGravity[] planets { get; set; }
+    public PlanetGravity[] planets { get; set; }
+    public PlayerController[] players { get; set; }
 
     private Rewired.Player player;
     private TMP_Text timer;
-    public PlayerController[] players { get; set; }
 
     private void Awake()
     {
@@ -38,7 +42,7 @@ public class GameManager : MonoBehaviour
     {
         player = ReInput.players.GetPlayer(0);
 
-        // planets = GameObject.FindObjectsOfType<PlanetGravity>();
+        planets = GameObject.FindObjectsOfType<PlanetGravity>();
 
         players = GameObject.FindObjectsOfType<PlayerController>();
 
@@ -47,6 +51,7 @@ public class GameManager : MonoBehaviour
         timer.text = timerValue.ToString();
 
         // StartCoroutine(tickTimer());
+        StartCoroutine(cloudSpawner());
     }
 
     // Update is called once per frame
@@ -75,5 +80,26 @@ public class GameManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private IEnumerator cloudSpawner()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(cloudSpawnRate);
+
+            var index = Random.Range(0, clouds.Length);
+
+            var minY = Camera.main.transform.position.y - Camera.main.orthographicSize - cloudYOffset;
+            var maxY = Camera.main.transform.position.y + Camera.main.orthographicSize + cloudYOffset;
+
+            var pos = new Vector3(cloudXStart, Random.Range(minY, maxY), 0.0f);
+
+            var cloud = Instantiate(clouds[index], pos, clouds[index].transform.rotation);
+
+            var cloudController = cloud.GetComponent<CloudController>();
+            cloudController.endX = cloudXEnd;
+            cloudController.speed = Random.Range(cloudSpeedMin, cloudSpeedMax);
+        }
     }
 }

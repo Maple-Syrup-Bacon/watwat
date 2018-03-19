@@ -5,7 +5,7 @@ AnimationClip:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Player_Green_Walk
+  m_Name: Player_Beige_Walk
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -19,9 +19,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: 7e0efc19550b234479fefb5c4b3f9852, type: 3}
+      value: {fileID: 21300000, guid: 79e55f5aaf6ca5844902e1111a3b012e, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: cd5b1b8c3223a504484deb2b7c32f256, type: 3}
+      value: {fileID: 21300000, guid: 1cf421e29c32af54099206ea073f2533, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -41,8 +41,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 7e0efc19550b234479fefb5c4b3f9852, type: 3}
-    - {fileID: 21300000, guid: cd5b1b8c3223a504484deb2b7c32f256, type: 3}
+    - {fileID: 21300000, guid: 79e55f5aaf6ca5844902e1111a3b012e, type: 3}
+    - {fileID: 21300000, guid: 1cf421e29c32af54099206ea073f2533, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

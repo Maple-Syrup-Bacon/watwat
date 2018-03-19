@@ -2,21 +2,21 @@ fileFormatVersion: 2
 guid: 34056504098974fdb95a2fb1b69d1cb6
 TextureImporter:
   fileIDToRecycleName:
-    21300000: p1_spritesheet_0
-    21300002: p1_spritesheet_1
-    21300004: p1_spritesheet_2
-    21300006: p1_spritesheet_3
-    21300008: p1_spritesheet_4
-    21300010: p1_spritesheet_5
-    21300012: p1_spritesheet_6
-    21300014: p1_spritesheet_7
-    21300016: p1_spritesheet_8
-    21300018: p1_spritesheet_9
-    21300020: p1_spritesheet_10
-    21300022: p1_spritesheet_11
-    21300024: p1_spritesheet_12
-    21300026: p1_spritesheet_13
-    21300028: p1_spritesheet_14
+    21300000: walk_3
+    21300002: walk_5
+    21300004: walk_6
+    21300006: walk_10
+    21300008: walk_1
+    21300010: walk_2
+    21300012: hurt
+    21300014: walk_7
+    21300016: walk_8
+    21300018: walk_9
+    21300020: walk_11
+    21300022: walk_4
+    21300024: duck
+    21300026: jump
+    21300028: front
     21300030: p1_spritesheet_15
   externalObjects: {}
   serializedVersion: 5
@@ -109,7 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: p1_spritesheet_0
+      name: walk_3
       rect:
         serializedVersion: 2
         x: 4
@@ -117,7 +117,7 @@ TextureImporter:
         width: 67
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -129,7 +129,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_1
+      name: walk_5
       rect:
         serializedVersion: 2
         x: 79
@@ -137,7 +137,7 @@ TextureImporter:
         width: 66
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -149,7 +149,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_2
+      name: walk_6
       rect:
         serializedVersion: 2
         x: 147
@@ -157,7 +157,7 @@ TextureImporter:
         width: 71
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -169,7 +169,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_3
+      name: walk_10
       rect:
         serializedVersion: 2
         x: 219
@@ -177,7 +177,7 @@ TextureImporter:
         width: 70
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -189,7 +189,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_4
+      name: walk_1
       rect:
         serializedVersion: 2
         x: 295
@@ -197,7 +197,7 @@ TextureImporter:
         width: 66
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -209,7 +209,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_5
+      name: walk_2
       rect:
         serializedVersion: 2
         x: 368
@@ -217,7 +217,7 @@ TextureImporter:
         width: 67
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -229,15 +229,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_6
+      name: hurt
       rect:
         serializedVersion: 2
-        x: 438
+        x: 436
         y: 196
         width: 69
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -249,7 +249,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_7
+      name: walk_7
       rect:
         serializedVersion: 2
         x: 0
@@ -257,7 +257,7 @@ TextureImporter:
         width: 72
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -269,7 +269,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_8
+      name: walk_8
       rect:
         serializedVersion: 2
         x: 73
@@ -277,7 +277,7 @@ TextureImporter:
         width: 71
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -289,7 +289,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_9
+      name: walk_9
       rect:
         serializedVersion: 2
         x: 146
@@ -297,7 +297,7 @@ TextureImporter:
         width: 70
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -309,7 +309,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_10
+      name: walk_11
       rect:
         serializedVersion: 2
         x: 222
@@ -317,7 +317,7 @@ TextureImporter:
         width: 66
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -329,7 +329,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_11
+      name: walk_4
       rect:
         serializedVersion: 2
         x: 296
@@ -337,7 +337,7 @@ TextureImporter:
         width: 66
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -349,7 +349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_12
+      name: duck
       rect:
         serializedVersion: 2
         x: 365
@@ -357,7 +357,7 @@ TextureImporter:
         width: 69
         height: 71
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -369,7 +369,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_13
+      name: jump
       rect:
         serializedVersion: 2
         x: 438
@@ -377,7 +377,7 @@ TextureImporter:
         width: 67
         height: 94
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -389,7 +389,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: p1_spritesheet_14
+      name: front
       rect:
         serializedVersion: 2
         x: 0
@@ -397,7 +397,7 @@ TextureImporter:
         width: 66
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -417,7 +417,7 @@ TextureImporter:
         width: 66
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

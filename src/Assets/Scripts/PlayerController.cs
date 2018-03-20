@@ -31,9 +31,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private ObjectGravity objectGravity;
+    private Transform aimerTransform;
 
+    private Vector3 aimerVector;
     private Vector2 leftAnalogStick;
-    private Vector2 aimer;
     private bool jump;
     private float originalFixedDelta;
     private float currentCurveTime = 1.0f;
@@ -55,8 +56,8 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        playerAttack = transform.GetChild(0).GetComponent<PlayerAttack>();
-        objectGravity = GetComponent<ObjectGravity>();
+        aimerTransform = transform.GetChild(0);
+        playerAttack = aimerTransform.GetComponent<PlayerAttack>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
         body = GetComponent<Rigidbody2D>();
@@ -65,10 +66,10 @@ public class PlayerController : MonoBehaviour
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
-        aimer = Vector2.right;
         sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
         attackTriggerXRight = playerAttack.transform.localPosition.x;
         attackTriggerXLeft = -attackTriggerXRight;
+        aimerVector = Vector2.right;
     }
 
     // Update is called once per frame
@@ -82,6 +83,8 @@ public class PlayerController : MonoBehaviour
         GroundCheck();
         GetInput();
         // DoTime();
+
+        MoveAimer();
     }
 
     private void FixedUpdate()
@@ -202,6 +205,11 @@ public class PlayerController : MonoBehaviour
         movement.x = player.GetAxis("Move X");
         movement.y = player.GetAxis("Move Y");
 
+        if (movement != Vector2.zero)
+        {
+            aimerVector = movement.normalized;
+        }
+
         if (!jump && IsGrounded)
         {
             jump = player.GetButtonDown("Jump");
@@ -258,6 +266,15 @@ public class PlayerController : MonoBehaviour
                 // CurrentPlanet = null;
             }
         }
+    }
+
+    private void MoveAimer()
+    {
+        var angle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
+        angle -= 90f;
+
+        aimerTransform.position = transform.position + aimerVector;
+        aimerTransform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private float GetAngle(Vector3 from, Vector3 to)
@@ -366,6 +383,7 @@ public class PlayerController : MonoBehaviour
     {
         damageTotal += amount;
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
+        Deground();
     }
 
     public void SetGrounded(bool grounded)

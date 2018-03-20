@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded { get; set; }
     public bool IsVisible { get; set; }
-    public PowerupType? Powerup { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
     public Sprite IdleSprite { get; set; }
     public RuntimeAnimatorController AnimatorController { get; set; }
@@ -61,14 +60,20 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
-
+    
+    // Powerups
+    public bool HasExplodingFireball { get; set; } = false;
+    public bool HasInvincibility { get; set; } = false;
+    public bool HasSuperStrength { get; set; } = false;
+    public bool HasSuperSpeed { get; set; } = false;
+    
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
+   
     // Use this for initialization
     private void Start()
     {
@@ -260,13 +265,13 @@ public class PlayerController : MonoBehaviour
 
         if (player.GetButtonDown("Primary"))
         {
-            Powerup = PowerupType.ExplodingFireball;
-            PowerupManager.instance.EnablePowerup(this);
-            // var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
-            // var mouseDirection = (worldMousePos - transform.position).normalized;
-
-            // var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
-            // instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
+            if (HasExplodingFireball)
+            {
+                // Send off a fireball
+                // var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
+                // instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
+                Debug.Log("Shot Fireball!");
+            }
         }
 
         if (player.GetButtonDown("Secondary"))

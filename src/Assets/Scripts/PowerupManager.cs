@@ -30,7 +30,7 @@ public class PowerupManager : MonoBehaviour
 
     private void Start()
     {
-        players = GameManager.instance.players;
+        players = GameManager.instance.Players;
         activePlayerPowerups = new IEnumerator[4];
     }
 

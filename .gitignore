@@ -118,3 +118,8 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/linux,macos,unity,windows,monodevelop,visualstudiocode
+
+# Custom
+src/Assets/Scenes
+!src/Assets/Scenes/Game*
+!src/Assets/Scenes/AlphaMenu*

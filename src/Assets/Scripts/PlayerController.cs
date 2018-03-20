@@ -242,6 +242,11 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        if (GameManager.instance.GameOver)
+        {
+            return;
+        }
+
         isDead = true;
         body.velocity = Vector2.zero;
         Instantiate(deathParticle, transform.position, deathParticle.transform.rotation);
@@ -325,7 +330,7 @@ public class PlayerController : MonoBehaviour
 
                 foreach (var player in playerAttack.players)
                 {
-                    player.Damage(damage, (isFacingRight ? transform.right : -transform.right), playerID);
+                    player.Damage(damage, player.transform.position - transform.position, playerID);
                     SoundManager.PlaySound(meleeHit, meleeHitVolume);
                 }
             }
@@ -412,7 +417,7 @@ public class PlayerController : MonoBehaviour
 
         damageTotal += amount;
         Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
-        body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
+        body.AddForce(direction.normalized * (GameManager.instance.baseKnockback * (damageTotal / 100f)), ForceMode2D.Impulse);
         Deground();
 
         GameManager.instance.UpdateAvatars();

@@ -62869,7 +62869,7 @@ MonoBehaviour:
   zoomSpeed: 5
   followSpeed: 5
   zoomFactor: 1.5
-  minSize: 5
+  minSize: 8
   maxSize: 20
 --- !u!81 &1237041093
 AudioListener:
@@ -63639,6 +63639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eaf9ac9a11f47f89c31d5e7d66eb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseKnockback: 15
   musicVolume: 0.25
   respawnTime: 3
   timeVisibleAfterDeath: 1

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public float baseKnockback = 10f;
     public float musicVolume = 0.5f;
     public float respawnTime = 3f;
     public float timeVisibleAfterDeath = 1f;
@@ -214,6 +215,11 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseScore(int playerID)
     {
+        if (GameOver)
+        {
+            return;
+        }
+
         Players[playerID].score++;
         UpdateAvatars();
     }

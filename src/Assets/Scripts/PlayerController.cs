@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using static Utilities;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public float timeHitCooldown = 1f;
 
     public bool IsGrounded { get; set; }
+    public PowerupType? Powerup { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
 
     private Rewired.Player player;
@@ -209,11 +211,13 @@ public class PlayerController : MonoBehaviour
 
         if (player.GetButtonDown("Primary"))
         {
-            var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
-            var mouseDirection = (worldMousePos - transform.position).normalized;
+            Powerup = PowerupType.ExplodingFireball;
+            PowerupManager.instance.EnablePowerup(this);
+            // var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
+            // var mouseDirection = (worldMousePos - transform.position).normalized;
 
-            var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
-            instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
+            // var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
+            // instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
         }
 
         if (player.GetButtonDown("Secondary"))

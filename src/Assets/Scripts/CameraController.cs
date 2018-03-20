@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
         var greatestDistance = 1f;
         var numberOfAlivePlayers = 0;
 
-        foreach (var player in GameManager.instance.players)
+        foreach (var player in GameManager.instance.Players)
         {
             if (!player.IsVisible)
             {
@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
 
             var myGreatestDistance = 0f;
 
-            foreach (var otherPlayer in GameManager.instance.players)
+            foreach (var otherPlayer in GameManager.instance.Players)
             {
                 if (!otherPlayer.IsVisible || player == otherPlayer)
                 {

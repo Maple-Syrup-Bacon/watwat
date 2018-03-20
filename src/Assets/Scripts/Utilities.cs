@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Utilities : MonoBehaviour
 {
-    public static int NumberOfPlayers = 2;
+    public static int NumberOfPlayers = 1;
 
     public enum PowerupType
     {

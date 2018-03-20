@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public float respawnTime = 3f;
+    public float timeVisibleAfterDeath = 1f;
+    public float respawnParticleDelay = 0.25f;
     public float timerValue = 60f;
     public float timerTickStep = 0.1f;
     public float cloudSpawnRate = 0.8f;

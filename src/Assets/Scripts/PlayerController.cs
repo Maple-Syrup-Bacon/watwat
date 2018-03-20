@@ -12,17 +12,20 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 10f;
     public float degroundedTime = 0.25f;
     public float maxSpeed = 200f;
-    public float slowestTimeFactor = 0.1f;
-    public AnimationCurve curve;
-    public GameObject lightProjectile;
     public float lightProjectileSpeed = 50f;
     public float lightProjectileCooldown = 1.5f;
-    public GameObject punchEffect;
-    public float punchDamage = 10f;
-    public float punchCooldown = 1f;
+    public float meleeDamage = 10f;
+    public float meleeCooldown = 1f;
     public float timeHitCooldown = 1f;
+    [Header("Particles")]
+    public GameObject meleeHitParticle;
+    public GameObject meleeParticle;
+    public GameObject deathParticle;
+    public GameObject spawnParticle;
+    public GameObject lightProjectile;
 
     public bool IsGrounded { get; set; }
+    public bool IsVisible { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
 
     private Rewired.Player player;
@@ -32,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private ObjectGravity objectGravity;
     private Transform aimerTransform;
+    private SpriteRenderer aimerSpriteRenderer;
 
     private Vector3 aimerVector;
     private Vector2 leftAnalogStick;
@@ -39,7 +43,7 @@ public class PlayerController : MonoBehaviour
     private float originalFixedDelta;
     private float currentCurveTime = 1.0f;
     private float nextLightProjectile;
-    private float nextPunch;
+    private float nextMelee;
     private float nextTimeHit;
     private float prevX;
     private Vector2 movement;
@@ -58,6 +62,7 @@ public class PlayerController : MonoBehaviour
     {
         aimerTransform = transform.GetChild(0);
         playerAttack = aimerTransform.GetComponent<PlayerAttack>();
+        aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
         body = GetComponent<Rigidbody2D>();
@@ -70,6 +75,7 @@ public class PlayerController : MonoBehaviour
         attackTriggerXRight = playerAttack.transform.localPosition.x;
         attackTriggerXLeft = -attackTriggerXRight;
         aimerVector = Vector2.right;
+        IsVisible = true;
     }
 
     // Update is called once per frame
@@ -82,8 +88,6 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
         GetInput();
-        // DoTime();
-
         MoveAimer();
     }
 
@@ -175,7 +179,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Border"))
+        if (!isDead && other.CompareTag("Border"))
         {
             Die();
         }
@@ -185,19 +189,42 @@ public class PlayerController : MonoBehaviour
     {
         isDead = true;
         body.velocity = Vector2.zero;
+        Instantiate(deathParticle, transform.position, deathParticle.transform.rotation);
 
         StartCoroutine(Respawn());
     }
 
     private IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(GameManager.instance.respawnTime);
+        spriteRenderer.enabled = false;
+        aimerSpriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(GameManager.instance.timeVisibleAfterDeath);
+
+        IsVisible = false;
+
+        yield return new WaitForSeconds(GameManager.instance.respawnTime - GameManager.instance.timeVisibleAfterDeath);
+
         isDead = false;
+        IsVisible = true;
+        spriteRenderer.enabled = true;
+        aimerSpriteRenderer.enabled = true;
 
         damageTotal = 0;
 
         var index = Random.Range(0, GameManager.instance.planets.Length);
         transform.position = GameManager.instance.planets[index].transform.position;
+
+        yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
+
+        var instance = Instantiate(spawnParticle, transform.position, spawnParticle.transform.rotation);
+
+        instance.transform.up = transform.up;
+        instance.transform.Rotate(new Vector3(90, 0, 0));
+
+        var pos = instance.transform.localPosition;
+        pos.y -= yExtent;
+        instance.transform.localPosition = pos;
     }
 
     private void GetInput()
@@ -226,11 +253,11 @@ public class PlayerController : MonoBehaviour
 
         if (player.GetButtonDown("Secondary"))
         {
-            Instantiate(punchEffect, transform.position, lightProjectile.transform.rotation);
+            // Instantiate(meleeParticle, transform.position, lightProjectile.transform.rotation);
 
             foreach (var player in playerAttack.players)
             {
-                player.Damage(punchDamage, (isFacingRight ? transform.right : -transform.right));
+                player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
             }
         }
     }
@@ -294,84 +321,6 @@ public class PlayerController : MonoBehaviour
         return Mathf.RoundToInt(angle / 22.5f) * 22.5f;
     }
 
-    private void DoTime()
-    {
-        // if (movement != 0.0f)
-        // {
-        //     Time.timeScale += Mathf.Pow(speedUpFactor * Time.unscaledDeltaTime, speedUpExponent);
-        // }
-        // else
-        // {
-        //     Time.timeScale -= Mathf.Pow(slowDownFactor * Time.unscaledDeltaTime, slowDownExponent);
-        // }
-
-        // if (movement != 0.0f)
-        // {
-        //     Time.timeScale = Mathf.Lerp(Time.timeScale, Mathf.Abs(movement), Time.unscaledDeltaTime);
-        // }
-        // else
-        // {
-        //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
-        // }
-
-        // float factor = body.velocity.magnitude / magnitudeFactor;
-        // factor = Mathf.Clamp(factor, 0f, 1f);
-
-        // if (factor != 0.0f)
-        // {
-        //     Time.timeScale += Mathf.Pow(factor * speedUpFactor * Time.unscaledDeltaTime, speedUpExponent);
-        // }
-        // else
-        // {
-        //     Time.timeScale -= Mathf.Pow(slowDownFactor * Time.unscaledDeltaTime, slowDownExponent);
-        // }
-
-        // if (movement != 0.0f)
-        // {
-        //     Time.timeScale = Mathf.Lerp(Time.timeScale, Mathf.Abs(movement), Time.unscaledDeltaTime);
-        // }
-        // else
-        // {
-        //     Time.timeScale = Mathf.Lerp(Time.timeScale, slowestTimeFactor, Time.unscaledDeltaTime);
-        // }
-
-        // if (leftAnalogStick.x != 0.0f)
-        // {
-        //     currentCurveTime = Mathf.Abs(leftAnalogStick.x);
-        // }
-        // else
-        // {
-        //     currentCurveTime -= Time.unscaledDeltaTime;
-        // }
-
-        // currentCurveTime = Mathf.Abs(leftAnalogStick.x) * Time.unscaledDeltaTime;
-        // currentCurveTime -= Time.unscaledDeltaTime;
-        // currentCurveTime += body.velocity.magnitude * Time.unscaledDeltaTime;
-        // currentCurveTime += Mathf.Abs(body.velocity.y) * Time.unscaledDeltaTime;
-
-        // if (jump)
-        // {
-        //     currentCurveTime = 1f;
-        // }
-
-        if (prevX <= leftAnalogStick.x)
-        {
-            currentCurveTime += Time.unscaledDeltaTime;
-            currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, Mathf.Abs(leftAnalogStick.x));
-        }
-        else
-        {
-            currentCurveTime -= Time.unscaledDeltaTime;
-        }
-
-        // currentCurveTime += body.velocity.sqrMagnitude * Time.unscaledDeltaTime;
-
-        currentCurveTime = Mathf.Clamp(currentCurveTime, 0f, 1f);
-
-        Time.timeScale = Mathf.Clamp(curve.Evaluate(currentCurveTime), slowestTimeFactor, 1f);
-        Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;
-    }
-
     private void Deground()
     {
         degrounded = true;
@@ -382,6 +331,7 @@ public class PlayerController : MonoBehaviour
     public void Damage(float amount, Vector2 direction)
     {
         damageTotal += amount;
+        Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
         Deground();
     }

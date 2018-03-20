@@ -207,40 +207,18 @@ MonoBehaviour:
   jumpForce: 500
   degroundedTime: 0.25
   maxSpeed: 50
-  slowestTimeFactor: 0.1
-  curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  lightProjectile: {fileID: 1870291720119966, guid: b915dacc55c1c42a1abb919899f682d4,
-    type: 2}
   lightProjectileSpeed: 20
   lightProjectileCooldown: 1.5
-  punchEffect: {fileID: 1431949366205518, guid: 80c7b5fdad7b9455f84f157595617aed,
-    type: 2}
-  punchDamage: 10
-  punchCooldown: 1
+  meleeDamage: 10
+  meleeCooldown: 1
   timeHitCooldown: 1
+  meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}
+  meleeParticle: {fileID: 0}
+  deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}
+  spawnParticle: {fileID: 1965343156803978, guid: 9678bdf2f613e4112ab1611b1bb721ca,
+    type: 2}
+  lightProjectile: {fileID: 1870291720119966, guid: b915dacc55c1c42a1abb919899f682d4,
+    type: 2}
 --- !u!212 &212322305702140010
 SpriteRenderer:
   m_ObjectHideFlags: 1

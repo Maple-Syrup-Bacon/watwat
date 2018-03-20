@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
 
         foreach (var player in GameManager.instance.players)
         {
-            if (player.isDead)
+            if (!player.IsVisible)
             {
                 continue;
             }
@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
 
             foreach (var otherPlayer in GameManager.instance.players)
             {
-                if (otherPlayer.isDead || player == otherPlayer)
+                if (!otherPlayer.IsVisible || player == otherPlayer)
                 {
                     continue;
                 }

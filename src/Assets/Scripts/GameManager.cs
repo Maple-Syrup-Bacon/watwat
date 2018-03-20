@@ -4,16 +4,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Rewired;
+using EazyTools.SoundManager;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public float musicVolume = 0.5f;
     public float respawnTime = 3f;
     public float timeVisibleAfterDeath = 1f;
     public float respawnParticleDelay = 0.25f;
-    public float timerValue = 60f;
-    public float timerTickStep = 0.1f;
+    public int timerValue = 60;
     public float cloudSpawnRate = 0.8f;
     public float cloudSpeedMin = 10f;
     public float cloudSpeedMax = 30f;
@@ -27,11 +28,20 @@ public class GameManager : MonoBehaviour
     public Sprite[] idleSprites;
     public RuntimeAnimatorController[] animatorControllers;
 
-    public PointEffector2D[] planets { get; set; }
-    public PlayerController[] players { get; set; }
+    [Header("Audio")]
+    public AudioClip[] music;
+    public AudioClip[] announcerNumbers;
+    public AudioClip announcerBegin;
+    public AudioClip announcerGameOver;
+
+    public PointEffector2D[] Planets { get; set; }
+    public PlayerController[] Players { get; set; }
+    public bool GameStarted { get; set; } = false;
+    public bool GameOver { get; set; } = false;
 
     private Rewired.Player player;
     private TMP_Text timer;
+    private TMP_Text countdown;
 
     private void Awake()
     {
@@ -43,12 +53,10 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
 
-            planets = GameObject.FindObjectsOfType<PointEffector2D>();
+            Planets = GameObject.FindObjectsOfType<PointEffector2D>();
 
             SpawnPlayers();
         }
-
-
     }
 
     // Use this for initialization
@@ -57,14 +65,17 @@ public class GameManager : MonoBehaviour
         player = ReInput.players.GetPlayer(0);
 
 
-        players = GameObject.FindObjectsOfType<PlayerController>();
+        Players = GameObject.FindObjectsOfType<PlayerController>();
 
         timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
+        countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
 
         timer.text = timerValue.ToString();
+        countdown.text = "3";
 
-        // StartCoroutine(tickTimer());
         StartCoroutine(CloudSpawner());
+        StartCoroutine(GameBeginCountdown());
+        StartCoroutine(PlayMusic());
     }
 
     // Update is called once per frame
@@ -76,23 +87,53 @@ public class GameManager : MonoBehaviour
         // }
     }
 
-    public void SubtractTime(float t)
+    private IEnumerator PlayMusic()
     {
-        timerValue -= t;
-    }
+        var musicID = SoundManager.PlayMusic(music[Random.Range(0, music.Length)], musicVolume, false, false);
+        var musicAudio = SoundManager.GetMusicAudio(musicID);
 
-    private IEnumerator tickTimer()
-    {
-        while (0f < timerValue)
+        while (musicAudio.playing)
         {
-            yield return new WaitForSeconds(timerTickStep);
-
-            timerValue -= timerTickStep;
-
-            timer.text = timerValue.ToString("N1");
+            yield return null;
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(PlayMusic());
+    }
+
+    private IEnumerator TickTimer()
+    {
+        while (0 < timerValue)
+        {
+            yield return new WaitForSeconds(1);
+
+            timerValue -= 1;
+
+            timer.text = timerValue.ToString();
+        }
+
+        SoundManager.PlaySound(announcerGameOver);
+        GameOver = true;
+    }
+
+    private IEnumerator GameBeginCountdown()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        SoundManager.PlaySound(announcerNumbers[2]);
+        yield return new WaitForSecondsRealtime(1);
+        SoundManager.PlaySound(announcerNumbers[1]);
+        countdown.text = "2";
+        yield return new WaitForSecondsRealtime(1);
+        SoundManager.PlaySound(announcerNumbers[0]);
+        countdown.text = "1";
+        yield return new WaitForSecondsRealtime(1);
+        countdown.text = "BEGIN";
+        SoundManager.PlaySound(announcerBegin);
+        yield return new WaitForSecondsRealtime(1);
+
+        GameStarted = true;
+        countdown.gameObject.SetActive(false);
+
+        StartCoroutine(TickTimer());
     }
 
     private IEnumerator CloudSpawner()
@@ -120,9 +161,9 @@ public class GameManager : MonoBehaviour
     {
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
         {
-            var index = Random.Range(0, GameManager.instance.planets.Length);
+            var index = Random.Range(0, GameManager.instance.Planets.Length);
 
-            var playerInstance = Instantiate(playerPrefab, instance.planets[index].transform.position, playerPrefab.transform.rotation);
+            var playerInstance = Instantiate(playerPrefab, instance.Planets[index].transform.position, playerPrefab.transform.rotation);
 
             var playerController = playerInstance.GetComponent<PlayerController>();
             playerController.playerID = i;

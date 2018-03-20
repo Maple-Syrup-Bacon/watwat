@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using EazyTools.SoundManager;
 using static Utilities;
 
 public class PlayerController : MonoBehaviour
@@ -25,6 +26,10 @@ public class PlayerController : MonoBehaviour
     public GameObject deathParticle;
     public GameObject spawnParticle;
     public GameObject lightProjectile;
+
+    [Header("Audio")]
+    public AudioClip meleeHit;
+    public float meleeHitVolume = 1.0f;
 
     public bool IsGrounded { get; set; }
     public bool IsVisible { get; set; }
@@ -103,6 +108,12 @@ public class PlayerController : MonoBehaviour
         }
 
         GroundCheck();
+
+        if (!GameManager.instance.GameStarted || GameManager.instance.GameOver)
+        {
+            return;
+        }
+
         GetInput();
         MoveAimer();
     }
@@ -238,8 +249,8 @@ public class PlayerController : MonoBehaviour
 
         damageTotal = 0;
 
-        var index = Random.Range(0, GameManager.instance.planets.Length);
-        transform.position = GameManager.instance.planets[index].transform.position;
+        var index = Random.Range(0, GameManager.instance.Planets.Length);
+        transform.position = GameManager.instance.Planets[index].transform.position;
 
         yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
 
@@ -286,6 +297,7 @@ public class PlayerController : MonoBehaviour
             foreach (var player in playerAttack.players)
             {
                 player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
+                SoundManager.PlaySound(meleeHit, meleeHitVolume);
             }
         }
     }

@@ -9,13 +9,13 @@ public class ObjectGravity : MonoBehaviour
     private Rigidbody2D body;
     private PlayerController playerController;
     private float lastPlanetDistance = float.PositiveInfinity;
-    private List<Transform> planets;
+    private List<PlanetController> planets;
     private float offset;
 
     private void Start()
     {
         playerController = GetComponent<PlayerController>();
-        planets = new List<Transform>();
+        planets = new List<PlanetController>();
         body = GetComponent<Rigidbody2D>();
         offset = GetComponent<BoxCollider2D>().bounds.extents.y;
     }
@@ -29,6 +29,7 @@ public class ObjectGravity : MonoBehaviour
             foreach (var planet in planets)
             {
                 var diff = planet.transform.position - transform.position;
+                diff = diff.normalized * (diff.magnitude - planet.PlanetRadius);
 
                 if (diff.magnitude < closest.magnitude)
                 {
@@ -106,7 +107,7 @@ public class ObjectGravity : MonoBehaviour
     {
         if (playerController && other.CompareTag("Planet"))
         {
-            planets.Add(other.transform);
+            planets.Add(other.GetComponent<PlanetController>());
         }
     }
 
@@ -114,7 +115,7 @@ public class ObjectGravity : MonoBehaviour
     {
         if (playerController && other.CompareTag("Planet"))
         {
-            planets.Remove(other.transform);
+            planets.Remove(other.GetComponent<PlanetController>());
         }
     }
 

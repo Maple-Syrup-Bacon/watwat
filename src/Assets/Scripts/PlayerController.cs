@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public int playerID;
     public float damageTotal;
+    public int score;
     public bool isDead = false;
     public float movementSpeed = 10f;
     public float jumpForce = 10f;
@@ -19,6 +20,11 @@ public class PlayerController : MonoBehaviour
     public float meleeDamage = 10f;
     public float meleeCooldown = 1f;
     public float timeHitCooldown = 1f;
+    public float yExtent;
+
+    [Header("Powerup Effects")]
+    public float superStrengthEffect = 2.0f;
+    public float superSpeedEffect = 2.0f;
 
     [Header("Particles")]
     public GameObject meleeHitParticle;
@@ -27,10 +33,12 @@ public class PlayerController : MonoBehaviour
     public GameObject spawnParticle;
     public GameObject lightProjectile;
 
+
     [Header("Audio")]
     public AudioClip meleeHit;
     public float meleeHitVolume = 1.0f;
 
+    // Properties
     public bool IsGrounded { get; set; }
     public bool IsVisible { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
@@ -56,7 +64,6 @@ public class PlayerController : MonoBehaviour
     private float nextTimeHit;
     private float prevX;
     private Vector2 movement;
-    private float yExtent;
     private float sqrMaxSpeed;
     private bool attacking;
     private PlayerAttack playerAttack;
@@ -65,6 +72,7 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
+    private int lastDamagedByPlayerID = -1;
 
     // Powerups
     public bool HasExplodingFireball { get; set; } = false;
@@ -139,11 +147,16 @@ public class PlayerController : MonoBehaviour
 
                 var localVelocity = transform.InverseTransformDirection(body.velocity);
 
-                var scaledMovment = (movement - new Vector2(transform.up.x, transform.up.y));
+                var scaledMovement = (movement - new Vector2(transform.up.x, transform.up.y));
 
-                scaledMovment = (scaledMovment * movementSpeed * Time.fixedDeltaTime);
+                scaledMovement = (scaledMovement * movementSpeed * Time.fixedDeltaTime);
 
-                localVelocity = transform.InverseTransformDirection(scaledMovment);
+                if (HasSuperSpeed)
+                {
+                    scaledMovement *= superSpeedEffect;
+                }
+
+                localVelocity = transform.InverseTransformDirection(scaledMovement);
                 localVelocity.y = 0.0f;
 
                 isFacingRight = (0.0f <= localVelocity.x);
@@ -152,7 +165,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                body.AddForce(movement * movementSpeed * Time.fixedDeltaTime);
+                var newMovement = movement * movementSpeed * Time.fixedDeltaTime;
+                if (HasSuperSpeed)
+                {
+                    newMovement *= superSpeedEffect;
+                }
+                body.AddForce(newMovement);
 
                 var localMovement = transform.InverseTransformDirection(movement);
                 isFacingRight = (0.0f <= localMovement.x);
@@ -224,9 +242,26 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        if (GameManager.instance.GameOver)
+        {
+            return;
+        }
+
         isDead = true;
         body.velocity = Vector2.zero;
         Instantiate(deathParticle, transform.position, deathParticle.transform.rotation);
+
+        if (lastDamagedByPlayerID != -1)
+        {
+            GameManager.instance.IncreaseScore(lastDamagedByPlayerID);
+            lastDamagedByPlayerID = -1;
+        }
+        else
+        {
+            score--;
+        }
+
+        GameManager.instance.UpdateAvatars();
 
         StartCoroutine(Respawn());
     }
@@ -262,6 +297,8 @@ public class PlayerController : MonoBehaviour
         var pos = instance.transform.localPosition;
         pos.y -= yExtent;
         instance.transform.localPosition = pos;
+
+        GameManager.instance.UpdateAvatars();
     }
 
     private void GetInput()
@@ -283,23 +320,24 @@ public class PlayerController : MonoBehaviour
         {
             if (HasExplodingFireball)
             {
-                // Send off a fireball
-                // var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
-                // instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
-                Debug.Log("Shot Fireball!");
+                var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);
+                instance.GetComponent<BasicProjectile>().Owner = transform;
+                instance.GetComponent<Rigidbody2D>().AddForce(aimerVector * lightProjectileSpeed, ForceMode2D.Impulse);
+            }
+            else
+            {
+                var damage = (HasSuperStrength ? meleeDamage * superStrengthEffect : meleeDamage);
+
+                foreach (var player in playerAttack.players)
+                {
+                    player.Damage(damage, player.transform.position - transform.position, playerID);
+                    SoundManager.PlaySound(meleeHit, meleeHitVolume);
+                }
             }
         }
 
         if (player.GetButtonDown("Secondary"))
-        {
-            // Instantiate(meleeParticle, transform.position, lightProjectile.transform.rotation);
-
-            foreach (var player in playerAttack.players)
-            {
-                player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
-                SoundManager.PlaySound(meleeHit, meleeHitVolume);
-            }
-        }
+        { }
     }
 
     private void GroundCheck()
@@ -368,12 +406,21 @@ public class PlayerController : MonoBehaviour
         degroundedTimer = Time.time + degroundedTime;
     }
 
-    public void Damage(float amount, Vector2 direction)
+    public void Damage(float amount, Vector2 direction, int enemyPlayerID)
     {
+        if (HasInvincibility)
+        {
+            return;
+        }
+
+        lastDamagedByPlayerID = enemyPlayerID;
+
         damageTotal += amount;
         Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
-        body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
+        body.AddForce(direction.normalized * (GameManager.instance.baseKnockback * (damageTotal / 100f)), ForceMode2D.Impulse);
         Deground();
+
+        GameManager.instance.UpdateAvatars();
     }
 
     public void SetGrounded(bool grounded)

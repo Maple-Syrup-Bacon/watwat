@@ -62196,6 +62196,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnTime: 3
+  timeVisibleAfterDeath: 1
+  respawnParticleDelay: 0.1
   timerValue: 60
   timerTickStep: 0.1
   cloudSpawnRate: 1.7

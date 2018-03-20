@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class BasicProjectile : MonoBehaviour
 {
-    [SerializeField]
-    private float lifespan = 15.0f;
+    public float lifespan = 15.0f;
+    public GameObject collisionEffect;
 
-    [SerializeField]
-    private GameObject collisionEffect;
+    public Transform Owner { get; set; }
 
     private float currentTime;
 
@@ -24,14 +23,10 @@ public class BasicProjectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player"))
+        if (!other.isTrigger && other.transform != Owner)
         {
+            Debug.Log(other.name);
             Instantiate(collisionEffect, transform.position, collisionEffect.transform.rotation);
-
-            if (other.CompareTag("Enemy"))
-            {
-                Destroy(other.gameObject);
-            }
 
             GetComponent<ParticleSystem>().Stop();
 

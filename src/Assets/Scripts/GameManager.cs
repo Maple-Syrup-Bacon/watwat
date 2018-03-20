@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public float baseKnockback = 10f;
     public float musicVolume = 0.5f;
     public float respawnTime = 3f;
     public float timeVisibleAfterDeath = 1f;
@@ -42,6 +43,8 @@ public class GameManager : MonoBehaviour
     private Rewired.Player player;
     private TMP_Text timer;
     private TMP_Text countdown;
+    private TMP_Text[] percentages;
+    private TMP_Text[] scores;
 
     private void Awake()
     {
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour
             Planets = GameObject.FindObjectsOfType<PointEffector2D>();
 
             SpawnPlayers();
+            GetUIElements();
         }
     }
 
@@ -64,14 +68,10 @@ public class GameManager : MonoBehaviour
     {
         player = ReInput.players.GetPlayer(0);
 
-
-        Players = GameObject.FindObjectsOfType<PlayerController>();
-
-        timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
-        countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
-
         timer.text = timerValue.ToString();
         countdown.text = "3";
+
+        UpdateAvatars();
 
         StartCoroutine(CloudSpawner());
         StartCoroutine(GameBeginCountdown());
@@ -159,6 +159,8 @@ public class GameManager : MonoBehaviour
 
     private void SpawnPlayers()
     {
+        Players = new PlayerController[Utilities.NumberOfPlayers];
+
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
         {
             var index = Random.Range(0, GameManager.instance.Planets.Length);
@@ -169,6 +171,56 @@ public class GameManager : MonoBehaviour
             playerController.playerID = i;
             playerController.IdleSprite = idleSprites[i];
             playerController.AnimatorController = animatorControllers[i];
+
+            Players[i] = playerController;
         }
+    }
+
+    private void GetUIElements()
+    {
+        timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
+        countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
+
+        percentages = new TMP_Text[Utilities.NumberOfPlayers];
+        scores = new TMP_Text[Utilities.NumberOfPlayers];
+
+        var avatars = GameObject.Find("Canvas/Avatars").transform;
+
+        if (Utilities.NumberOfPlayers == 2)
+        {
+            avatars.GetChild(2).gameObject.SetActive(false);
+            avatars.GetChild(3).gameObject.SetActive(false);
+        }
+        else if (Utilities.NumberOfPlayers == 3)
+        {
+            avatars.GetChild(3).gameObject.SetActive(false);
+        }
+
+        for (var i = 0; i < Utilities.NumberOfPlayers; i++)
+        {
+            var avatar = avatars.GetChild(i);
+            percentages[i] = avatar.GetChild(0).GetComponent<TMP_Text>();
+            scores[i] = avatar.GetChild(1).GetComponent<TMP_Text>();
+        }
+    }
+
+    public void UpdateAvatars()
+    {
+        for (var i = 0; i < Utilities.NumberOfPlayers; i++)
+        {
+            percentages[i].text = Players[i].damageTotal + "%";
+            scores[i].text = Players[i].score.ToString();
+        }
+    }
+
+    public void IncreaseScore(int playerID)
+    {
+        if (GameOver)
+        {
+            return;
+        }
+
+        Players[playerID].score++;
+        UpdateAvatars();
     }
 }

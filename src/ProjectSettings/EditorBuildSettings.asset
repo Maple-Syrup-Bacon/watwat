@@ -8,7 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/HilmarGame.unity
-    guid: 49d767cfc26d84421be4538b4ffae674
+    guid: 6a5b0909949d046f0b8242bedf5c1641
+  - enabled: 1
+    path: Assets/Scenes/AlphaMenu.unity
+    guid: 93c9189aea41343f4af819988d90e0b4
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 4a0fc581102634e13afdd727e310fb59
   m_configObjects: {}

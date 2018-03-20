@@ -5,135 +5,258 @@ using Rewired;
 
 public class PlayerController : MonoBehaviour
 {
+    public int playerID;
+    public float damageTotal;
+    public bool isDead = false;
+    public float movementSpeed = 10f;
+    public float jumpForce = 10f;
+    public float degroundedTime = 0.25f;
+    public float maxSpeed = 200f;
+    public float slowestTimeFactor = 0.1f;
+    public AnimationCurve curve;
+    public GameObject lightProjectile;
+    public float lightProjectileSpeed = 50f;
+    public float lightProjectileCooldown = 1.5f;
+    public GameObject punchEffect;
+    public float punchDamage = 10f;
+    public float punchCooldown = 1f;
+    public float timeHitCooldown = 1f;
 
-    [SerializeField]
-    private float slowestTimeFactor = 0.1f;
-
-    [SerializeField]
-    private float speedUpFactor = 0.1f;
-
-    [SerializeField]
-    private float speedUpExponent = 2f;
-
-    [SerializeField]
-    private float slowDownFactor = 0.1f;
-
-    [SerializeField]
-    private float slowDownExponent = 2f;
-
-    [SerializeField]
-    private float magnitudeFactor = 4f;
-
-    [SerializeField]
-    private AnimationCurve curve;
-
-    [SerializeField]
-    private GameObject lightProjectile;
-
-    [SerializeField]
-    private float lightProjectileSpeed = 50f;
-
-    [SerializeField]
-    private float lightProjectileCooldown = 1.5f;
-
-    [SerializeField]
-    private GameObject punchEffect;
-
-    [SerializeField]
-    private float punchCooldown = 1f;
-
-    [SerializeField]
-    private float timeHitCooldown = 1f;
+    public bool IsGrounded { get; set; }
+    public PlanetGravity CurrentPlanet { get; set; }
 
     private Rewired.Player player;
     private GameManager gameManager;
+    private Rigidbody2D body;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private ObjectGravity objectGravity;
 
-    private Rigidbody body;
     private Vector2 leftAnalogStick;
     private Vector2 aimer;
     private bool jump;
-    private bool grounded;
     private float originalFixedDelta;
     private float currentCurveTime = 1.0f;
     private float nextLightProjectile;
     private float nextPunch;
     private float nextTimeHit;
     private float prevX;
+    private Vector2 movement;
+    private float yExtent;
+    private float sqrMaxSpeed;
+    private bool attacking;
+    private PlayerAttack playerAttack;
+    private float attackTriggerXRight;
+    private float attackTriggerXLeft;
+    private bool isFacingRight = true;
+    private bool degrounded = false;
+    private float degroundedTimer;
 
     // Use this for initialization
     private void Start()
     {
-        player = ReInput.players.GetPlayer(0);
-        body = GetComponent<Rigidbody>();
+        playerAttack = transform.GetChild(0).GetComponent<PlayerAttack>();
+        objectGravity = GetComponent<ObjectGravity>();
+        yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
+        player = ReInput.players.GetPlayer(playerID);
+        body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
         aimer = Vector2.right;
+        sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
+        attackTriggerXRight = playerAttack.transform.localPosition.x;
+        attackTriggerXLeft = -attackTriggerXRight;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
+
+        GroundCheck();
         GetInput();
-        DoTime();
+        // DoTime();
     }
 
     private void FixedUpdate()
     {
-        // body.velocity = new Vector3(movement * movementSpeed * Time.fixedDeltaTime, body.velocity.y, 0.0f);
+        if (isDead)
+        {
+            return;
+        }
 
-        // if (jump)
-        // {
-        //     jump = false;
-        //     body.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
-        // }
+        if (movement != Vector2.zero)
+        {
+            var attackTriggerPos = playerAttack.transform.localPosition;
 
-        // transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        body.MovePosition(new Vector3(body.position.x, body.position.y, 0f));
+            playerAttack.transform.localPosition = attackTriggerPos;
+
+
+            if (IsGrounded)
+            {
+                // var localVelocity = transform.InverseTransformDirection(body.velocity);
+                // localVelocity.x = movement.x * movementSpeed * Time.fixedDeltaTime;
+
+                // body.velocity = transform.TransformDirection(localVelocity);
+
+                var localVelocity = transform.InverseTransformDirection(body.velocity);
+
+                var scaledMovment = (movement - new Vector2(transform.up.x, transform.up.y));
+
+                scaledMovment = (scaledMovment * movementSpeed * Time.fixedDeltaTime);
+
+                localVelocity = transform.InverseTransformDirection(scaledMovment);
+                localVelocity.y = 0.0f;
+
+                isFacingRight = (0.0f <= localVelocity.x);
+
+                body.velocity = transform.TransformDirection(localVelocity);
+            }
+            else
+            {
+                body.AddForce(movement * movementSpeed * Time.fixedDeltaTime);
+
+                var localMovement = transform.InverseTransformDirection(movement);
+                isFacingRight = (0.0f <= localMovement.x);
+            }
+
+            if (isFacingRight)
+            {
+                spriteRenderer.flipX = false;
+                attackTriggerPos.x = attackTriggerXRight;
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+                attackTriggerPos.x = attackTriggerXLeft;
+            }
+        }
+        else
+        {
+            // animator.SetLayerWeight(1, 0.0f);
+
+            if (IsGrounded)
+            {
+                var localVelocity = transform.InverseTransformDirection(body.velocity);
+                localVelocity.x = 0.0f;
+
+                body.velocity = transform.TransformDirection(localVelocity);
+            }
+        }
+
+        if (jump)
+        {
+            jump = false;
+            Deground();
+            body.AddForce(transform.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+        }
+
+        if (sqrMaxSpeed < body.velocity.sqrMagnitude)
+        {
+            // var breakSpeed = body.velocity.magnitude - maxSpeed;
+            // var breakVector = body.velocity.normalized * breakSpeed;
+
+            // body.AddForce(-breakVector);
+
+            // body.velocity = body.velocity.normalized * maxSpeed;
+
+            // body.velocity = Vector3.ClampMagnitude(body.velocity, maxSpeed);
+        }
     }
 
-    void OnCollisionEnter(Collision other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Enemy") && nextTimeHit < Time.time)
+        if (other.CompareTag("Border"))
         {
-            nextTimeHit = Time.time + timeHitCooldown;
-
-            gameManager.SubtractTime(5f);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        isDead = true;
+        body.velocity = Vector2.zero;
+
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(GameManager.instance.respawnTime);
+        isDead = false;
+
+        damageTotal = 0;
+
+        var index = Random.Range(0, GameManager.instance.planets.Length);
+        transform.position = GameManager.instance.planets[index].transform.position;
     }
 
     private void GetInput()
     {
-        prevX = leftAnalogStick.x;
+        movement.x = player.GetAxis("Move X");
+        movement.y = player.GetAxis("Move Y");
 
-        leftAnalogStick.x = player.GetAxis("Move X");
-        leftAnalogStick.y = player.GetAxis("Move Y");
-
-        if (leftAnalogStick != Vector2.zero)
+        if (!jump && IsGrounded)
         {
-            aimer = leftAnalogStick;
-            float snappedAngle = SnapAngle(GetAngle(aimer, Vector3.right));
-            aimer = Quaternion.AngleAxis(snappedAngle, Vector3.forward) * Vector3.right;
+            jump = player.GetButtonDown("Jump");
         }
 
-        // if (!jump && grounded)
-        // {
-        //     jump = player.GetButtonDown("Jump");
-        // }
-
-        if (player.GetButtonDown("Light Attack") && nextLightProjectile < Time.time)
+        if (player.GetButtonDown("Primary"))
         {
-            nextLightProjectile = Time.time + lightProjectileCooldown;
+            var worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3(player.controllers.Mouse.screenPosition.x, player.controllers.Mouse.screenPosition.y, transform.position.z));
+            var mouseDirection = (worldMousePos - transform.position).normalized;
 
-            var instance = Instantiate(lightProjectile, transform.position + Vector3.up + (Vector3.forward * (-0.5f)), lightProjectile.transform.rotation);
-            instance.GetComponent<Rigidbody>().AddForce(aimer.normalized * lightProjectileSpeed, ForceMode.Impulse);
+            var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
+            instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
         }
 
-        if (player.GetButtonDown("Punch") && nextPunch < Time.time)
+        if (player.GetButtonDown("Secondary"))
         {
-            nextPunch = Time.time + punchCooldown;
+            Instantiate(punchEffect, transform.position, lightProjectile.transform.rotation);
 
-            Instantiate(punchEffect, transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.transform.position + Vector3.up + (Vector3.forward * (-0.5f)), punchEffect.transform.rotation);
+            foreach (var player in playerAttack.players)
+            {
+                player.Damage(punchDamage, (isFacingRight ? transform.right : -transform.right));
+            }
+        }
+    }
+
+    private void GroundCheck()
+    {
+        if (degrounded && degroundedTimer < Time.time)
+        {
+            degrounded = false;
+        }
+
+        if (!degrounded)
+        {
+            var start = transform.position;
+            start -= yExtent * transform.up;
+
+            var end = start;
+            end -= transform.up * 0.1f;
+
+            Debug.DrawLine(start, end);
+            var ray = Physics2D.Linecast(start, end);
+
+            if (ray.collider != null && ray.collider.CompareTag("Planet"))
+            {
+                IsGrounded = true;
+                transform.parent = ray.collider.transform;
+                // CurrentPlanet = ray.collider.gameObject.GetComponent<PlanetGravity>();
+            }
+            else
+            {
+                IsGrounded = false;
+                transform.parent = null;
+                // CurrentPlanet = null;
+            }
         }
     }
 
@@ -232,8 +355,21 @@ public class PlayerController : MonoBehaviour
         Time.fixedDeltaTime = originalFixedDelta * Time.timeScale;
     }
 
+    private void Deground()
+    {
+        degrounded = true;
+        IsGrounded = false;
+        degroundedTimer = Time.time + degroundedTime;
+    }
+
+    public void Damage(float amount, Vector2 direction)
+    {
+        damageTotal += amount;
+        body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
+    }
+
     public void SetGrounded(bool grounded)
     {
-        this.grounded = grounded;
+        this.IsGrounded = grounded;
     }
 }

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4793919000526778}
   - component: {fileID: 198218682086821996}
   - component: {fileID: 199691913503149868}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4351984864440886}
   - component: {fileID: 198098572066615430}
   - component: {fileID: 199669516228630644}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FireEmbers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,10 +55,10 @@ GameObject:
   - component: {fileID: 4995908020149048}
   - component: {fileID: 198420021471199190}
   - component: {fileID: 199195984565711850}
-  - component: {fileID: 135624590947545760}
-  - component: {fileID: 54142211124594988}
   - component: {fileID: 114500128562113026}
-  m_Layer: 0
+  - component: {fileID: 50468420885566692}
+  - component: {fileID: 58112026360981910}
+  m_Layer: 9
   m_Name: FlamesParticleEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1870291720119966}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 7.66, y: 1.58, z: -2.65}
+  m_LocalPosition: {x: 5.5477285, y: -3.083802, z: 54.418}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4351984864440886}
@@ -106,21 +106,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!54 &54142211124594988
-Rigidbody:
+--- !u!50 &50468420885566692
+Rigidbody2D:
+  serializedVersion: 4
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1870291720119966}
-  serializedVersion: 2
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
   m_Mass: 1
-  m_Drag: 0
+  m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_Constraints: 112
+  m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!58 &58112026360981910
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1870291720119966}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.54
 --- !u!114 &114500128562113026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -132,20 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3815c707872be4b2daae408f90af5da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifespan: 15
   collisionEffect: {fileID: 1355144674684246, guid: 1f541aaf5fe7141c48d9568c0765580e,
     type: 2}
---- !u!135 &135624590947545760
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1870291720119966}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &198098572066615430
 ParticleSystem:
   m_ObjectHideFlags: 1

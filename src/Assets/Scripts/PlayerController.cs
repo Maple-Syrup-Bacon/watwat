@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public float meleeDamage = 10f;
     public float meleeCooldown = 1f;
     public float timeHitCooldown = 1f;
+
     [Header("Particles")]
     public GameObject meleeHitParticle;
     public GameObject meleeParticle;
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     public bool IsGrounded { get; set; }
     public bool IsVisible { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
+    public Sprite IdleSprite { get; set; }
+    public RuntimeAnimatorController AnimatorController { get; set; }
 
     private Rewired.Player player;
     private GameManager gameManager;
@@ -57,13 +60,20 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
-
+    
     // Powerups
     public bool HasExplodingFireball { get; set; } = false;
     public bool HasInvincibility { get; set; } = false;
     public bool HasSuperStrength { get; set; } = false;
     public bool HasSuperSpeed { get; set; } = false;
-
+    
+    private void Awake()
+    {
+        body = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+   
     // Use this for initialization
     private void Start()
     {
@@ -72,9 +82,6 @@ public class PlayerController : MonoBehaviour
         aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
-        body = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
@@ -83,6 +90,8 @@ public class PlayerController : MonoBehaviour
         attackTriggerXLeft = -attackTriggerXRight;
         aimerVector = Vector2.right;
         IsVisible = true;
+        animator.runtimeAnimatorController = AnimatorController;
+        spriteRenderer.sprite = IdleSprite;
     }
 
     // Update is called once per frame
@@ -105,19 +114,17 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        animator.enabled = true;
+
         if (movement != Vector2.zero)
         {
             var attackTriggerPos = playerAttack.transform.localPosition;
 
             playerAttack.transform.localPosition = attackTriggerPos;
 
-
             if (IsGrounded)
             {
-                // var localVelocity = transform.InverseTransformDirection(body.velocity);
-                // localVelocity.x = movement.x * movementSpeed * Time.fixedDeltaTime;
-
-                // body.velocity = transform.TransformDirection(localVelocity);
+                animator.SetLayerWeight(1, 1.0f);
 
                 var localVelocity = transform.InverseTransformDirection(body.velocity);
 
@@ -153,14 +160,21 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // animator.SetLayerWeight(1, 0.0f);
+            animator.SetLayerWeight(1, 0.0f);
 
             if (IsGrounded)
             {
+                animator.enabled = false;
+                spriteRenderer.sprite = IdleSprite;
+
                 var localVelocity = transform.InverseTransformDirection(body.velocity);
                 localVelocity.x = 0.0f;
 
                 body.velocity = transform.TransformDirection(localVelocity);
+            }
+            else
+            {
+                // Swimmy swim goes here
             }
         }
 

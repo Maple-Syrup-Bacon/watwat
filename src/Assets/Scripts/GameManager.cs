@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public GameObject playerPrefab;
     public float respawnTime = 3f;
     public float timeVisibleAfterDeath = 1f;
     public float respawnParticleDelay = 0.25f;
@@ -22,6 +21,11 @@ public class GameManager : MonoBehaviour
     public float cloudXStart;
     public float cloudXEnd;
     public float cloudYOffset;
+
+    [Header("Players")]
+    public GameObject playerPrefab;
+    public Sprite[] idleSprites;
+    public RuntimeAnimatorController[] animatorControllers;
 
     public PointEffector2D[] planets { get; set; }
     public PlayerController[] players { get; set; }
@@ -41,14 +45,7 @@ public class GameManager : MonoBehaviour
 
             planets = GameObject.FindObjectsOfType<PointEffector2D>();
 
-            for (var i = 0; i < Utilities.NumberOfPlayers; i++)
-            {
-                var index = Random.Range(0, GameManager.instance.planets.Length);
-
-                var playerInstance = Instantiate(playerPrefab, instance.planets[index].transform.position, playerPrefab.transform.rotation);
-
-                playerInstance.GetComponent<PlayerController>().playerID = i;
-            }
+            SpawnPlayers();
         }
 
 
@@ -67,7 +64,7 @@ public class GameManager : MonoBehaviour
         timer.text = timerValue.ToString();
 
         // StartCoroutine(tickTimer());
-        StartCoroutine(cloudSpawner());
+        StartCoroutine(CloudSpawner());
     }
 
     // Update is called once per frame
@@ -98,7 +95,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private IEnumerator cloudSpawner()
+    private IEnumerator CloudSpawner()
     {
         while (true)
         {
@@ -116,6 +113,21 @@ public class GameManager : MonoBehaviour
             var cloudController = cloud.GetComponent<CloudController>();
             cloudController.endX = cloudXEnd;
             cloudController.speed = Random.Range(cloudSpeedMin, cloudSpeedMax);
+        }
+    }
+
+    private void SpawnPlayers()
+    {
+        for (var i = 0; i < Utilities.NumberOfPlayers; i++)
+        {
+            var index = Random.Range(0, GameManager.instance.planets.Length);
+
+            var playerInstance = Instantiate(playerPrefab, instance.planets[index].transform.position, playerPrefab.transform.rotation);
+
+            var playerController = playerInstance.GetComponent<PlayerController>();
+            playerController.playerID = i;
+            playerController.IdleSprite = idleSprites[i];
+            playerController.AnimatorController = animatorControllers[i];
         }
     }
 }

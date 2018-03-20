@@ -62183,8 +62183,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eaf9ac9a11f47f89c31d5e7d66eb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1398607332044848, guid: 97746355205444e36a8b249bb9b06acf,
-    type: 2}
   respawnTime: 3
   timeVisibleAfterDeath: 1
   respawnParticleDelay: 0.1
@@ -62200,6 +62198,18 @@ MonoBehaviour:
   cloudXStart: -50
   cloudXEnd: 60
   cloudYOffset: 5
+  playerPrefab: {fileID: 1398607332044848, guid: 97746355205444e36a8b249bb9b06acf,
+    type: 2}
+  idleSprites:
+  - {fileID: 21300000, guid: 3953c3ef9bbbcd247936de22b5a8cbb8, type: 3}
+  - {fileID: 21300000, guid: 2ed8d4946d5bf014c90d74b6eb0ee34b, type: 3}
+  - {fileID: 21300000, guid: 756102fbc40400b47b9292a86a6fee2d, type: 3}
+  - {fileID: 21300000, guid: f3a27632140e41447b45900eb98ff6f5, type: 3}
+  animatorControllers:
+  - {fileID: 9100000, guid: d040e96616d67f44e887cf235c5fe3a5, type: 2}
+  - {fileID: 9100000, guid: 4caaa0e009df9d94b9a3029959dd1db1, type: 2}
+  - {fileID: 9100000, guid: a264a86c7c4bd9b4d941e42085905d9a, type: 2}
+  - {fileID: 9100000, guid: d628e07a89a1e164bb658bc8a4470581, type: 2}
 --- !u!4 &1986617804
 Transform:
   m_ObjectHideFlags: 0

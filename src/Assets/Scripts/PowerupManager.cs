@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Utilities;
+using Rewired;
 
 public class PowerupManager : MonoBehaviour
 {
     public static PowerupManager instance;
 
-    public float powerupDuration = 10.0f;
+    public float invincibilityDuration = 10.0f;
+    public float superStrengthDuration = 10.0f;
+    public float superSpeedDuration = 10.0f;
 
     private PlayerController[] players;
     private IEnumerator[] activePlayerPowerups;
@@ -31,92 +34,94 @@ public class PowerupManager : MonoBehaviour
         activePlayerPowerups = new IEnumerator[4];
     }
 
-    public void EnablePowerup(PlayerController player)
+    public void EnablePowerup(PlayerController player, PowerupType type)
     {
-        PowerupType? type = player.Powerup;
-        if (type.HasValue)
+        var playerID = player.playerID;
+        try
         {
-            var playerID = player.playerID;
-            try
-            {
-                StopCoroutine(activePlayerPowerups[playerID]);
-            }
-            catch (Exception)
-            { }
-            DisablePowerup(player);
-            IEnumerator coroutine;
-            switch (type.Value)
-            {
-                case PowerupType.ExplodingFireball:
-                    coroutine = ExplodingFireball(player);
-                    break;
-                case PowerupType.Invincibility:
-                    coroutine = Invincibility(player);
-                    break;
-                case PowerupType.SuperStrength:
-                    coroutine = SuperStrength(player);
-                    break;
-                case PowerupType.SuperSpeed:
-                default:
-                    coroutine = SuperSpeed(player);
-                    break;
-            }
-            StartCoroutine(coroutine);
-            activePlayerPowerups[playerID] = coroutine;
-            player.Powerup = null;
+            StopCoroutine(activePlayerPowerups[playerID]);
         }
+        catch (Exception)
+        { }
+        DisablePowerups(player);
+        IEnumerator coroutine;
+        switch (type)
+        {
+            case PowerupType.ExplodingFireball:
+                coroutine = ExplodingFireball(player);
+                break;
+            case PowerupType.Invincibility:
+                coroutine = Invincibility(player);
+                break;
+            case PowerupType.SuperStrength:
+                coroutine = SuperStrength(player);
+                break;
+            case PowerupType.SuperSpeed:
+            default:
+                coroutine = SuperSpeed(player);
+                break;
+        }
+        StartCoroutine(coroutine);
+        activePlayerPowerups[playerID] = coroutine;
     }
 
     private IEnumerator ExplodingFireball(PlayerController player)
     {
         EnableExplodingFireball(player);
-        yield return new WaitForSeconds(powerupDuration);
-        DisablePowerup(player);
+        var rewiredPlayer = ReInput.players.GetPlayer(player.playerID);
+        while (!rewiredPlayer.GetButtonDown("Primary"))
+        {
+            yield return null;
+        }
+        DisablePowerups(player);
     }
 
     private void EnableExplodingFireball(PlayerController player)
     {
-        // Set new variables
+        player.HasExplodingFireball = true;
     }
 
     private IEnumerator Invincibility(PlayerController player)
     {
         EnableInvincibility(player);
-        yield return new WaitForSeconds(powerupDuration);
-        DisablePowerup(player);
+        yield return new WaitForSeconds(invincibilityDuration);
+        DisablePowerups(player);
     }
 
     private void EnableInvincibility(PlayerController player)
     {
-        // Set new variables
+        player.HasInvincibility = true;
     }
 
     private IEnumerator SuperStrength(PlayerController player)
     {
         EnableSuperStrength(player);
-        yield return new WaitForSeconds(powerupDuration);
-        DisablePowerup(player);
+        yield return new WaitForSeconds(superStrengthDuration);
+        DisablePowerups(player);
     }
 
     private void EnableSuperStrength(PlayerController player)
     {
-        // Set new variables
+        player.HasSuperStrength = true;
     }
 
     private IEnumerator SuperSpeed(PlayerController player)
     {
         EnableSuperSpeed(player);
-        yield return new WaitForSeconds(powerupDuration);
-        DisablePowerup(player);
+        yield return new WaitForSeconds(superSpeedDuration);
+        DisablePowerups(player);
     }
 
     private void EnableSuperSpeed(PlayerController player)
     {
-        // Set new variables
+        player.HasSuperSpeed = true;
     }
 
-    private void DisablePowerup(PlayerController player)
+    private void DisablePowerups(PlayerController player)
     {
-        // Set default variables
+        player.HasExplodingFireball = false;
+        player.HasInvincibility = false;
+        player.HasSuperStrength = false;
+        player.HasSuperSpeed = false;
     }
 }

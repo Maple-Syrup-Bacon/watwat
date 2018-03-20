@@ -1177,7 +1177,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &358902892
 Transform:
   m_ObjectHideFlags: 0
@@ -62183,6 +62183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eaf9ac9a11f47f89c31d5e7d66eb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 1398607332044848, guid: 97746355205444e36a8b249bb9b06acf,
+    type: 2}
   respawnTime: 3
   timeVisibleAfterDeath: 1
   respawnParticleDelay: 0.1

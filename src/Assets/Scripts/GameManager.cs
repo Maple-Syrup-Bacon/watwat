@@ -8,6 +8,8 @@ using Rewired;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    public GameObject playerPrefab;
     public float respawnTime = 3f;
     public float timeVisibleAfterDeath = 1f;
     public float respawnParticleDelay = 0.25f;
@@ -29,14 +31,27 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        if (instance != null)
         {
             Destroy(gameObject);
         }
+        else
+        {
+            instance = this;
+
+            planets = GameObject.FindObjectsOfType<PointEffector2D>();
+
+            for (var i = 0; i < Utilities.NumberOfPlayers; i++)
+            {
+                var index = Random.Range(0, GameManager.instance.planets.Length);
+
+                var playerInstance = Instantiate(playerPrefab, instance.planets[index].transform.position, playerPrefab.transform.rotation);
+
+                playerInstance.GetComponent<PlayerController>().playerID = i;
+            }
+        }
+
+
     }
 
     // Use this for initialization
@@ -44,7 +59,6 @@ public class GameManager : MonoBehaviour
     {
         player = ReInput.players.GetPlayer(0);
 
-        planets = GameObject.FindObjectsOfType<PointEffector2D>();
 
         players = GameObject.FindObjectsOfType<PlayerController>();
 

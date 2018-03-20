@@ -7,6 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     public void LoadGameWithPlayers(int players)
     {
-        Debug.Log(players);
+        Utilities.NumberOfPlayers = players;
+        SceneManager.LoadScene(1);
     }
 }

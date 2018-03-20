@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 212322305702140010}
   - component: {fileID: 61680872792736334}
   - component: {fileID: 114209633464217812}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,6 +212,7 @@ MonoBehaviour:
   meleeDamage: 10
   meleeCooldown: 1
   timeHitCooldown: 1
+  yExtent: 0
   meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}
   meleeParticle: {fileID: 0}
   deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}

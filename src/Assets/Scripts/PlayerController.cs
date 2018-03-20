@@ -18,6 +18,11 @@ public class PlayerController : MonoBehaviour
     public float meleeDamage = 10f;
     public float meleeCooldown = 1f;
     public float timeHitCooldown = 1f;
+    public float yExtent;
+
+    [Header("Powerup Effects")]
+    public float superStrengthEffect = 2.0f;
+    public float superSpeedEffect = 2.0f;
 
     [Header("Particles")]
     public GameObject meleeHitParticle;
@@ -26,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public GameObject spawnParticle;
     public GameObject lightProjectile;
 
+    // Properties
     public bool IsGrounded { get; set; }
     public bool IsVisible { get; set; }
     public PlanetGravity CurrentPlanet { get; set; }
@@ -51,7 +57,6 @@ public class PlayerController : MonoBehaviour
     private float nextTimeHit;
     private float prevX;
     private Vector2 movement;
-    private float yExtent;
     private float sqrMaxSpeed;
     private bool attacking;
     private PlayerAttack playerAttack;
@@ -128,11 +133,16 @@ public class PlayerController : MonoBehaviour
 
                 var localVelocity = transform.InverseTransformDirection(body.velocity);
 
-                var scaledMovment = (movement - new Vector2(transform.up.x, transform.up.y));
+                var scaledMovement = (movement - new Vector2(transform.up.x, transform.up.y));
 
-                scaledMovment = (scaledMovment * movementSpeed * Time.fixedDeltaTime);
+                scaledMovement = (scaledMovement * movementSpeed * Time.fixedDeltaTime);
 
-                localVelocity = transform.InverseTransformDirection(scaledMovment);
+                if (HasSuperSpeed)
+                {
+                    scaledMovement *= superSpeedEffect;
+                }
+
+                localVelocity = transform.InverseTransformDirection(scaledMovement);
                 localVelocity.y = 0.0f;
 
                 isFacingRight = (0.0f <= localVelocity.x);
@@ -141,7 +151,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                body.AddForce(movement * movementSpeed * Time.fixedDeltaTime);
+                var newMovement = movement * movementSpeed * Time.fixedDeltaTime;
+                if (HasSuperSpeed)
+                {
+                    newMovement *= superSpeedEffect;
+                }
+                body.AddForce(newMovement);
 
                 var localMovement = transform.InverseTransformDirection(movement);
                 isFacingRight = (0.0f <= localMovement.x);
@@ -272,22 +287,30 @@ public class PlayerController : MonoBehaviour
         {
             if (HasExplodingFireball)
             {
-                // Send off a fireball
-                // var instance = Instantiate(lightProjectile, transform.position, lightProjectile.transform.rotation);
-                // instance.GetComponent<Rigidbody2D>().AddForce(mouseDirection * lightProjectileSpeed, ForceMode2D.Impulse);
-                Debug.Log("Shot Fireball!");
+                var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);
+                instance.GetComponent<BasicProjectile>().Owner = transform;
+                instance.GetComponent<Rigidbody2D>().AddForce(aimerVector * lightProjectileSpeed, ForceMode2D.Impulse);
+            }
+            else if (HasSuperStrength)
+            {
+                foreach (var player in playerAttack.players)
+                {
+                    player.Damage(meleeDamage * superStrengthEffect, (isFacingRight ? transform.right : -transform.right));
+                }
+            }
+            else
+            {
+                // Instantiate(meleeParticle, transform.position, lightProjectile.transform.rotation);
+
+                foreach (var player in playerAttack.players)
+                {
+                    player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
+                }
             }
         }
 
         if (player.GetButtonDown("Secondary"))
-        {
-            // Instantiate(meleeParticle, transform.position, lightProjectile.transform.rotation);
-
-            foreach (var player in playerAttack.players)
-            {
-                player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
-            }
-        }
+        { }
     }
 
     private void GroundCheck()
@@ -358,6 +381,10 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(float amount, Vector2 direction)
     {
+        if (HasInvincibility)
+        {
+            return;
+        }
         damageTotal += amount;
         Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);

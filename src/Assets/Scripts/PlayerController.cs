@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public int playerID;
     public float damageTotal;
+    public int score;
     public bool isDead = false;
     public float movementSpeed = 10f;
     public float jumpForce = 10f;
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
+    private int lastDamagedByPlayerID = -1;
 
     // Powerups
     public bool HasExplodingFireball { get; set; } = false;
@@ -228,6 +230,18 @@ public class PlayerController : MonoBehaviour
         body.velocity = Vector2.zero;
         Instantiate(deathParticle, transform.position, deathParticle.transform.rotation);
 
+        if (lastDamagedByPlayerID != -1)
+        {
+            GameManager.instance.IncreaseScore(lastDamagedByPlayerID);
+            lastDamagedByPlayerID = -1;
+        }
+        else
+        {
+            score--;
+        }
+
+        GameManager.instance.UpdateAvatars();
+
         StartCoroutine(Respawn());
     }
 
@@ -262,6 +276,8 @@ public class PlayerController : MonoBehaviour
         var pos = instance.transform.localPosition;
         pos.y -= yExtent;
         instance.transform.localPosition = pos;
+
+        GameManager.instance.UpdateAvatars();
     }
 
     private void GetInput()
@@ -296,7 +312,7 @@ public class PlayerController : MonoBehaviour
 
             foreach (var player in playerAttack.players)
             {
-                player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right));
+                player.Damage(meleeDamage, (isFacingRight ? transform.right : -transform.right), playerID);
                 SoundManager.PlaySound(meleeHit, meleeHitVolume);
             }
         }
@@ -368,12 +384,15 @@ public class PlayerController : MonoBehaviour
         degroundedTimer = Time.time + degroundedTime;
     }
 
-    public void Damage(float amount, Vector2 direction)
+    public void Damage(float amount, Vector2 direction, int enemyPlayerID)
     {
+        lastDamagedByPlayerID = enemyPlayerID;
         damageTotal += amount;
         Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
         body.AddForce(direction.normalized * damageTotal, ForceMode2D.Impulse);
         Deground();
+
+        GameManager.instance.UpdateAvatars();
     }
 
     public void SetGrounded(bool grounded)

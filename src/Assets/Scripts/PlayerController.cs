@@ -60,20 +60,20 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
-    
+
     // Powerups
     public bool HasExplodingFireball { get; set; } = false;
     public bool HasInvincibility { get; set; } = false;
     public bool HasSuperStrength { get; set; } = false;
     public bool HasSuperSpeed { get; set; } = false;
-    
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-   
+
     // Use this for initialization
     private void Start()
     {
@@ -172,10 +172,15 @@ public class PlayerController : MonoBehaviour
 
                 body.velocity = transform.TransformDirection(localVelocity);
             }
-            else
-            {
-                // Swimmy swim goes here
-            }
+        }
+
+        if (!IsGrounded)
+        {
+            animator.SetLayerWeight(2, 1.0f);
+        }
+        else
+        {
+            animator.SetLayerWeight(2, 0.0f);
         }
 
         if (jump)

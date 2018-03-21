@@ -9,16 +9,26 @@ public class PowerupManager : MonoBehaviour
 {
     public static PowerupManager instance;
 
+    [Header("Spawning")]
+    public GameObject powerupPrefab;
+    public float minSeconds = 10f;
+    public float maxSeconds = 20f;
+
     [Header("Variables")]
     public float invincibilityDuration = 10.0f;
     public float superStrengthDuration = 10.0f;
     public float superSpeedDuration = 10.0f;
+
+    [Header("Sprites")]
+    public Sprite[] sprites;
 
     [Header("Particles")]
     public GameObject hasExplodingFireballParticle;
 
     private IEnumerator[] activePlayerPowerups;
     private GameObject[] activePlayerPowerupEffects;
+    private BoxCollider2D borderBox;
+
 
     private void Awake()
     {
@@ -36,6 +46,9 @@ public class PowerupManager : MonoBehaviour
     {
         activePlayerPowerups = new IEnumerator[Utilities.NumberOfPlayers];
         activePlayerPowerupEffects = new GameObject[Utilities.NumberOfPlayers];
+        borderBox = GameObject.FindGameObjectWithTag("Border").GetComponent<BoxCollider2D>();
+
+        StartCoroutine(SpawnPowerups());
     }
 
     public void EnablePowerup(PlayerController player, PowerupType type)
@@ -135,5 +148,39 @@ public class PowerupManager : MonoBehaviour
         player.HasInvincibility = false;
         player.HasSuperStrength = false;
         player.HasSuperSpeed = false;
+    }
+
+    private IEnumerator SpawnPowerups()
+    {
+        while (!GameManager.instance.GameOver)
+        {
+            yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(minSeconds, maxSeconds));
+
+            var x = UnityEngine.Random.Range(-borderBox.bounds.extents.x, borderBox.bounds.extents.x);
+            var y = UnityEngine.Random.Range(-borderBox.bounds.extents.y, borderBox.bounds.extents.y);
+
+            PowerupType type;
+            var typeID = UnityEngine.Random.Range(0, 3);
+
+            switch (typeID)
+            {
+                case 0:
+                    type = PowerupType.Invincibility;
+                    break;
+
+                case 1:
+                    type = PowerupType.SuperStrength;
+                    break;
+
+                case 2:
+                default:
+                    type = PowerupType.SuperSpeed;
+                    break;
+            }
+
+            var instance = Instantiate(powerupPrefab, new Vector3(x, y, 0f), Quaternion.identity);
+            instance.GetComponent<PowerupController>().type = type;
+            instance.GetComponent<SpriteRenderer>().sprite = sprites[typeID];
+        }
     }
 }

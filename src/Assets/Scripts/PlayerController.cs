@@ -415,7 +415,7 @@ public class PlayerController : MonoBehaviour
 
         lastDamagedByPlayerID = enemyPlayerID;
 
-        damageTotal += amount;
+        damageTotal += Mathf.Round(amount);
         Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
         body.AddForce(direction.normalized * (GameManager.instance.baseKnockback * (damageTotal / 100f)), ForceMode2D.Impulse);
         Deground();

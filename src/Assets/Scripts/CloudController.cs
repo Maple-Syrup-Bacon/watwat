@@ -6,10 +6,16 @@ public class CloudController : MonoBehaviour
 {
     public float speed;
     public float endX;
+    public float rotationSpeed;
 
-    // Update is called once per frame
-    void Update()
+    private float currentRotation;
+
+    private void Update()
     {
+        currentRotation = (currentRotation + rotationSpeed * Time.fixedDeltaTime) % 360f;
+
+        transform.Rotate(new Vector3(0.0f, 0.0f, rotationSpeed * Time.fixedDeltaTime));
+
         if (endX < transform.position.x)
         {
             Destroy(gameObject);

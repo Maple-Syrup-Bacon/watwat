@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     public float cloudSpeedMin = 10f;
     public float cloudSpeedMax = 30f;
     public GameObject[] clouds;
+    public float cloudRotationSpeedMin = 5f;
+    public float cloudRotationSpeedMax = 30f;
     public float cloudXStart;
     public float cloudXEnd;
     public float cloudYOffset;
@@ -154,6 +156,10 @@ public class GameManager : MonoBehaviour
             var cloudController = cloud.GetComponent<CloudController>();
             cloudController.endX = cloudXEnd;
             cloudController.speed = Random.Range(cloudSpeedMin, cloudSpeedMax);
+
+            var rotSpeed = Random.Range(cloudRotationSpeedMin, cloudRotationSpeedMax);
+            rotSpeed = (Random.Range(0, 2) == 0 ? rotSpeed : -rotSpeed);
+            cloudController.rotationSpeed = rotSpeed;
         }
     }
 

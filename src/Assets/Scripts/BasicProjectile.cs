@@ -25,8 +25,10 @@ public class BasicProjectile : MonoBehaviour
     {
         if (!other.isTrigger && other.transform != Owner)
         {
-            Debug.Log(other.name);
-            Instantiate(collisionEffect, transform.position, collisionEffect.transform.rotation);
+            var explosion = Instantiate(collisionEffect, transform.position, collisionEffect.transform.rotation);
+            var playerID = Owner.GetComponent<PlayerController>().playerID;
+
+            explosion.GetComponent<Explosion>().playerID = playerID;
 
             GetComponent<ParticleSystem>().Stop();
 

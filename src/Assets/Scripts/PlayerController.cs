@@ -316,8 +316,10 @@ public class PlayerController : MonoBehaviour
             jump = player.GetButtonDown("Jump");
         }
 
-        if (player.GetButtonDown("Primary"))
+        if (player.GetButtonDown("Primary") && nextMelee < Time.time)
         {
+            nextMelee = Time.time + meleeCooldown;
+
             if (HasExplodingFireball)
             {
                 var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);

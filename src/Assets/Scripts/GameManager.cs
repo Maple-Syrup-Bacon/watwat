@@ -115,6 +115,10 @@ public class GameManager : MonoBehaviour
 
         SoundManager.PlaySound(announcerGameOver);
         GameOver = true;
+        countdown.gameObject.SetActive(true);
+        countdown.text = "GAME OVER";
+        yield return new WaitForSecondsRealtime(5.0f);
+        SceneManager.LoadScene(0);
     }
 
     private IEnumerator GameBeginCountdown()

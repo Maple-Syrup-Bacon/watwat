@@ -33,6 +33,12 @@ public class PlayerController : MonoBehaviour
     public GameObject spawnParticle;
     public GameObject lightProjectile;
 
+    [Header("Camera Shake")]
+    public float deathMagnitude = 100;
+    public float deathRoughness = 10;
+    public float deathFadeIn = 0.25f;
+    public float deathFadeOut = 1;
+
 
     [Header("Audio")]
     public AudioClip meleeHit;
@@ -262,6 +268,8 @@ public class PlayerController : MonoBehaviour
         }
 
         GameManager.instance.UpdateAvatars();
+
+        EZCameraShake.CameraShaker.Instance.ShakeOnce(deathMagnitude, deathRoughness, deathFadeIn, deathFadeOut);
 
         StartCoroutine(Respawn());
     }

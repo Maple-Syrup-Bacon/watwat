@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
     private ObjectGravity objectGravity;
     private Transform aimerTransform;
     private SpriteRenderer aimerSpriteRenderer;
+    private TrailRenderer trailRenderer;
 
     private Vector3 aimerVector;
     private Vector2 leftAnalogStick;
@@ -99,6 +100,7 @@ public class PlayerController : MonoBehaviour
         aimerTransform = transform.GetChild(0);
         playerAttack = aimerTransform.GetComponent<PlayerAttack>();
         aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
+        trailRenderer = GetComponent<TrailRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
         originalFixedDelta = Time.fixedDeltaTime;
@@ -278,6 +280,7 @@ public class PlayerController : MonoBehaviour
     {
         spriteRenderer.enabled = false;
         aimerSpriteRenderer.enabled = false;
+        trailRenderer.enabled = false;
 
         yield return new WaitForSeconds(GameManager.instance.timeVisibleAfterDeath);
 
@@ -289,6 +292,7 @@ public class PlayerController : MonoBehaviour
         IsVisible = true;
         spriteRenderer.enabled = true;
         aimerSpriteRenderer.enabled = true;
+        trailRenderer.enabled = true;
 
         damageTotal = 0;
 

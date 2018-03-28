@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [Header("Players")]
     public GameObject playerPrefab;
     public Sprite[] idleSprites;
+    public Color[] playerColors;
     public RuntimeAnimatorController[] animatorControllers;
 
     [Header("Audio")]
@@ -181,6 +182,15 @@ public class GameManager : MonoBehaviour
             playerController.playerID = i;
             playerController.IdleSprite = idleSprites[i];
             playerController.AnimatorController = animatorControllers[i];
+
+            var trailRenderer = playerInstance.GetComponent<TrailRenderer>();
+            trailRenderer.startColor = playerColors[i];
+            var endColor = new Color();
+            endColor.r = playerColors[i].r;
+            endColor.g = playerColors[i].g;
+            endColor.b = playerColors[i].b;
+            endColor.a = 0;
+            trailRenderer.endColor = endColor;
 
             Players[i] = playerController;
         }

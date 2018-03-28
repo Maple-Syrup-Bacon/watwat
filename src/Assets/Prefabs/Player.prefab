@@ -313,8 +313,10 @@ MonoBehaviour:
   lightProjectileCooldown: 1.5
   meleeDamage: 10
   meleeCooldown: 0.3
-  timeHitCooldown: 1
+  invincibilityFrameTime: 0.1
   yExtent: 0
+  dashForce: 500
+  dashDisabledTime: 1.5
   superStrengthEffect: 2
   superSpeedEffect: 2
   meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}

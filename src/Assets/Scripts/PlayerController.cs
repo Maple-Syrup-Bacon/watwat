@@ -22,6 +22,12 @@ public class PlayerController : MonoBehaviour
     public float invincibilityFrameTime = 0.1f;
     public float yExtent;
 
+    [Header("Dash")]
+    public float dashForce = 100f;
+    public float dashDisabledTime = 1.5f;
+    public float dashDuration = 1f;
+    public float dashDrag = 1f;
+
     [Header("Powerup Effects")]
     public float superStrengthEffect = 2.0f;
     public float superSpeedEffect = 2.0f;
@@ -79,8 +85,11 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
-    public float invincibilityFrameTimer;
-    public bool inInvincibilityFrame = false;
+    private bool inInvincibilityFrame = false;
+    private float invincibilityFrameTimer;
+    private float dashDisabledTimer;
+    private bool hitDashDisabled = false;
+    private bool dashDisabled = false;
     private int lastDamagedByPlayerID = -1;
 
     // Powerups
@@ -132,9 +141,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (invincibilityFrameTimer <= Time.time)
+        if (inInvincibilityFrame && invincibilityFrameTimer <= Time.time)
         {
             inInvincibilityFrame = false;
+        }
+
+        if (hitDashDisabled && dashDisabledTimer <= Time.time)
+        {
+            hitDashDisabled = false;
+            dashDisabled = false;
         }
 
         GetInput();
@@ -230,8 +245,32 @@ public class PlayerController : MonoBehaviour
         if (jump)
         {
             jump = false;
-            Deground();
-            body.AddForce(transform.up * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+
+            if (IsGrounded)
+            {
+                Deground();
+                var jumpVec = movement == Vector2.zero ? new Vector2(transform.up.x, transform.up.y) : movement.normalized;
+                body.AddForce(jumpVec * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            }
+            else if (!dashDisabled)
+            {
+                dashDisabled = true;
+                var dashVec = body.velocity;
+                var bonusForce = 0f;
+                if (movement != Vector2.zero)
+                {
+                    var velocityAngle = Mathf.Abs(Vector2.SignedAngle(movement, body.velocity));
+                    dashVec = movement;
+
+                    if (velocityAngle < 90)
+                    {
+                        bonusForce = 1 - (velocityAngle / 90);
+                    }
+                }
+                body.velocity *= bonusForce;
+                body.AddForce(dashVec.normalized * dashForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                StartCoroutine(DashStop());
+            }
         }
 
         if (sqrMaxSpeed < body.velocity.sqrMagnitude)
@@ -330,7 +369,7 @@ public class PlayerController : MonoBehaviour
             aimerVector = movement.normalized;
         }
 
-        if (!jump && IsGrounded)
+        if (!jump)
         {
             jump = player.GetButtonDown("Jump");
         }
@@ -382,14 +421,15 @@ public class PlayerController : MonoBehaviour
             if (ray.collider != null && ray.collider.CompareTag("Planet"))
             {
                 IsGrounded = true;
+                dashDisabled = false;
+                hitDashDisabled = false;
+                dashDisabledTimer = 0f;
                 transform.parent = ray.collider.transform;
-                // CurrentPlanet = ray.collider.gameObject.GetComponent<PlanetGravity>();
             }
             else
             {
                 IsGrounded = false;
                 transform.parent = null;
-                // CurrentPlanet = null;
             }
         }
     }
@@ -447,6 +487,19 @@ public class PlayerController : MonoBehaviour
         spriteRenderer.color = originalColor;
     }
 
+    private IEnumerator DashStop()
+    {
+        var elapsed = 0f;
+        while (!IsGrounded && elapsed < dashDuration)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            elapsed += Time.deltaTime;
+            body.drag += dashDrag;
+        }
+
+        body.drag = 0f;
+    }
+
     public void Damage(float amount, Vector2 direction, int enemyPlayerID)
     {
         if (HasInvincibility || inInvincibilityFrame)
@@ -457,6 +510,10 @@ public class PlayerController : MonoBehaviour
         inInvincibilityFrame = true;
         invincibilityFrameTimer = invincibilityFrameTime + Time.time;
         StartCoroutine(InvincibilityFrameBlink());
+
+        hitDashDisabled = true;
+        dashDisabled = true;
+        dashDisabledTimer = dashDisabledTime + Time.time;
 
         lastDamagedByPlayerID = enemyPlayerID;
 

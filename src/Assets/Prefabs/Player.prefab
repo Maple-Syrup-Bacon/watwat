@@ -223,6 +223,10 @@ MonoBehaviour:
     type: 2}
   lightProjectile: {fileID: 1870291720119966, guid: b915dacc55c1c42a1abb919899f682d4,
     type: 2}
+  deathMagnitude: 100
+  deathRoughness: 10
+  deathFadeIn: 0.25
+  deathFadeOut: 1
   meleeHit: {fileID: 8300000, guid: 07b2e1400399b4e6fb31fe1da8562a99, type: 3}
   meleeHitVolume: 1
 --- !u!212 &212322305702140010

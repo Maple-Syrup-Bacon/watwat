@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public float lightProjectileCooldown = 1.5f;
     public float meleeDamage = 10f;
     public float meleeCooldown = 1f;
-    public float timeHitCooldown = 1f;
+    public float invincibilityFrameTime = 0.1f;
     public float yExtent;
 
     [Header("Powerup Effects")]
@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool degrounded = false;
     private float degroundedTimer;
+    public float invincibilityFrameTimer;
+    public bool inInvincibilityFrame = false;
     private int lastDamagedByPlayerID = -1;
 
     // Powerups
@@ -128,6 +130,11 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.instance.GameStarted || GameManager.instance.GameOver)
         {
             return;
+        }
+
+        if (invincibilityFrameTimer <= Time.time)
+        {
+            inInvincibilityFrame = false;
         }
 
         GetInput();
@@ -420,12 +427,36 @@ public class PlayerController : MonoBehaviour
         degroundedTimer = Time.time + degroundedTime;
     }
 
+    private IEnumerator InvincibilityFrameBlink()
+    {
+        var interval = invincibilityFrameTime / 2;
+        var originalColor = spriteRenderer.color;
+
+        while (inInvincibilityFrame)
+        {
+            var color = spriteRenderer.color;
+            color.a = 0.5f;
+            spriteRenderer.color = color;
+
+            yield return new WaitForSeconds(interval);
+
+            color.a = 1f;
+            spriteRenderer.color = color;
+        }
+
+        spriteRenderer.color = originalColor;
+    }
+
     public void Damage(float amount, Vector2 direction, int enemyPlayerID)
     {
-        if (HasInvincibility)
+        if (HasInvincibility || inInvincibilityFrame)
         {
             return;
         }
+
+        inInvincibilityFrame = true;
+        invincibilityFrameTimer = invincibilityFrameTime + Time.time;
+        StartCoroutine(InvincibilityFrameBlink());
 
         lastDamagedByPlayerID = enemyPlayerID;
 

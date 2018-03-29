@@ -20,9 +20,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4076052982893642}
   - component: {fileID: 212716110879260428}
-  - component: {fileID: 114121015755158662}
+  - component: {fileID: 114996919459034416}
+  - component: {fileID: 114743638797505372}
+  - component: {fileID: 114439268306069202}
+  - component: {fileID: 61276923797941406}
   m_Layer: 0
-  m_Name: cloud2
+  m_Name: asteroid2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +44,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114121015755158662
+--- !u!61 &61276923797941406
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522295334139542}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 10.24, y: 10.24}
+    newSize: {x: 8, y: 4.4375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 10.24, y: 10.24}
+  m_EdgeRadius: 0
+--- !u!114 &114439268306069202
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -49,12 +77,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1522295334139542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98c27ef28ae654ddbb5c9151dee0d22b, type: 3}
+  m_Script: {fileID: 11500000, guid: 99db2eb502b15457386c4596d281d6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  endX: 0
-  rotationSpeed: 0
+  destroyCollider: {fileID: 0}
+--- !u!114 &114743638797505372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522295334139542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5370b4f4d8cb4d8bbf41fda74ff03ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minScale: 0.1
+  maxScale: 0.4
+--- !u!114 &114996919459034416
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522295334139542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ffc5a2682004496aa914918781bfaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSpeed: 5
+  maxSpeed: 20
+  minRotation: 20
+  maxRotation: 90
 --- !u!212 &212716110879260428
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -87,9 +141,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingLayerID: 625231373
+  m_SortingLayer: -1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 86f41f28ea629497cb8548c9c1c4dd94, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.2509804}
   m_FlipX: 0

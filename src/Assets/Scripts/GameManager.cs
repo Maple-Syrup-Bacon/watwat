@@ -16,15 +16,6 @@ public class GameManager : MonoBehaviour
     public float timeVisibleAfterDeath = 1f;
     public float respawnParticleDelay = 0.25f;
     public int timerValue = 60;
-    public float cloudSpawnRate = 0.8f;
-    public float cloudSpeedMin = 10f;
-    public float cloudSpeedMax = 30f;
-    public GameObject[] clouds;
-    public float cloudRotationSpeedMin = 5f;
-    public float cloudRotationSpeedMax = 30f;
-    public float cloudXStart;
-    public float cloudXEnd;
-    public float cloudYOffset;
 
     [Header("Players")]
     public GameObject playerPrefab;
@@ -76,7 +67,6 @@ public class GameManager : MonoBehaviour
 
         UpdateAvatars();
 
-        StartCoroutine(CloudSpawner());
         StartCoroutine(GameBeginCountdown());
         StartCoroutine(PlayMusic());
     }
@@ -141,31 +131,6 @@ public class GameManager : MonoBehaviour
         countdown.gameObject.SetActive(false);
 
         StartCoroutine(TickTimer());
-    }
-
-    private IEnumerator CloudSpawner()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(cloudSpawnRate);
-
-            var index = Random.Range(0, clouds.Length);
-
-            var minY = Camera.main.transform.position.y - Camera.main.orthographicSize - cloudYOffset;
-            var maxY = Camera.main.transform.position.y + Camera.main.orthographicSize + cloudYOffset;
-
-            var pos = new Vector3(cloudXStart, Random.Range(minY, maxY), 0.0f);
-
-            var cloud = Instantiate(clouds[index], pos, clouds[index].transform.rotation);
-
-            var cloudController = cloud.GetComponent<CloudController>();
-            cloudController.endX = cloudXEnd;
-            cloudController.speed = Random.Range(cloudSpeedMin, cloudSpeedMax);
-
-            var rotSpeed = Random.Range(cloudRotationSpeedMin, cloudRotationSpeedMax);
-            rotSpeed = (Random.Range(0, 2) == 0 ? rotSpeed : -rotSpeed);
-            cloudController.rotationSpeed = rotSpeed;
-        }
     }
 
     private void SpawnPlayers()

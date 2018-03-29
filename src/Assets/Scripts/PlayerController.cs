@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Dash")]
     public float dashForce = 100f;
-    public float dashDisabledTime = 1.5f;
     public float dashDuration = 1f;
     public float dashDrag = 1f;
 
@@ -87,8 +86,6 @@ public class PlayerController : MonoBehaviour
     private float degroundedTimer;
     private bool inInvincibilityFrame = false;
     private float invincibilityFrameTimer;
-    private float dashDisabledTimer;
-    private bool hitDashDisabled = false;
     private bool dashDisabled = false;
     private int lastDamagedByPlayerID = -1;
 
@@ -144,12 +141,6 @@ public class PlayerController : MonoBehaviour
         if (inInvincibilityFrame && invincibilityFrameTimer <= Time.time)
         {
             inInvincibilityFrame = false;
-        }
-
-        if (hitDashDisabled && dashDisabledTimer <= Time.time)
-        {
-            hitDashDisabled = false;
-            dashDisabled = false;
         }
 
         GetInput();
@@ -390,7 +381,7 @@ public class PlayerController : MonoBehaviour
 
                 foreach (var player in playerAttack.players)
                 {
-                    player.Damage(damage, player.transform.position - transform.position, playerID);
+                    player.Damage(damage, player.transform.position - transform.position, playerID, body.velocity);
                     SoundManager.PlaySound(meleeHit, meleeHitVolume);
                 }
             }
@@ -422,8 +413,6 @@ public class PlayerController : MonoBehaviour
             {
                 IsGrounded = true;
                 dashDisabled = false;
-                hitDashDisabled = false;
-                dashDisabledTimer = 0f;
                 transform.parent = ray.collider.transform;
             }
             else
@@ -500,7 +489,7 @@ public class PlayerController : MonoBehaviour
         body.drag = 0f;
     }
 
-    public void Damage(float amount, Vector2 direction, int enemyPlayerID)
+    public void Damage(float amount, Vector2 direction, int enemyPlayerID, Vector2? velocity = null)
     {
         if (HasInvincibility || inInvincibilityFrame)
         {
@@ -511,15 +500,23 @@ public class PlayerController : MonoBehaviour
         invincibilityFrameTimer = invincibilityFrameTime + Time.time;
         StartCoroutine(InvincibilityFrameBlink());
 
-        hitDashDisabled = true;
-        dashDisabled = true;
-        dashDisabledTimer = dashDisabledTime + Time.time;
-
         lastDamagedByPlayerID = enemyPlayerID;
 
         damageTotal += Mathf.Round(amount);
-        Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
-        body.AddForce(direction.normalized * (GameManager.instance.baseKnockback * (damageTotal / 100f)), ForceMode2D.Impulse);
+        var hitParticle = Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
+
+        var bonusVec = Vector2.zero;
+        if (velocity.HasValue)
+        {
+            bonusVec = velocity.Value;
+        }
+
+        var knockbackForce = (GameManager.instance.baseKnockback * (damageTotal / 100f)) + (bonusVec.magnitude / 2);
+        hitParticle.transform.localScale *= knockbackForce / 10;
+
+        var knockbackVec = bonusVec.normalized + direction.normalized;
+
+        body.AddForce(knockbackVec.normalized * knockbackForce, ForceMode2D.Impulse);
         Deground();
 
         GameManager.instance.UpdateAvatars();

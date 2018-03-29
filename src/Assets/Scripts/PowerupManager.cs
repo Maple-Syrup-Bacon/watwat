@@ -160,7 +160,7 @@ public class PowerupManager : MonoBehaviour
             var y = UnityEngine.Random.Range(-borderBox.bounds.extents.y, borderBox.bounds.extents.y);
 
             PowerupType type;
-            var typeID = UnityEngine.Random.Range(1, 3);
+            var typeID = UnityEngine.Random.Range(3, 4);
 
             switch (typeID)
             {
@@ -173,8 +173,12 @@ public class PowerupManager : MonoBehaviour
                     break;
 
                 case 2:
-                default:
                     type = PowerupType.SuperSpeed;
+                    break;
+
+                case 3:
+                default:
+                    type = PowerupType.ExplodingFireball;
                     break;
             }
 

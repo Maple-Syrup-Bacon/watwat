@@ -2831,6 +2831,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7923366727fc343afb3bf7e9988f1378, type: 3}
   - {fileID: 21300000, guid: 24ebdc56445dd47438aa42ac8dd549d8, type: 3}
   - {fileID: 21300000, guid: 10245f8d95b454df18cd133ed14c0805, type: 3}
+  - {fileID: 21300000, guid: 95c0c7837fadc45a6882831f23682034, type: 3}
   hasExplodingFireballParticle: {fileID: 1727626132299242, guid: eb7b0ecb82b76094b9b45f3a871885ea,
     type: 2}
 --- !u!1 &1144558123

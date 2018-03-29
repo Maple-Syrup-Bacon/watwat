@@ -493,7 +493,7 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(float amount, Vector2 direction, int enemyPlayerID, Vector2? velocity = null)
     {
-        if (HasInvincibility || inInvincibilityFrame)
+        if (inInvincibilityFrame)
         {
             return;
         }
@@ -503,6 +503,8 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(InvincibilityFrameBlink());
 
         lastDamagedByPlayerID = enemyPlayerID;
+
+        amount = (HasInvincibility ? amount / 2 : amount);
 
         damageTotal += Mathf.Round(amount);
         var hitParticle = Instantiate(meleeHitParticle, transform.position, meleeHitParticle.transform.rotation);
@@ -517,6 +519,8 @@ public class PlayerController : MonoBehaviour
         hitParticle.transform.localScale *= knockbackForce / 10;
 
         var knockbackVec = bonusVec.normalized + direction.normalized;
+
+        knockbackForce = (HasInvincibility ? knockbackForce / 2 : knockbackForce);
 
         body.AddForce(knockbackVec.normalized * knockbackForce, ForceMode2D.Impulse);
         Deground();

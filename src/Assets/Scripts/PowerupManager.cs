@@ -11,6 +11,7 @@ public class PowerupManager : MonoBehaviour
 
     [Header("Spawning")]
     public GameObject powerupPrefab;
+    public GameObject[] particlePrefabs;
     public float minSeconds = 10f;
     public float maxSeconds = 20f;
 
@@ -160,7 +161,7 @@ public class PowerupManager : MonoBehaviour
             var y = UnityEngine.Random.Range(-borderBox.bounds.extents.y, borderBox.bounds.extents.y);
 
             PowerupType type;
-            var typeID = UnityEngine.Random.Range(3, 4);
+            var typeID = UnityEngine.Random.Range(0, 4);
 
             switch (typeID)
             {
@@ -185,6 +186,7 @@ public class PowerupManager : MonoBehaviour
             var instance = Instantiate(powerupPrefab, new Vector3(x, y, 0f), Quaternion.identity);
             instance.GetComponent<PowerupController>().type = type;
             instance.GetComponent<SpriteRenderer>().sprite = sprites[typeID];
+            var powerupParticles = Instantiate(particlePrefabs[typeID], new Vector3(x, y, 0f), Quaternion.identity, instance.transform);
         }
     }
 }

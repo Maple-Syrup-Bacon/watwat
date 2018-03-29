@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     [Header("Audio")]
     public AudioClip[] music;
     public AudioClip[] announcerNumbers;
-    public AudioClip announcerBegin;
     public AudioClip announcerGameOver;
 
     public PointEffector2D[] Planets { get; set; }
@@ -114,17 +113,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameBeginCountdown()
     {
-        yield return new WaitForSecondsRealtime(1);
-        SoundManager.PlaySound(announcerNumbers[2]);
-        yield return new WaitForSecondsRealtime(1);
-        SoundManager.PlaySound(announcerNumbers[1]);
-        countdown.text = "2";
-        yield return new WaitForSecondsRealtime(1);
-        SoundManager.PlaySound(announcerNumbers[0]);
-        countdown.text = "1";
-        yield return new WaitForSecondsRealtime(1);
-        countdown.text = "BEGIN";
-        SoundManager.PlaySound(announcerBegin);
+        var cix = 3;
+        while(0 <= cix){
+            yield return new WaitForSecondsRealtime(1);
+            SoundManager.PlaySound(announcerNumbers[cix]);
+            countdown.text = cix == 0 ? "BEGIN" : cix.ToString();
+            cix--;
+        }   
         yield return new WaitForSecondsRealtime(1);
 
         GameStarted = true;

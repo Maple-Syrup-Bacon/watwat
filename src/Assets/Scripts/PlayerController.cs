@@ -513,6 +513,7 @@ public class PlayerController : MonoBehaviour
         if (velocity.HasValue)
         {
             bonusVec = velocity.Value;
+            damageTotal += Mathf.Round(bonusVec.magnitude / 2);
         }
 
         var knockbackForce = (GameManager.instance.baseKnockback * (damageTotal / 100f)) + (bonusVec.magnitude / 2);

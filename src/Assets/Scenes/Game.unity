@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731725, g: 0.13414744, b: 0.12107873, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731725, g: 0.1341475, b: 0.12107855, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1709,7 +1709,7 @@ PointEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294950911
   m_ForceMagnitude: -10
   m_ForceVariation: 0
   m_DistanceScale: 0.5
@@ -1920,7 +1920,7 @@ PointEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294950911
   m_ForceMagnitude: -15
   m_ForceVariation: 0
   m_DistanceScale: 0.4
@@ -2101,7 +2101,7 @@ PointEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294950911
   m_ForceMagnitude: -15
   m_ForceVariation: 0
   m_DistanceScale: 0.5
@@ -2323,7 +2323,7 @@ PointEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294950911
   m_ForceMagnitude: -15
   m_ForceVariation: 0
   m_DistanceScale: 0.5
@@ -2474,7 +2474,7 @@ PointEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294950911
   m_ForceMagnitude: -15
   m_ForceVariation: 0
   m_DistanceScale: 0.5
@@ -3632,7 +3632,7 @@ MonoBehaviour:
   - {fileID: 1522295334139542, guid: 3189e87c7428c4e7e8a5347ce6ffd202, type: 2}
   - {fileID: 1522295334139542, guid: c262bf28ba00b4adbbefbea7ce7afc2c, type: 2}
   - {fileID: 1522295334139542, guid: 8796ca86bdc644ed99176727e3d79a1e, type: 2}
-  spawnRate: 3
+  spawnRate: 0.8
   xStartMin: -60
   xStartMax: 60
   yStartMin: -60
@@ -3652,7 +3652,7 @@ MonoBehaviour:
   - {fileID: 1522295334139542, guid: 3189e87c7428c4e7e8a5347ce6ffd202, type: 2}
   - {fileID: 1522295334139542, guid: c262bf28ba00b4adbbefbea7ce7afc2c, type: 2}
   - {fileID: 1522295334139542, guid: 8796ca86bdc644ed99176727e3d79a1e, type: 2}
-  spawnRate: 3
+  spawnRate: 0.8
   xStartMin: -60
   xStartMax: 60
   yStartMin: 60
@@ -3672,7 +3672,7 @@ MonoBehaviour:
   - {fileID: 1522295334139542, guid: 3189e87c7428c4e7e8a5347ce6ffd202, type: 2}
   - {fileID: 1522295334139542, guid: c262bf28ba00b4adbbefbea7ce7afc2c, type: 2}
   - {fileID: 1522295334139542, guid: 8796ca86bdc644ed99176727e3d79a1e, type: 2}
-  spawnRate: 3
+  spawnRate: 0.8
   xStartMin: 60
   xStartMax: 60
   yStartMin: -60

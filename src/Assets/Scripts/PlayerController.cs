@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
     private Transform aimerTransform;
     private SpriteRenderer aimerSpriteRenderer;
     private TrailRenderer trailRenderer;
+    private ParticleSystem.MainModule meleeParticlePrefabMain;
 
     private Vector3 aimerVector;
     private Vector2 leftAnalogStick;
@@ -108,6 +109,7 @@ public class PlayerController : MonoBehaviour
         aimerTransform = transform.GetChild(0);
         playerAttack = aimerTransform.GetComponent<PlayerAttack>();
         aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
+        meleeParticlePrefabMain = meleeParticle.GetComponent<ParticleSystem>().main;
         trailRenderer = GetComponent<TrailRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         player = ReInput.players.GetPlayer(playerID);
@@ -379,6 +381,11 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                var rot = -(aimerTransform.rotation.eulerAngles.z + 90);
+                meleeParticlePrefabMain.startRotation = new ParticleSystem.MinMaxCurve(rot * Mathf.Deg2Rad);
+
+                var meleeParticeInstance = Instantiate(meleeParticle, aimerTransform.position, Quaternion.identity);
+
                 var damage = (HasSuperStrength ? meleeDamage * superStrengthEffect : meleeDamage);
 
                 foreach (var player in playerAttack.players)
@@ -427,11 +434,11 @@ public class PlayerController : MonoBehaviour
 
     private void MoveAimer()
     {
-        var angle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
-        angle -= 90f;
+        var aimerAngle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
+        aimerAngle -= 90f;
 
         aimerTransform.position = transform.position + aimerVector;
-        aimerTransform.rotation = Quaternion.Euler(0, 0, angle);
+        aimerTransform.rotation = Quaternion.Euler(0, 0, aimerAngle);
     }
 
     private float GetAngle(Vector3 from, Vector3 to)

@@ -321,7 +321,7 @@ MonoBehaviour:
   superStrengthEffect: 4
   superSpeedEffect: 3
   meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}
-  meleeParticle: {fileID: 0}
+  meleeParticle: {fileID: 100002, guid: ef61099bbf63943ed86ef60612f40425, type: 2}
   deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}
   spawnParticle: {fileID: 1965343156803978, guid: 9678bdf2f613e4112ab1611b1bb721ca,
     type: 2}

@@ -61,6 +61,13 @@ public class PowerupManager : MonoBehaviour
         }
         catch (Exception)
         { }
+        try
+        {
+            Destroy(activePlayerPowerupEffects[playerID]);
+            activePlayerPowerupEffects[playerID] = null;
+        }
+        catch (Exception)
+        { }
         DisablePowerups(player);
         IEnumerator coroutine;
         switch (type)
@@ -99,12 +106,15 @@ public class PowerupManager : MonoBehaviour
 
     private void EnableExplodingFireball(PlayerController player)
     {
-        player.HasExplodingFireball = true;
-        var fire = Instantiate(hasExplodingFireballParticle, Vector3.zero, hasExplodingFireballParticle.transform.rotation, player.transform);
-        fire.transform.up = player.transform.up;
-        fire.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
-        fire.transform.localPosition = new Vector3(0.0f, -player.yExtent, 0.0f);
-        activePlayerPowerupEffects[player.playerID] = fire;
+        if (!player.HasExplodingFireball)
+        {
+            player.HasExplodingFireball = true;
+            var fire = Instantiate(hasExplodingFireballParticle, Vector3.zero, hasExplodingFireballParticle.transform.rotation, player.transform);
+            fire.transform.up = player.transform.up;
+            fire.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
+            fire.transform.localPosition = new Vector3(0.0f, -player.yExtent, 0.0f);
+            activePlayerPowerupEffects[player.playerID] = fire;
+        }
     }
 
     private IEnumerator Invincibility(PlayerController player)

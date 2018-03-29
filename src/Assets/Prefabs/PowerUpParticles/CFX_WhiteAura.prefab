@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 199594383786100696}
   - component: {fileID: 114591012372744022}
   m_Layer: 0
-  m_Name: CFX_OrangeAura 1
+  m_Name: CFX_WhiteAura
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

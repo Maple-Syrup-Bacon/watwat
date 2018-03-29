@@ -249,7 +249,8 @@ public class PlayerController : MonoBehaviour
             }
             else if (!dashDisabled)
             {
-                dashDisabled = true;
+                dashDisabled = !HasSuperSpeed;
+
                 var dashVec = body.velocity;
                 var bonusForce = 0f;
                 if (movement != Vector2.zero)

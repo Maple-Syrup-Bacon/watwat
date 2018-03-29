@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public float dashDrag = 1f;
 
     [Header("Powerup Effects")]
-    public float superStrengthEffect = 2.0f;
+    public float superStrengthEffect = 4.0f;
     public float superSpeedEffect = 2.0f;
 
     [Header("Particles")]
@@ -237,11 +237,13 @@ public class PlayerController : MonoBehaviour
         {
             jump = false;
 
+            var superSpeedBonus = (HasSuperSpeed ? superSpeedEffect : 1f);
+
             if (IsGrounded)
             {
                 Deground();
                 var jumpVec = movement == Vector2.zero ? new Vector2(transform.up.x, transform.up.y) : movement.normalized;
-                body.AddForce(jumpVec * jumpForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                body.AddForce(jumpVec * jumpForce * superSpeedBonus * Time.fixedDeltaTime, ForceMode2D.Impulse);
             }
             else if (!dashDisabled)
             {
@@ -259,7 +261,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
                 body.velocity *= bonusForce;
-                body.AddForce(dashVec.normalized * dashForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                body.AddForce(dashVec.normalized * dashForce * superSpeedBonus * Time.fixedDeltaTime, ForceMode2D.Impulse);
                 StartCoroutine(DashStop());
             }
         }

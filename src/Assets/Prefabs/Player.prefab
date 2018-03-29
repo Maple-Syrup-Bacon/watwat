@@ -315,10 +315,11 @@ MonoBehaviour:
   meleeCooldown: 0.3
   invincibilityFrameTime: 0.1
   yExtent: 0
-  dashForce: 500
-  dashDisabledTime: 1.5
-  superStrengthEffect: 2
-  superSpeedEffect: 2
+  dashForce: 1250
+  dashDuration: 0.5
+  dashDrag: 0.25
+  superStrengthEffect: 4
+  superSpeedEffect: 4
   meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}
   meleeParticle: {fileID: 0}
   deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}

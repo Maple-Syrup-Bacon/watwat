@@ -473,7 +473,7 @@ namespace EazyTools.SoundManager
                 Debug.LogError("Sound Manager: Audio clip is null, cannot play music", clip);
             }
 
-            if(ignoreDuplicateMusic)
+            if (ignoreDuplicateMusic)
             {
                 List<int> keys = new List<int>(musicAudio.Keys);
                 foreach (int key in keys)
@@ -562,7 +562,7 @@ namespace EazyTools.SoundManager
             instance.Init();
 
             // Create the audioSource
-            AudioSource audioSource = instance.gameObject.AddComponent<AudioSource>() as AudioSource;
+            // AudioSource audioSource = instance.gameObject.AddComponent<AudioSource>() as AudioSource;
             Audio audio = new Audio(Audio.AudioType.Sound, clip, loop, false, volume, 0f, 0f, sourceTransform);
 
             // Add it to music list
@@ -869,7 +869,7 @@ namespace EazyTools.SoundManager
         /// <summary>
         /// Whether the audio is stopping
         /// </summary>
-        public bool stopping { get; private set; }        
+        public bool stopping { get; private set; }
 
         /// <summary>
         /// Whether the audio is created and updated at least once. 
@@ -943,7 +943,7 @@ namespace EazyTools.SoundManager
         /// <param name="volume">The target volume</param>
         public void Play(float volume)
         {
-            if(audioSource == null)
+            if (audioSource == null)
             {
                 CreateAudiosource(initClip, loop);
             }
@@ -992,7 +992,7 @@ namespace EazyTools.SoundManager
         /// <param name="volume">The target volume</param>
         public void SetVolume(float volume)
         {
-            if(volume > targetVolume)
+            if (volume > targetVolume)
             {
                 SetVolume(volume, fadeOutSeconds);
             }
@@ -1018,13 +1018,13 @@ namespace EazyTools.SoundManager
         /// <param name="volume">The target volume</param>
         /// <param name="fadeSeconds">How many seconds it needs for the audio to fade in/out to reach target volume. If passed, it will override the Audio's fade in/out seconds, but only for this transition</param>
         /// <param name="startVolume">Immediately set the volume to this value before beginning the fade. If not passed, the Audio will start fading from the current volume towards the target volume</param>
-        public void SetVolume(float volume, float fadeSeconds, float startVolume) 
-		{
-			targetVolume = Mathf.Clamp01(volume);
-			fadeInterpolater = 0;
-			onFadeStartVolume = startVolume;
-			tempFadeSeconds = fadeSeconds;
-		}
+        public void SetVolume(float volume, float fadeSeconds, float startVolume)
+        {
+            targetVolume = Mathf.Clamp01(volume);
+            fadeInterpolater = 0;
+            onFadeStartVolume = startVolume;
+            tempFadeSeconds = fadeSeconds;
+        }
 
         /// <summary>
         /// Sets the Audio 3D max distance
@@ -1057,7 +1057,7 @@ namespace EazyTools.SoundManager
 
         public void Update()
         {
-            if(audioSource == null)
+            if (audioSource == null)
             {
                 return;
             }
@@ -1070,7 +1070,7 @@ namespace EazyTools.SoundManager
                 fadeInterpolater += Time.deltaTime;
                 if (volume > targetVolume)
                 {
-                    fadeValue = tempFadeSeconds != -1? tempFadeSeconds: fadeOutSeconds;
+                    fadeValue = tempFadeSeconds != -1 ? tempFadeSeconds : fadeOutSeconds;
                 }
                 else
                 {
@@ -1079,7 +1079,7 @@ namespace EazyTools.SoundManager
 
                 volume = Mathf.Lerp(onFadeStartVolume, targetVolume, fadeInterpolater / fadeValue);
             }
-            else if(tempFadeSeconds != -1)
+            else if (tempFadeSeconds != -1)
             {
                 tempFadeSeconds = -1;
             }

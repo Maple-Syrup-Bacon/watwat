@@ -2942,6 +2942,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: da0318c1d2b1f4503b4a1094a59591dd, type: 3}
   hasExplodingFireballParticle: {fileID: 1727626132299242, guid: eb7b0ecb82b76094b9b45f3a871885ea,
     type: 2}
+  hasSuperSpeedParticle: {fileID: 1748422225534024, guid: 18ab0af39cbc14e9993bd8fad0eaa121,
+    type: 2}
+  hasSuperStrengthParticle: {fileID: 0}
+  hasInvincibilityParticle: {fileID: 1272240432817264, guid: 8c091b90036584404acc79ecb14de9ea,
+    type: 2}
 --- !u!1 &1144558123
 GameObject:
   m_ObjectHideFlags: 0

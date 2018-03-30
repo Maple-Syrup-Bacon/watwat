@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
     private int lastDamagedByPlayerID = -1;
 
     // Powerups
-    public bool HasExplodingFireball { get; set; } = false;
+    public bool HasFireball { get; set; } = false;
     public bool HasInvincibility { get; set; } = false;
     public bool HasSuperStrength { get; set; } = false;
     public bool HasSuperSpeed { get; set; } = false;
@@ -314,6 +314,7 @@ public class PlayerController : MonoBehaviour
         GameManager.instance.UpdateAvatars();
 
         EZCameraShake.CameraShaker.Instance.ShakeOnce(deathMagnitude, deathRoughness, deathFadeIn, deathFadeOut);
+        PowerupManager.instance.DisablePowerups(this);
 
         StartCoroutine(Respawn());
     }
@@ -374,7 +375,7 @@ public class PlayerController : MonoBehaviour
         {
             nextMelee = Time.time + meleeCooldown;
 
-            if (HasExplodingFireball)
+            if (HasFireball)
             {
                 var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);
                 instance.GetComponent<BasicProjectile>().Owner = transform;

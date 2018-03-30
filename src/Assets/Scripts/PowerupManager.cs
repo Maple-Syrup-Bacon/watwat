@@ -25,9 +25,19 @@ public class PowerupManager : MonoBehaviour
 
     [Header("Particles")]
     public GameObject hasExplodingFireballParticle;
+    public GameObject hasSuperSpeedParticle;
+    public GameObject hasSuperStrengthParticle;
+    public GameObject hasInvincibilityParticle;
 
-    private IEnumerator[] activePlayerPowerups;
-    private GameObject[] activePlayerPowerupEffects;
+    private float[] superSpeedTimers;
+    private float[] superStrengthTimers;
+    private float[] invincibilityTimers;
+
+    private GameObject[] fireballEffects;
+    private GameObject[] superSpeedEffects;
+    private GameObject[] superStrengthEffects;
+    private GameObject[] invincibilitiesEffects;
+
     private BoxCollider2D borderBox;
 
 
@@ -45,120 +55,146 @@ public class PowerupManager : MonoBehaviour
 
     private void Start()
     {
-        activePlayerPowerups = new IEnumerator[Utilities.NumberOfPlayers];
-        activePlayerPowerupEffects = new GameObject[Utilities.NumberOfPlayers];
         borderBox = GameObject.FindGameObjectWithTag("Border").GetComponent<BoxCollider2D>();
 
+        superSpeedTimers = new float[Utilities.NumberOfPlayers];
+        superStrengthTimers = new float[Utilities.NumberOfPlayers];
+        invincibilityTimers = new float[Utilities.NumberOfPlayers];
+
+        superSpeedEffects = new GameObject[Utilities.NumberOfPlayers];
+        superStrengthEffects = new GameObject[Utilities.NumberOfPlayers];
+        invincibilitiesEffects = new GameObject[Utilities.NumberOfPlayers];
+
         StartCoroutine(SpawnPowerups());
+    }
+
+    private void Update()
+    {
+        foreach (var player in GameManager.instance.Players)
+        {
+            if (player.HasSuperSpeed && superSpeedTimers[player.playerID] <= Time.time)
+            {
+                DisableSuperSpeed(player);
+            }
+
+            if (player.HasSuperStrength && superStrengthTimers[player.playerID] <= Time.time)
+            {
+                DisableSuperStrength(player);
+            }
+
+            if (player.HasInvincibility && invincibilityTimers[player.playerID] <= Time.time)
+            {
+                DisableInvincibility(player);
+            }
+        }
     }
 
     public void EnablePowerup(PlayerController player, PowerupType type)
     {
         var playerID = player.playerID;
-        try
-        {
-            StopCoroutine(activePlayerPowerups[playerID]);
-        }
-        catch (Exception)
-        { }
-        try
-        {
-            Destroy(activePlayerPowerupEffects[playerID]);
-            activePlayerPowerupEffects[playerID] = null;
-        }
-        catch (Exception)
-        { }
-        DisablePowerups(player);
-        IEnumerator coroutine;
         switch (type)
         {
             case PowerupType.ExplodingFireball:
-                coroutine = ExplodingFireball(player);
+                StartCoroutine(ExplodingFireball(player));
                 break;
+
             case PowerupType.Invincibility:
-                coroutine = Invincibility(player);
+                Invincibility(player);
                 break;
+
             case PowerupType.SuperStrength:
-                coroutine = SuperStrength(player);
+                SuperStrength(player);
                 break;
+
             case PowerupType.SuperSpeed:
             default:
-                coroutine = SuperSpeed(player);
+                SuperSpeed(player);
                 break;
         }
-        StartCoroutine(coroutine);
-        activePlayerPowerups[playerID] = coroutine;
     }
 
     private IEnumerator ExplodingFireball(PlayerController player)
     {
-        EnableExplodingFireball(player);
-        var playerID = player.playerID;
-        var rewiredPlayer = ReInput.players.GetPlayer(playerID);
-        while (!rewiredPlayer.GetButtonDown("Primary"))
+        if (!player.HasFireball)
         {
-            yield return null;
+            EnableExplodingFireball(player);
+            var playerID = player.playerID;
+            var rewiredPlayer = ReInput.players.GetPlayer(playerID);
+            while (!rewiredPlayer.GetButtonDown("Primary"))
+            {
+                yield return null;
+            }
+            player.HasFireball = false;
+            Destroy(fireballEffects[playerID]);
+            fireballEffects[playerID] = null;
         }
-        Destroy(activePlayerPowerupEffects[playerID]);
-        activePlayerPowerupEffects[playerID] = null;
-        DisablePowerups(player);
     }
 
     private void EnableExplodingFireball(PlayerController player)
     {
-        if (!player.HasExplodingFireball)
+        if (!player.HasFireball)
         {
-            player.HasExplodingFireball = true;
-            var fire = Instantiate(hasExplodingFireballParticle, Vector3.zero, hasExplodingFireballParticle.transform.rotation, player.transform);
-            fire.transform.up = player.transform.up;
-            fire.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
-            fire.transform.localPosition = new Vector3(0.0f, -player.yExtent, 0.0f);
-            activePlayerPowerupEffects[player.playerID] = fire;
+            player.HasFireball = true;
+            var effect = Instantiate(hasExplodingFireballParticle, Vector3.zero, hasExplodingFireballParticle.transform.rotation, player.transform);
+            effect.transform.up = player.transform.up;
+            effect.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
+            effect.transform.localPosition = new Vector3(0.0f, -player.yExtent, 0.0f);
+            fireballEffects[player.playerID] = effect;
         }
     }
 
-    private IEnumerator Invincibility(PlayerController player)
+    private void Invincibility(PlayerController player)
     {
         EnableInvincibility(player);
-        yield return new WaitForSeconds(invincibilityDuration);
-        DisablePowerups(player);
+        invincibilityTimers[player.playerID] = invincibilityDuration + Time.time;
     }
 
     private void EnableInvincibility(PlayerController player)
     {
-        player.HasInvincibility = true;
+        if (!player.HasInvincibility)
+        {
+            player.HasInvincibility = true;
+            var effect = Instantiate(hasInvincibilityParticle, Vector3.zero, hasInvincibilityParticle.transform.rotation, player.transform);
+            effect.transform.up = player.transform.up;
+            effect.transform.localPosition = Vector3.zero;
+            invincibilitiesEffects[player.playerID] = effect;
+        }
     }
 
-    private IEnumerator SuperStrength(PlayerController player)
+    private void SuperStrength(PlayerController player)
     {
         EnableSuperStrength(player);
-        yield return new WaitForSeconds(superStrengthDuration);
-        DisablePowerups(player);
+        superStrengthTimers[player.playerID] = superStrengthDuration + Time.time;
     }
 
     private void EnableSuperStrength(PlayerController player)
     {
-        player.HasSuperStrength = true;
+        if (!player.HasSuperStrength)
+        {
+            player.HasSuperStrength = true;
+            // var effect = Instantiate(hasSuperStrengthParticle, Vector3.zero, hasSuperStrengthParticle.transform.rotation, player.transform);
+            // effect.transform.up = player.transform.up;
+            // effect.transform.localPosition = Vector3.zero;
+            // activePlayerPowerupEffects[player.playerID] = effect;
+        }
     }
 
-    private IEnumerator SuperSpeed(PlayerController player)
+    private void SuperSpeed(PlayerController player)
     {
         EnableSuperSpeed(player);
-        yield return new WaitForSeconds(superSpeedDuration);
-        DisablePowerups(player);
+        superSpeedTimers[player.playerID] = superSpeedDuration + Time.time;
     }
 
     private void EnableSuperSpeed(PlayerController player)
     {
-        player.HasSuperSpeed = true;
-    }
-
-    private void DisablePowerups(PlayerController player)
-    {
-        player.HasExplodingFireball = false;
-        player.HasInvincibility = false;
-        player.HasSuperStrength = false;
-        player.HasSuperSpeed = false;
+        if (!player.HasSuperSpeed)
+        {
+            player.HasSuperSpeed = true;
+            var effect = Instantiate(hasSuperSpeedParticle, Vector3.zero, hasSuperSpeedParticle.transform.rotation, player.transform);
+            effect.transform.up = player.transform.up;
+            effect.transform.localPosition = Vector3.zero;
+            superSpeedEffects[player.playerID] = effect;
+        }
     }
 
     private IEnumerator SpawnPowerups()
@@ -197,6 +233,57 @@ public class PowerupManager : MonoBehaviour
             instance.GetComponent<PowerupController>().type = type;
             instance.GetComponent<SpriteRenderer>().sprite = sprites[typeID];
             var powerupParticles = Instantiate(particlePrefabs[typeID], new Vector3(x, y, 0f), Quaternion.identity, instance.transform);
+        }
+    }
+
+    private void DisableSuperSpeed(PlayerController player)
+    {
+        player.HasSuperSpeed = false;
+        Destroy(superSpeedEffects[player.playerID]);
+        superSpeedEffects[player.playerID] = null;
+    }
+
+    private void DisableSuperStrength(PlayerController player)
+    {
+        player.HasSuperStrength = false;
+        Destroy(superStrengthEffects[player.playerID]);
+        superStrengthEffects[player.playerID] = null;
+    }
+
+    private void DisableFireball(PlayerController player)
+    {
+        player.HasFireball = false;
+        Destroy(fireballEffects[player.playerID]);
+        fireballEffects[player.playerID] = null;
+    }
+
+    private void DisableInvincibility(PlayerController player)
+    {
+        player.HasInvincibility = false;
+        Destroy(invincibilitiesEffects[player.playerID]);
+        invincibilitiesEffects[player.playerID] = null;
+    }
+
+    public void DisablePowerups(PlayerController player)
+    {
+        if (player.HasSuperSpeed)
+        {
+            DisableSuperSpeed(player);
+        }
+
+        if (player.HasSuperStrength)
+        {
+            DisableSuperStrength(player);
+        }
+
+        if (player.HasFireball)
+        {
+            DisableFireball(player);
+        }
+
+        if (player.HasInvincibility)
+        {
+            DisableInvincibility(player);
         }
     }
 }

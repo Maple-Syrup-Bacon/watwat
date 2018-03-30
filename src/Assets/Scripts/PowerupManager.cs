@@ -61,6 +61,7 @@ public class PowerupManager : MonoBehaviour
         superStrengthTimers = new float[Utilities.NumberOfPlayers];
         invincibilityTimers = new float[Utilities.NumberOfPlayers];
 
+        fireballEffects = new GameObject[Utilities.NumberOfPlayers];
         superSpeedEffects = new GameObject[Utilities.NumberOfPlayers];
         superStrengthEffects = new GameObject[Utilities.NumberOfPlayers];
         invincibilitiesEffects = new GameObject[Utilities.NumberOfPlayers];
@@ -124,9 +125,8 @@ public class PowerupManager : MonoBehaviour
             {
                 yield return null;
             }
-            player.HasFireball = false;
-            Destroy(fireballEffects[playerID]);
-            fireballEffects[playerID] = null;
+
+            DisableFireball(player);
         }
     }
 
@@ -190,6 +190,7 @@ public class PowerupManager : MonoBehaviour
         if (!player.HasSuperSpeed)
         {
             player.HasSuperSpeed = true;
+            player.dashDisabled = false;
             var effect = Instantiate(hasSuperSpeedParticle, Vector3.zero, hasSuperSpeedParticle.transform.rotation, player.transform);
             effect.transform.up = player.transform.up;
             effect.transform.localPosition = Vector3.zero;

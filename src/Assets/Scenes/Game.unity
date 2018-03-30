@@ -2070,6 +2070,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1468778774}
   - {fileID: 1569804925}
   - {fileID: 1144558124}
   - {fileID: 1060098368}
@@ -2841,7 +2842,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 726888589}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1060098369
 BoxCollider2D:
@@ -2883,6 +2884,52 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 39.7
+--- !u!1001 &1087417011
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 726888589}
+    m_Modifications:
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 73.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1779241362281322, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+      propertyPath: m_Name
+      value: FallingStars
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e13e0d918ba6c4ff395f9450b1b80abd, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1143114370
 GameObject:
   m_ObjectHideFlags: 0
@@ -2977,7 +3024,7 @@ Transform:
   - {fileID: 935699630}
   - {fileID: 1037436703}
   m_Father: {fileID: 726888589}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1155629229
 GameObject:
@@ -3272,7 +3319,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 726888589}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1333287508
 CircleCollider2D:
@@ -3696,6 +3743,11 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
+--- !u!4 &1468778774 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4792192585296788, guid: e13e0d918ba6c4ff395f9450b1b80abd,
+    type: 2}
+  m_PrefabInternal: {fileID: 1087417011}
 --- !u!1 &1506791410
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,7 +3933,7 @@ Transform:
   m_Children:
   - {fileID: 1433330300}
   m_Father: {fileID: 726888589}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804288870
 GameObject:

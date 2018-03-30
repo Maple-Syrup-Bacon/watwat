@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     public PlanetGravity CurrentPlanet { get; set; }
     public Sprite IdleSprite { get; set; }
     public RuntimeAnimatorController AnimatorController { get; set; }
+    public bool dashDisabled { get; set; } = false;
 
     private Rewired.Player player;
     private GameManager gameManager;
@@ -87,7 +88,6 @@ public class PlayerController : MonoBehaviour
     private float degroundedTimer;
     private bool inInvincibilityFrame = false;
     private float invincibilityFrameTimer;
-    private bool dashDisabled = false;
     private int lastDamagedByPlayerID = -1;
 
     // Powerups
@@ -332,6 +332,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(GameManager.instance.respawnTime - GameManager.instance.timeVisibleAfterDeath);
 
         isDead = false;
+        dashDisabled = false;
         IsVisible = true;
         spriteRenderer.enabled = true;
         aimerSpriteRenderer.enabled = true;

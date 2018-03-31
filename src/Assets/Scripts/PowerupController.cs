@@ -12,6 +12,12 @@ public class PowerupController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             var player = other.GetComponent<PlayerController>();
+
+            if (player.isDead)
+            {
+                return;
+            }
+
             PowerupManager.instance.EnablePowerup(player, type);
             Destroy(gameObject);
         }

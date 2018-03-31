@@ -48,6 +48,12 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Audio")]
+    public AudioClip death;
+    public float deathVolume = 1.0f;
+    public AudioClip spawnPortal;
+    public float spawnPortalVolume = 1.0f;
+    public AudioClip spawn;
+    public float spawnVolume = 1.0f;
     public AudioClip fireball;
     public float fireballVolume = 1.0f;
     public AudioClip meleeHit;
@@ -340,6 +346,7 @@ public class PlayerController : MonoBehaviour
         GameManager.instance.UpdateAvatars();
 
         EZCameraShake.CameraShaker.Instance.ShakeOnce(deathMagnitude, deathRoughness, deathFadeIn, deathFadeOut);
+        SoundManager.PlaySound(death, deathVolume);
         PowerupManager.instance.DisablePowerups(this);
 
         StartCoroutine(Respawn());
@@ -366,9 +373,12 @@ public class PlayerController : MonoBehaviour
         body.velocity = new Vector2(0f, 0f);
         IsVisible = true;
         var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
+        var portalAudio = SoundManager.GetAudio(SoundManager.PlaySound(spawnPortal, spawnPortalVolume));
 
         yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
 
+        portalAudio.Stop();
+        SoundManager.PlaySound(spawn, spawnVolume);
         transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
         isDead = false;
         dashDisabled = false;

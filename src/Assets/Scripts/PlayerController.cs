@@ -343,6 +343,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
 
+        transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
         isDead = false;
         dashDisabled = false;
         spriteRenderer.enabled = true;

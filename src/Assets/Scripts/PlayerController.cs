@@ -106,13 +106,13 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        player = ReInput.players.GetPlayer(playerID);
         aimerTransform = transform.GetChild(0);
         playerAttack = aimerTransform.GetComponent<PlayerAttack>();
         aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
         meleeParticlePrefabMain = meleeParticle.GetComponent<ParticleSystem>().main;
         trailRenderer = GetComponent<TrailRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
-        player = ReInput.players.GetPlayer(playerID);
         originalFixedDelta = Time.fixedDeltaTime;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
@@ -128,7 +128,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (isDead)
+        if (player.GetButtonDown("Pause"))
+        {
+            GameManager.instance.TogglePause(playerID);
+        }
+
+        if (isDead || GameManager.instance.Paused)
         {
             return;
         }
@@ -151,7 +156,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead)
+        if (isDead || GameManager.instance.Paused)
         {
             return;
         }
@@ -337,7 +342,7 @@ public class PlayerController : MonoBehaviour
         var planetRadius = planet.GetComponent<CircleCollider2D>().radius;
         var planetPos = planet.transform.position;
         transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
-        body.velocity = new Vector2(0f,0f);
+        body.velocity = new Vector2(0f, 0f);
         IsVisible = true;
         var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
 

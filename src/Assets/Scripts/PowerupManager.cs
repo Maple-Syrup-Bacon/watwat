@@ -202,13 +202,13 @@ public class PowerupManager : MonoBehaviour
     {
         while (!GameManager.instance.GameOver)
         {
-            yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(minSeconds, maxSeconds));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(minSeconds, maxSeconds));
 
             var x = UnityEngine.Random.Range(-borderBox.bounds.extents.x, borderBox.bounds.extents.x);
             var y = UnityEngine.Random.Range(-borderBox.bounds.extents.y, borderBox.bounds.extents.y);
 
             PowerupType type;
-            var typeID = UnityEngine.Random.Range(0, 4);
+            var typeID = UnityEngine.Random.Range(3, 4);
 
             switch (typeID)
             {

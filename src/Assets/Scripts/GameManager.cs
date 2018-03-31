@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using Rewired;
+using Rewired.Integration.UnityUI;
 using EazyTools.SoundManager;
 
 public class GameManager : MonoBehaviour
@@ -32,12 +33,16 @@ public class GameManager : MonoBehaviour
     public PlayerController[] Players { get; set; }
     public bool GameStarted { get; set; } = false;
     public bool GameOver { get; set; } = false;
+    public bool Paused { get; set; } = false;
 
     private Rewired.Player player;
+    private CanvasGroup pauseScreen;
+    private RewiredStandaloneInputModule uiInputModule;
     private TMP_Text timer;
     private TMP_Text countdown;
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
+    private Rewired.Player currentPausingPlayer;
 
     private void Awake()
     {
@@ -56,10 +61,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Use this for initialization
-    void Start()
+    private void Start()
     {
-        player = ReInput.players.GetPlayer(0);
+        Resume();
 
         timer.text = timerValue.ToString();
         countdown.text = "3";
@@ -68,15 +72,6 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(GameBeginCountdown());
         StartCoroutine(PlayMusic());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // if (player.GetButtonDown("Jump"))
-        // {
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
     }
 
     private IEnumerator PlayMusic()
@@ -107,20 +102,21 @@ public class GameManager : MonoBehaviour
         GameOver = true;
         countdown.gameObject.SetActive(true);
         countdown.text = "GAME OVER";
-        yield return new WaitForSecondsRealtime(5.0f);
+        yield return new WaitForSeconds(5.0f);
         SceneManager.LoadScene(0);
     }
 
     private IEnumerator GameBeginCountdown()
     {
         var cix = 3;
-        while(0 <= cix){
-            yield return new WaitForSecondsRealtime(1);
+        while (0 <= cix)
+        {
+            yield return new WaitForSeconds(1);
             SoundManager.PlaySound(announcerNumbers[cix]);
             countdown.text = cix == 0 ? "BEGIN" : cix.ToString();
             cix--;
-        }   
-        yield return new WaitForSecondsRealtime(1);
+        }
+        yield return new WaitForSeconds(1);
 
         GameStarted = true;
         countdown.gameObject.SetActive(false);
@@ -158,6 +154,8 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
+        pauseScreen = GameObject.Find("Canvas/PauseScreen").GetComponent<CanvasGroup>();
+        uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
         timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
         countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
 
@@ -184,6 +182,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Pause()
+    {
+        Paused = true;
+        Time.timeScale = 0;
+        pauseScreen.alpha = 1;
+    }
+
     public void UpdateAvatars()
     {
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
@@ -202,5 +207,36 @@ public class GameManager : MonoBehaviour
 
         Players[playerID].score++;
         UpdateAvatars();
+    }
+
+    public void Resume()
+    {
+        Paused = false;
+        Time.timeScale = 1;
+        pauseScreen.alpha = 0;
+        uiInputModule.RewiredPlayerIds = new int[0];
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Quit()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void TogglePause(int playerID)
+    {
+        if (Paused)
+        {
+            Resume();
+        }
+        else if (!Paused)
+        {
+            Pause();
+            uiInputModule.RewiredPlayerIds = new int[] { playerID };
+        }
     }
 }

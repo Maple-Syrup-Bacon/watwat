@@ -10,6 +10,7 @@ TagManager:
   - Border
   - FxTemporaire
   - ObjectBorder
+  - EventSystem
   layers:
   - Default
   - TransparentFX

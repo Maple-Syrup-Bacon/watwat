@@ -11,7 +11,7 @@ public class EndExplosion : MonoBehaviour
 
     private IEnumerator DestroyAfterDelay()
     {
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
 }

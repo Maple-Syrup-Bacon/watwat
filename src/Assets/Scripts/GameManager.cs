@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public int winScore = 5;
+    [Tooltip("When a player dies the last one to damage gets the credit for the kill, but that damage must have been within a specific amount of seconds or it is counted as a suicide.")]
+    public float lastTouchDuration = 5f;
     public float baseKnockback = 10f;
     public float musicVolume = 0.5f;
     public float respawnTime = 3f;
@@ -38,7 +41,7 @@ public class GameManager : MonoBehaviour
     private Rewired.Player player;
     private CanvasGroup pauseScreen;
     private RewiredStandaloneInputModule uiInputModule;
-    private TMP_Text timer;
+    // private TMP_Text timer;
     private TMP_Text countdown;
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
@@ -65,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
         Resume();
 
-        timer.text = timerValue.ToString();
+        // timer.text = timerValue.ToString();
         countdown.text = "3";
 
         UpdateAvatars();
@@ -87,24 +90,24 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayMusic());
     }
 
-    private IEnumerator TickTimer()
-    {
-        while (0 < timerValue)
-        {
-            yield return new WaitForSeconds(1);
+    // private IEnumerator TickTimer()
+    // {
+    //     while (0 < timerValue)
+    //     {
+    //         yield return new WaitForSeconds(1);
 
-            timerValue -= 1;
+    //         timerValue -= 1;
 
-            timer.text = timerValue.ToString();
-        }
+    //         timer.text = timerValue.ToString();
+    //     }
 
-        SoundManager.PlaySound(announcerGameOver);
-        GameOver = true;
-        countdown.gameObject.SetActive(true);
-        countdown.text = "GAME OVER";
-        yield return new WaitForSeconds(5.0f);
-        SceneManager.LoadScene(0);
-    }
+    //     SoundManager.PlaySound(announcerGameOver);
+    //     GameOver = true;
+    //     countdown.gameObject.SetActive(true);
+    //     countdown.text = "GAME OVER";
+    //     yield return new WaitForSeconds(5.0f);
+    //     SceneManager.LoadScene(0);
+    // }
 
     private IEnumerator GameBeginCountdown()
     {
@@ -121,7 +124,7 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
         countdown.gameObject.SetActive(false);
 
-        StartCoroutine(TickTimer());
+        // StartCoroutine(TickTimer());
     }
 
     private void SpawnPlayers()
@@ -156,7 +159,7 @@ public class GameManager : MonoBehaviour
     {
         pauseScreen = GameObject.Find("Canvas/PauseScreen").GetComponent<CanvasGroup>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
-        timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
+        // timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
         countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
 
         percentages = new TMP_Text[Utilities.NumberOfPlayers];
@@ -207,6 +210,14 @@ public class GameManager : MonoBehaviour
 
         Players[playerID].score++;
         UpdateAvatars();
+
+        if (winScore <= Players[playerID].score)
+        {
+            SoundManager.PlaySound(announcerGameOver);
+            GameOver = true;
+            countdown.gameObject.SetActive(true);
+            countdown.text = "GAME OVER";
+        }
     }
 
     public void Resume()

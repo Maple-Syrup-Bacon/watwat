@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
     public bool dashDisabled { get; set; } = false;
 
     private Rewired.Player player;
-    private GameManager gameManager;
     private Rigidbody2D body;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -105,6 +104,7 @@ public class PlayerController : MonoBehaviour
     private bool inInvincibilityFrame = false;
     private float invincibilityFrameTimer;
     private int lastDamagedByPlayerID = -1;
+    private float lastDamageTime;
 
     // Powerups
     public bool HasFireball { get; set; } = false;
@@ -130,7 +130,6 @@ public class PlayerController : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();
         yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
         originalFixedDelta = Time.fixedDeltaTime;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         leftAnalogStick = new Vector2();
         sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
         attackTriggerXRight = playerAttack.transform.localPosition.x;
@@ -333,7 +332,7 @@ public class PlayerController : MonoBehaviour
         body.velocity = Vector2.zero;
         Instantiate(deathParticle, transform.position, deathParticle.transform.rotation);
 
-        if (lastDamagedByPlayerID != -1)
+        if (lastDamagedByPlayerID != -1 && Time.time - GameManager.instance.lastTouchDuration <= lastDamageTime)
         {
             GameManager.instance.IncreaseScore(lastDamagedByPlayerID);
             lastDamagedByPlayerID = -1;
@@ -569,6 +568,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(InvincibilityFrameBlink());
 
         lastDamagedByPlayerID = enemyPlayerID;
+        lastDamageTime = Time.time;
 
         amount = (HasInvincibility ? amount / 2 : amount);
 

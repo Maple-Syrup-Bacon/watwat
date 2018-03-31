@@ -134,7 +134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &38062394
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10518,6 +10518,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eaf9ac9a11f47f89c31d5e7d66eb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winScore: 5
+  lastTouchDuration: 5
   baseKnockback: 15
   musicVolume: 0.25
   respawnTime: 3

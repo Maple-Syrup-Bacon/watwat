@@ -268,6 +268,8 @@ MonoBehaviour:
   shakeRoughness: 10
   shakeFadeIn: 0.25
   shakeFadeOut: 1
+  explosion: {fileID: 8300000, guid: 5f6b5ded08cee4ce4ac7a20961ae87d4, type: 3}
+  explosionVolume: 1
 --- !u!114 &114566962382578006
 MonoBehaviour:
   m_ObjectHideFlags: 1

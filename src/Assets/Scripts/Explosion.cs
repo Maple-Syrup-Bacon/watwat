@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EazyTools.SoundManager;
 
 public class Explosion : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Explosion : MonoBehaviour
     public float shakeRoughness = 10;
     public float shakeFadeIn = 0.25f;
     public float shakeFadeOut = 1;
+    [Header("Audio")]
+    public AudioClip explosion;
+    public float explosionVolume = 1.0f;
 
     private CircleCollider2D circleCollider;
     private List<Rigidbody2D> hitBodies;
@@ -23,6 +27,8 @@ public class Explosion : MonoBehaviour
         circleCollider = GetComponent<CircleCollider2D>();
         EZCameraShake.CameraShaker.Instance.ShakeOnce(shakeMagnitude, shakeRoughness, shakeFadeIn, shakeFadeOut);
         hitBodies = new List<Rigidbody2D>();
+
+        SoundManager.PlaySound(explosion, explosionVolume);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -46,8 +46,14 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Audio")]
+    public AudioClip fireball;
+    public float fireballVolume = 1.0f;
     public AudioClip meleeHit;
     public float meleeHitVolume = 1.0f;
+    public AudioClip meleeMiss;
+    public float meleeMissVolume = 1.0f;
+    public AudioClip dash;
+    public float dashVolume = 1.0f;
 
     // Properties
     public bool IsGrounded { get; set; }
@@ -271,6 +277,7 @@ public class PlayerController : MonoBehaviour
                 body.velocity *= bonusForce;
                 body.AddForce(dashVec.normalized * dashForce * superSpeedBonus * Time.fixedDeltaTime, ForceMode2D.Impulse);
                 StartCoroutine(DashStop());
+                SoundManager.PlaySound(dash, dashVolume);
             }
         }
 
@@ -388,6 +395,7 @@ public class PlayerController : MonoBehaviour
 
             if (HasFireball)
             {
+                SoundManager.PlaySound(fireball, fireballVolume);
                 var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);
                 instance.GetComponent<BasicProjectile>().Owner = transform;
                 instance.GetComponent<Rigidbody2D>().AddForce(aimerVector * lightProjectileSpeed, ForceMode2D.Impulse);
@@ -401,10 +409,17 @@ public class PlayerController : MonoBehaviour
 
                 var damage = (HasSuperStrength ? meleeDamage * superStrengthEffect : meleeDamage);
 
-                foreach (var player in playerAttack.players)
+                if (playerAttack.players.Count == 0)
                 {
-                    player.Damage(damage, player.transform.position - transform.position, playerID, body.velocity);
-                    SoundManager.PlaySound(meleeHit, meleeHitVolume);
+                    SoundManager.PlaySound(meleeMiss, meleeMissVolume);
+                }
+                else
+                {
+                    foreach (var player in playerAttack.players)
+                    {
+                        player.Damage(damage, player.transform.position - transform.position, playerID, body.velocity);
+                        SoundManager.PlaySound(meleeHit, meleeHitVolume);
+                    }
                 }
             }
         }

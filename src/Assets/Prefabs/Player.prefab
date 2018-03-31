@@ -349,6 +349,8 @@ MonoBehaviour:
   meleeMissVolume: 10
   dash: {fileID: 8300000, guid: ec284d6d42ac54ed0bf93a646743dc93, type: 3}
   dashVolume: 1
+  superSpeedDash: {fileID: 8300000, guid: df61d3daf12ba4295b5294c06f515762, type: 3}
+  superSpeedDashVolume: 1
 --- !u!212 &212322305702140010
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -4247,6 +4247,12 @@ MonoBehaviour:
   hasSuperStrengthParticle: {fileID: 0}
   hasInvincibilityParticle: {fileID: 1272240432817264, guid: 8c091b90036584404acc79ecb14de9ea,
     type: 2}
+  hasFireballSound: {fileID: 0}
+  hasFireballVolume: 1
+  hasSuperSpeedSound: {fileID: 8300000, guid: 6caf2a6eb0afb407c87f5b364755d807, type: 3}
+  hasSuperSpeedVolume: 1
+  hasSuperStrengthSound: {fileID: 0}
+  hasInvincibilitySound: {fileID: 0}
 --- !u!1 &1144558123
 GameObject:
   m_ObjectHideFlags: 0

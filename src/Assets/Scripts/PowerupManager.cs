@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EazyTools.SoundManager;
 using static Utilities;
 using Rewired;
 
@@ -29,6 +30,14 @@ public class PowerupManager : MonoBehaviour
     public GameObject hasSuperStrengthParticle;
     public GameObject hasInvincibilityParticle;
 
+    [Header("Audio")]
+    public AudioClip hasFireballSound;
+    public float hasFireballVolume = 1.0f;
+    public AudioClip hasSuperSpeedSound;
+    public float hasSuperSpeedVolume = 1.0f;
+    public AudioClip hasSuperStrengthSound;
+    public AudioClip hasInvincibilitySound;
+
     private float[] superSpeedTimers;
     private float[] superStrengthTimers;
     private float[] invincibilityTimers;
@@ -37,6 +46,11 @@ public class PowerupManager : MonoBehaviour
     private GameObject[] superSpeedEffects;
     private GameObject[] superStrengthEffects;
     private GameObject[] invincibilitiesEffects;
+
+    private Audio[] hasFireballAudios;
+    private Audio[] hasSuperSpeedAudios;
+    private Audio[] hasSuperStrengthAudios;
+    private Audio[] hasInvincibilityAudios;
 
     private BoxCollider2D borderBox;
 
@@ -65,6 +79,11 @@ public class PowerupManager : MonoBehaviour
         superSpeedEffects = new GameObject[Utilities.NumberOfPlayers];
         superStrengthEffects = new GameObject[Utilities.NumberOfPlayers];
         invincibilitiesEffects = new GameObject[Utilities.NumberOfPlayers];
+
+        hasFireballAudios = new Audio[Utilities.NumberOfPlayers];
+        hasSuperSpeedAudios = new Audio[Utilities.NumberOfPlayers];
+        hasSuperStrengthAudios = new Audio[Utilities.NumberOfPlayers];
+        hasInvincibilityAudios = new Audio[Utilities.NumberOfPlayers];
 
         StartCoroutine(SpawnPowerups());
     }
@@ -195,6 +214,8 @@ public class PowerupManager : MonoBehaviour
             effect.transform.up = player.transform.up;
             effect.transform.localPosition = Vector3.zero;
             superSpeedEffects[player.playerID] = effect;
+            var audioID = SoundManager.PlaySound(hasSuperSpeedSound, hasSuperSpeedVolume, true, null);
+            hasSuperSpeedAudios[player.playerID] = SoundManager.GetAudio(audioID);
         }
     }
 
@@ -242,6 +263,7 @@ public class PowerupManager : MonoBehaviour
         player.HasSuperSpeed = false;
         Destroy(superSpeedEffects[player.playerID]);
         superSpeedEffects[player.playerID] = null;
+        hasSuperSpeedAudios[player.playerID].Stop();
     }
 
     private void DisableSuperStrength(PlayerController player)

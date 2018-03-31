@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
     public float meleeMissVolume = 1.0f;
     public AudioClip dash;
     public float dashVolume = 1.0f;
+    public AudioClip superSpeedDash;
+    public float superSpeedDashVolume = 1.0f;
 
     // Properties
     public bool IsGrounded { get; set; }
@@ -280,8 +282,16 @@ public class PlayerController : MonoBehaviour
                 body.AddForce(dashVec.normalized * dashForce * superSpeedBonus * Time.fixedDeltaTime, ForceMode2D.Impulse);
                 StartCoroutine(DashStop());
 
-                SoundManager.PlaySound(dash, dashVolume);
                 Instantiate(dashParticles[playerID], transform.position, dashParticles[playerID].transform.rotation);
+
+                if (HasSuperSpeed)
+                {
+                    SoundManager.PlaySound(superSpeedDash, superSpeedDashVolume);
+                }
+                else
+                {
+                    SoundManager.PlaySound(dash, dashVolume);
+                }
             }
         }
 

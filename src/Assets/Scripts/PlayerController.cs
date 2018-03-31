@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     public GameObject meleeHitParticle;
     public GameObject meleeParticle;
     public GameObject deathParticle;
-    public GameObject spawnParticle;
+    public GameObject[] spawnParticles;
     public GameObject lightProjectile;
 
     [Header("Camera Shake")]
@@ -331,28 +331,32 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(GameManager.instance.respawnTime - GameManager.instance.timeVisibleAfterDeath);
 
+        // Spawn Particles and set spawn position, zero out velocity and set visible for camera focus
+        var index = Random.Range(0, GameManager.instance.Planets.Length);
+        var planet = GameManager.instance.Planets[index];
+        var planetRadius = planet.GetComponent<CircleCollider2D>().radius;
+        var planetPos = planet.transform.position;
+        transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
+        body.velocity = new Vector2(0f,0f);
+        IsVisible = true;
+        var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
+
+        yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
+
         isDead = false;
         dashDisabled = false;
-        IsVisible = true;
         spriteRenderer.enabled = true;
         aimerSpriteRenderer.enabled = true;
         trailRenderer.enabled = true;
 
         damageTotal = 0;
 
-        var index = Random.Range(0, GameManager.instance.Planets.Length);
-        transform.position = GameManager.instance.Planets[index].transform.position;
+        // instance.transform.up = transform.up;
+        // instance.transform.Rotate(new Vector3(90, 0, 0));
 
-        yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
-
-        var instance = Instantiate(spawnParticle, transform.position, spawnParticle.transform.rotation);
-
-        instance.transform.up = transform.up;
-        instance.transform.Rotate(new Vector3(90, 0, 0));
-
-        var pos = instance.transform.localPosition;
-        pos.y -= yExtent;
-        instance.transform.localPosition = pos;
+        // var pos = instance.transform.localPosition;
+        // pos.y -= yExtent;
+        // instance.transform.localPosition = pos;
 
         GameManager.instance.UpdateAvatars();
     }

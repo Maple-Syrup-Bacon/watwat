@@ -323,8 +323,11 @@ MonoBehaviour:
   meleeHitParticle: {fileID: 100004, guid: 5ed288b2191c7488d88f88d62c3dbc33, type: 2}
   meleeParticle: {fileID: 100002, guid: ef61099bbf63943ed86ef60612f40425, type: 2}
   deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}
-  spawnParticle: {fileID: 1965343156803978, guid: 9678bdf2f613e4112ab1611b1bb721ca,
-    type: 2}
+  spawnParticles:
+  - {fileID: 1656260141094082, guid: fe95319199bc9482cad5ef7d2dd3d423, type: 2}
+  - {fileID: 1054200795469692, guid: cc8bddbee58a5406dbd48b717e858a31, type: 2}
+  - {fileID: 1333250725429398, guid: ff719143503be42dd94e73a88fbbf448, type: 2}
+  - {fileID: 1927718648143958, guid: 956e32675be4b4fa68917d6c51f94da6, type: 2}
   lightProjectile: {fileID: 1870291720119966, guid: b915dacc55c1c42a1abb919899f682d4,
     type: 2}
   deathMagnitude: 100

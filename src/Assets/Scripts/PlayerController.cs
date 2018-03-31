@@ -32,10 +32,12 @@ public class PlayerController : MonoBehaviour
     public float superSpeedEffect = 2.0f;
 
     [Header("Particles")]
+    public GameObject groundedParticle;
     public GameObject meleeHitParticle;
     public GameObject meleeParticle;
     public GameObject deathParticle;
     public GameObject[] spawnParticles;
+    public GameObject[] dashParticles;
     public GameObject lightProjectile;
 
     [Header("Camera Shake")]
@@ -277,7 +279,9 @@ public class PlayerController : MonoBehaviour
                 body.velocity *= bonusForce;
                 body.AddForce(dashVec.normalized * dashForce * superSpeedBonus * Time.fixedDeltaTime, ForceMode2D.Impulse);
                 StartCoroutine(DashStop());
+
                 SoundManager.PlaySound(dash, dashVolume);
+                Instantiate(dashParticles[playerID], transform.position, dashParticles[playerID].transform.rotation);
             }
         }
 
@@ -448,6 +452,13 @@ public class PlayerController : MonoBehaviour
 
             if (ray.collider != null && ray.collider.CompareTag("Planet"))
             {
+                if (!IsGrounded)
+                {
+                    var rot = Quaternion.Euler(transform.rotation.eulerAngles.z - 90, groundedParticle.transform.rotation.eulerAngles.y, groundedParticle.transform.rotation.eulerAngles.z);
+
+                    Instantiate(groundedParticle, ray.point, rot);
+                }
+
                 IsGrounded = true;
                 dashDisabled = false;
                 transform.parent = ray.collider.transform;

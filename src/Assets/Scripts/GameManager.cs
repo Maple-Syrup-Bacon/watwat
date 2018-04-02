@@ -149,7 +149,9 @@ public class GameManager : MonoBehaviour
             endColor.g = playerColors[i].g;
             endColor.b = playerColors[i].b;
             endColor.a = 0;
-            trailRenderer.endColor = endColor;
+
+            // var playerLight = playerInstance.transform.Find("Light").GetComponent<Light>();
+            // playerLight.color = playerColors[i];
 
             Players[i] = playerController;
         }

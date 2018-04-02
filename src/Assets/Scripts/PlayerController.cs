@@ -368,7 +368,10 @@ public class PlayerController : MonoBehaviour
         var planet = GameManager.instance.Planets[index];
         var planetRadius = planet.GetComponent<CircleCollider2D>().radius;
         var planetPos = planet.transform.position;
-        transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
+        var planetPosX = Random.Range(0,2) == 0 ? planetPos.x - planetRadius : planetPos.x + planetRadius;
+        var planetPosY = Random.Range(0,2) == 0 ? planetPos.y - planetRadius : planetPos.y + planetRadius;
+        var startPos = new Vector3(planetPosX, planetPosY, 0);
+        transform.position = startPos;
         body.velocity = new Vector2(0f, 0f);
         IsVisible = true;
         var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
@@ -378,7 +381,7 @@ public class PlayerController : MonoBehaviour
 
         portalAudio.Stop();
         SoundManager.PlaySound(spawn, spawnVolume);
-        transform.position = new Vector3(planetPos.x + planetRadius, planetPos.y + planetRadius, 0);
+        transform.position = startPos;
         isDead = false;
         dashDisabled = false;
         spriteRenderer.enabled = true;

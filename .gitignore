@@ -122,4 +122,5 @@ $RECYCLE.BIN/
 # Custom
 src/Assets/Scenes
 !src/Assets/Scenes/Game*
+!src/Assets/Scenes/Menu*
 !src/Assets/Scenes/AlphaMenu*

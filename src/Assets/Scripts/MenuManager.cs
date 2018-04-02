@@ -8,6 +8,6 @@ public class MenuManager : MonoBehaviour
     public void LoadGameWithPlayers(int players)
     {
         Utilities.NumberOfPlayers = players;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1); // This should be the GAME index
     }
 }

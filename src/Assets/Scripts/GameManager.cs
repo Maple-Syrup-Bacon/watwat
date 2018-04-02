@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     public PointEffector2D[] Planets { get; set; }
     public PlayerController[] Players { get; set; }
+    public Light[] PlayerLights { get; set; }
     public bool GameStarted { get; set; } = false;
     public bool GameOver { get; set; } = false;
     public bool Paused { get; set; } = false;
@@ -130,6 +131,7 @@ public class GameManager : MonoBehaviour
     private void SpawnPlayers()
     {
         Players = new PlayerController[Utilities.NumberOfPlayers];
+        PlayerLights = new Light[Utilities.NumberOfPlayers];
 
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
         {
@@ -150,8 +152,10 @@ public class GameManager : MonoBehaviour
             endColor.b = playerColors[i].b;
             endColor.a = 0;
 
-            // var playerLight = playerInstance.transform.Find("Light").GetComponent<Light>();
-            // playerLight.color = playerColors[i];
+            PlayerLights[i] = playerInstance.transform.Find("Light").GetComponent<Light>();
+            // PlayerLights[i].color = playerColors[i];
+
+            playerInstance.GetComponent<_2dxFX_PlasmaShield>()._ColorX = playerColors[i];
 
             Players[i] = playerController;
         }

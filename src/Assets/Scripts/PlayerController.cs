@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float damageTotal;
     public int score;
     public bool isDead = false;
+    public float groundCheckLength = 0.1f;
     public float movementSpeed = 10f;
     public float jumpForce = 10f;
     public float degroundedTime = 0.25f;
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public float meleeDamage = 10f;
     public float meleeCooldown = 1f;
     public float invincibilityFrameTime = 0.1f;
-    public float yExtent;
+    public GameObject fireballProjectile;
 
     [Header("Dash")]
     public float dashForce = 100f;
@@ -38,7 +39,6 @@ public class PlayerController : MonoBehaviour
     public GameObject deathParticle;
     public GameObject[] spawnParticles;
     public GameObject[] dashParticles;
-    public GameObject lightProjectile;
 
     [Header("Camera Shake")]
     public float deathMagnitude = 100;
@@ -72,6 +72,9 @@ public class PlayerController : MonoBehaviour
     public Sprite IdleSprite { get; set; }
     public RuntimeAnimatorController AnimatorController { get; set; }
     public bool dashDisabled { get; set; } = false;
+    public _2dxFX_LightningBolt SuperSpeedSpriteEffect { get; set; }
+    public _2dxFX_PlasmaShield InvincibilitySpriteEffect { get; set; }
+    public _2dxFX_Fire FireballSpriteEffect { get; set; }
 
     private Rewired.Player player;
     private Rigidbody2D body;
@@ -82,6 +85,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer aimerSpriteRenderer;
     private TrailRenderer trailRenderer;
     private ParticleSystem.MainModule meleeParticlePrefabMain;
+    private BoxCollider2D boxCollider;
 
     private Vector3 aimerVector;
     private Vector2 leftAnalogStick;
@@ -128,7 +132,7 @@ public class PlayerController : MonoBehaviour
         aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
         meleeParticlePrefabMain = meleeParticle.GetComponent<ParticleSystem>().main;
         trailRenderer = GetComponent<TrailRenderer>();
-        yExtent = GetComponent<BoxCollider2D>().bounds.extents.y;
+        boxCollider = GetComponent<BoxCollider2D>();
         originalFixedDelta = Time.fixedDeltaTime;
         leftAnalogStick = new Vector2();
         sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
@@ -138,6 +142,15 @@ public class PlayerController : MonoBehaviour
         IsVisible = true;
         animator.runtimeAnimatorController = AnimatorController;
         spriteRenderer.sprite = IdleSprite;
+
+        SuperSpeedSpriteEffect = GetComponent<_2dxFX_LightningBolt>();
+        SuperSpeedSpriteEffect.enabled = false;
+
+        InvincibilitySpriteEffect = GetComponent<_2dxFX_PlasmaShield>();
+        InvincibilitySpriteEffect.enabled = false;
+
+        FireballSpriteEffect = GetComponent<_2dxFX_Fire>();
+        FireballSpriteEffect.enabled = false;
     }
 
     // Update is called once per frame
@@ -171,6 +184,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.instance.GameOver)
+        {
+            body.velocity = Vector2.zero;
+        }
+
         if (isDead || GameManager.instance.Paused)
         {
             return;
@@ -363,41 +381,37 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(GameManager.instance.respawnTime - GameManager.instance.timeVisibleAfterDeath);
 
-        // Spawn Particles and set spawn position, zero out velocity and set visible for camera focus
-        var index = Random.Range(0, GameManager.instance.Planets.Length);
-        var planet = GameManager.instance.Planets[index];
-        var planetRadius = planet.GetComponent<CircleCollider2D>().radius;
-        var planetPos = planet.transform.position;
-        var planetPosX = Random.Range(0, 2) == 0 ? planetPos.x - planetRadius : planetPos.x + planetRadius;
-        var planetPosY = Random.Range(0, 2) == 0 ? planetPos.y - planetRadius : planetPos.y + planetRadius;
-        var startPos = new Vector3(planetPosX, planetPosY, 0);
-        transform.position = startPos;
-        body.velocity = new Vector2(0f, 0f);
-        IsVisible = true;
-        var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
-        var portalAudio = SoundManager.GetAudio(SoundManager.PlaySound(spawnPortal, spawnPortalVolume));
+        if (!GameManager.instance.GameOver)
+        {
+            // Spawn Particles and set spawn position, zero out velocity and set visible for camera focus
+            var index = Random.Range(0, GameManager.instance.Planets.Length);
+            var planet = GameManager.instance.Planets[index];
+            var planetRadius = planet.GetComponent<CircleCollider2D>().radius;
+            var planetPos = planet.transform.position;
+            var planetPosX = Random.Range(0, 2) == 0 ? planetPos.x - planetRadius : planetPos.x + planetRadius;
+            var planetPosY = Random.Range(0, 2) == 0 ? planetPos.y - planetRadius : planetPos.y + planetRadius;
+            var startPos = new Vector3(planetPosX, planetPosY, 0);
+            transform.position = startPos;
+            body.velocity = new Vector2(0f, 0f);
+            IsVisible = true;
+            var instance = Instantiate(spawnParticles[playerID], transform.position, spawnParticles[playerID].transform.rotation);
+            var portalAudio = SoundManager.GetAudio(SoundManager.PlaySound(spawnPortal, spawnPortalVolume));
 
-        yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
+            yield return new WaitForSeconds(GameManager.instance.respawnParticleDelay);
 
-        portalAudio.Stop();
-        SoundManager.PlaySound(spawn, spawnVolume);
-        transform.position = startPos;
-        isDead = false;
-        dashDisabled = false;
-        spriteRenderer.enabled = true;
-        aimerSpriteRenderer.enabled = true;
-        trailRenderer.enabled = true;
+            portalAudio.Stop();
+            SoundManager.PlaySound(spawn, spawnVolume);
+            transform.position = startPos;
+            isDead = false;
+            dashDisabled = false;
+            spriteRenderer.enabled = true;
+            aimerSpriteRenderer.enabled = true;
+            trailRenderer.enabled = true;
 
-        damageTotal = 0;
+            damageTotal = 0;
 
-        // instance.transform.up = transform.up;
-        // instance.transform.Rotate(new Vector3(90, 0, 0));
-
-        // var pos = instance.transform.localPosition;
-        // pos.y -= yExtent;
-        // instance.transform.localPosition = pos;
-
-        GameManager.instance.UpdateAvatars();
+            GameManager.instance.UpdateAvatars();
+        }
     }
 
     private void GetInput()
@@ -422,7 +436,7 @@ public class PlayerController : MonoBehaviour
             if (HasFireball)
             {
                 SoundManager.PlaySound(fireball, fireballVolume);
-                var instance = Instantiate(lightProjectile, aimerTransform.position, lightProjectile.transform.rotation);
+                var instance = Instantiate(fireballProjectile, aimerTransform.position, fireballProjectile.transform.rotation);
                 instance.GetComponent<BasicProjectile>().Owner = transform;
                 instance.GetComponent<Rigidbody2D>().AddForce(aimerVector * lightProjectileSpeed, ForceMode2D.Impulse);
             }
@@ -464,12 +478,12 @@ public class PlayerController : MonoBehaviour
         if (!degrounded)
         {
             var start = transform.position;
-            start -= yExtent * transform.up;
+            start -= GetYExtend() * transform.up;
 
             var end = start;
-            end -= transform.up * 0.1f;
+            end -= transform.up * groundCheckLength;
 
-            Debug.DrawLine(start, end);
+            Debug.DrawLine(start, end, Color.red);
             var ray = Physics2D.Linecast(start, end);
 
             if (ray.collider != null && ray.collider.CompareTag("Planet"))
@@ -601,5 +615,15 @@ public class PlayerController : MonoBehaviour
     public void SetGrounded(bool grounded)
     {
         this.IsGrounded = grounded;
+    }
+
+    public void SetScale(Vector3 scale)
+    {
+        transform.localScale = scale;
+    }
+
+    public float GetYExtend()
+    {
+        return (boxCollider.size.y / 2) * transform.localScale.y;
     }
 }

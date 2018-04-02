@@ -4367,6 +4367,7 @@ MonoBehaviour:
   invincibilityDuration: 10
   superStrengthDuration: 10
   superSpeedDuration: 10
+  superStrengthSizeModifier: 2
   sprites:
   - {fileID: 21300000, guid: 2f5e4df09680045939544515dd1da39a, type: 3}
   - {fileID: 21300000, guid: b3626e09049d649e48ecffd5a437ba3e, type: 3}
@@ -4379,6 +4380,10 @@ MonoBehaviour:
   hasSuperStrengthParticle: {fileID: 0}
   hasInvincibilityParticle: {fileID: 1272240432817264, guid: 8c091b90036584404acc79ecb14de9ea,
     type: 2}
+  fireballColor: {r: 1, g: 0.33333334, b: 0, a: 1}
+  superSpeedColor: {r: 0, g: 0.81960785, b: 1, a: 1}
+  superStrengthColor: {r: 1, g: 0.9764706, b: 0.38431373, a: 1}
+  invincibilityColor: {r: 1, g: 0.6, b: 0.9647059, a: 1}
   hasFireballSound: {fileID: 0}
   hasFireballVolume: 1
   hasSuperSpeedSound: {fileID: 8300000, guid: 6caf2a6eb0afb407c87f5b364755d807, type: 3}
@@ -5591,7 +5596,7 @@ Transform:
   m_GameObject: {fileID: 1569804923}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_LocalScale: {x: 3.4677343, y: 3.4677343, z: 3.4677343}
   m_Children: []
   m_Father: {fileID: 726888589}
   m_RootOrder: 3
@@ -5605,11 +5610,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -12.9
+      value: -14.27
       objectReference: {fileID: 0}
     - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 6.97
+      value: -3.57
       objectReference: {fileID: 0}
     - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
       propertyPath: m_LocalPosition.z
@@ -5638,6 +5643,18 @@ Prefab:
     - target: {fileID: 1398607332044848, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
@@ -5681,6 +5698,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 199302853826472558, guid: 7f1d9d48347fb4801a74a5b9b2d58fbc,
+        type: 2}
+      propertyPath: m_RenderMode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 199302853826472558, guid: 7f1d9d48347fb4801a74a5b9b2d58fbc,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7f1d9d48347fb4801a74a5b9b2d58fbc, type: 2}
   m_IsPrefabParent: 0

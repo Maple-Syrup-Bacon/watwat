@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 96794735774609002}
   - component: {fileID: 114911988204953806}
   - component: {fileID: 114496673713374318}
+  - component: {fileID: 114898593608256784}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -76,7 +77,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1398607332044848}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.9, y: 6.97, z: 0}
+  m_LocalPosition: {x: -14.27, y: -3.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4804921162125312}
@@ -360,7 +361,7 @@ MonoBehaviour:
   ForceMaterial: {fileID: 0}
   ActiveChange: 1
   _Alpha: 1
-  _ColorX: {r: 1, g: 1, b: 1, a: 1}
+  _ColorX: {r: 0.44705883, g: 0.7647059, b: 0.6627451, a: 1}
   _Offset: 2.5
   Speed: 1
   ShaderChange: 0
@@ -400,7 +401,8 @@ MonoBehaviour:
   meleeDamage: 10
   meleeCooldown: 0.3
   invincibilityFrameTime: 0.1
-  yExtent: 0
+  fireballProjectile: {fileID: 1305370907839836, guid: 43fcb1a16c7274a6088d109381231b15,
+    type: 2}
   dashForce: 1250
   dashDuration: 0.5
   dashDrag: 0.25
@@ -421,8 +423,6 @@ MonoBehaviour:
   - {fileID: 1922673611268636, guid: 0673f21c2e1494dc3a7622e4e7c5e3a6, type: 2}
   - {fileID: 1875771203076516, guid: 27a405d9bffcd40d5a5fa4bc8a2cac83, type: 2}
   - {fileID: 1305137885444962, guid: 16fc0012b10b74641b91efb0ca5110c3, type: 2}
-  lightProjectile: {fileID: 1870291720119966, guid: b915dacc55c1c42a1abb919899f682d4,
-    type: 2}
   deathMagnitude: 100
   deathRoughness: 10
   deathFadeIn: 0.25
@@ -443,6 +443,30 @@ MonoBehaviour:
   dashVolume: 1
   superSpeedDash: {fileID: 8300000, guid: df61d3daf12ba4295b5294c06f515762, type: 3}
   superSpeedDashVolume: 1
+--- !u!114 &114898593608256784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1398607332044848}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d493b63150be1c429f3d01d00318de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ForceMaterial: {fileID: 0}
+  ActiveChange: 1
+  _Alpha: 1
+  __MainTex2: {fileID: 2800000, guid: 167023acf6c0d8546947dbade221cda9, type: 3}
+  _Value1: 100
+  _Value2: 0.8
+  _Value3: 1
+  _Value4: 0
+  _AutoScrollX: 0
+  _AutoScrollSpeedX: 0
+  _AutoScrollY: 0
+  _AutoScrollSpeedY: 0
+  ShaderChange: 0
 --- !u!114 &114911988204953806
 MonoBehaviour:
   m_ObjectHideFlags: 1

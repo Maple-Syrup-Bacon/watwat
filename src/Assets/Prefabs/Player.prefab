@@ -27,7 +27,6 @@ GameObject:
   - component: {fileID: 114562476371453656}
   - component: {fileID: 96794735774609002}
   - component: {fileID: 114911988204953806}
-  - component: {fileID: 114496673713374318}
   - component: {fileID: 114898593608256784}
   m_Layer: 10
   m_Name: Player
@@ -347,24 +346,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   players: []
---- !u!114 &114496673713374318
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1398607332044848}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 540ce9c639bd8a2469aafd3d225fb94b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ForceMaterial: {fileID: 0}
-  ActiveChange: 1
-  _Alpha: 1
-  _ColorX: {r: 0.44705883, g: 0.7647059, b: 0.6627451, a: 1}
-  _Offset: 2.5
-  Speed: 1
-  ShaderChange: 0
 --- !u!114 &114562476371453656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -392,6 +373,7 @@ MonoBehaviour:
   damageTotal: 0
   score: 0
   isDead: 0
+  groundCheckLength: 0.2
   movementSpeed: 250
   jumpForce: 500
   degroundedTime: 0.25

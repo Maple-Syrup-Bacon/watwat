@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
-    public int playerCount;
-    public Button playButton;
-    public Button playersButton;
-    public Text playersLabel;
-    void Start()
+    public TMP_Text playersLabel;
+
+    private int playerCount;
+
+    private void Start()
     {
         playerCount = 2;
-        playButton.onClick.AddListener(play);
-        playersButton.onClick.AddListener(updatePlayers);
     }
-    public void play()
+
+    public void Play()
     {
         Utilities.NumberOfPlayers = playerCount;
         SceneManager.LoadScene(1); // This should be the GAME index
     }
 
-    public void updatePlayers()
+    public void UpdatePlayers()
     {
         playerCount = playerCount == 4 ? 2 : playerCount + 1;
         playersLabel.text = "Players: " + playerCount.ToString();

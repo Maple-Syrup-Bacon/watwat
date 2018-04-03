@@ -484,11 +484,6 @@ public class PlayerController : MonoBehaviour
             Debug.DrawLine(start, end, Color.red);
             var ray = Physics2D.Linecast(start, end, planetLayer);
 
-            if (ray.collider != null && playerID == 1)
-            {
-                Debug.Log("RAY: " + ray.collider.tag + ", " + ray.collider.name);
-            }
-
             if (ray.collider != null && ray.collider.CompareTag("Planet"))
             {
                 if (!IsGrounded)

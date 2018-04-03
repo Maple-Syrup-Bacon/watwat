@@ -472,6 +472,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5535c1338c3cb48bca5e732f826eb622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCount: 2
+  playButton: {fileID: 1196185567}
+  playersButton: {fileID: 508325896}
+  playersLabel: {fileID: 1168995026}
 --- !u!224 &349327498
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2112,7 +2116,7 @@ GameObject:
   - component: {fileID: 528226892}
   - component: {fileID: 528226893}
   m_Layer: 16
-  m_Name: Spot Light
+  m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15746,7 +15750,7 @@ GameObject:
   - component: {fileID: 1168995026}
   - component: {fileID: 1168995024}
   m_Layer: 0
-  m_Name: Label
+  m_Name: PlayersButtonLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -935,6 +935,7 @@ GameObject:
   - component: {fileID: 508325894}
   - component: {fileID: 508325896}
   - component: {fileID: 508325895}
+  - component: {fileID: 508325897}
   m_Layer: 0
   m_Name: PlayersButton
   m_TagString: Untagged
@@ -977,9 +978,9 @@ MonoBehaviour:
   buttonCategory: Uncategorized
   buttonName: ~Button Name~
   allowMultipleClicks: 1
-  deselectButtonOnClick: 1
+  deselectButtonOnClick: 0
   disableButtonInterval: 0.4
-  useOnPointerEnter: 0
+  useOnPointerEnter: 1
   onPointerEnterDisableInterval: 0.4
   onPointerEnterSound: ~No Sound~
   customOnPointerEnterSound: 0
@@ -988,7 +989,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  onPointerEnterAnimationType: 0
+  onPointerEnterAnimationType: 1
   onPointerEnterPunchPresetCategory: Uncategorized
   onPointerEnterPunchPresetName: DefaultPreset
   loadOnPointerEnterPunchPresetAtRuntime: 0
@@ -1001,14 +1002,14 @@ MonoBehaviour:
       vibrato: 4
       elasticity: 0.5
     rotate:
-      enabled: 0
+      enabled: 1
       punch: {x: 0, y: 0, z: 30}
       startDelay: 0
       duration: 0.3
       vibrato: 4
       elasticity: 0.5
     scale:
-      enabled: 0
+      enabled: 1
       punch: {x: 0.2, y: 0.2, z: 0}
       startDelay: 0
       duration: 0.3
@@ -1019,13 +1020,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     rotateIsExpanded:
-      m_Target: 0
+      m_Target: 1
       speed: 2
-      m_Value: 0
+      m_Value: 1
     scaleIsExpanded:
-      m_Target: 0
+      m_Target: 1
       speed: 2
-      m_Value: 0
+      m_Value: 1
   onPointerEnterStatePresetCategory: Uncategorized
   onPointerEnterStatePresetName: DefaultPreset
   loadOnPointerEnterStatePresetAtRuntime: 0
@@ -1047,9 +1048,9 @@ MonoBehaviour:
       startDelay: 0
       duration: 0.5
     rotate:
-      enabled: 0
+      enabled: 1
       animationType: 2
-      rotation: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 30}
       rotateMode: 1
       easeType: 0
       ease: 1
@@ -1060,7 +1061,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       startDelay: 0
-      duration: 0.5
+      duration: 0
     scale:
       enabled: 0
       animationType: 2
@@ -1094,9 +1095,9 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     rotateIsExpanded:
-      m_Target: 0
+      m_Target: 1
       speed: 2
-      m_Value: 0
+      m_Value: 1
     scaleIsExpanded:
       m_Target: 0
       speed: 2
@@ -2103,9 +2104,67 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1820751777}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 349327497}
+        m_MethodName: updatePlayers
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 508325895}
+        m_MethodName: ExecuteClick
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &508325897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 508325893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 508325895}
+          m_MethodName: ExecuteOnPointerEnter
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &528226891
 GameObject:
   m_ObjectHideFlags: 0
@@ -24875,7 +24934,7 @@ MonoBehaviour:
   buttonCategory: Uncategorized
   buttonName: ~Button Name~
   allowMultipleClicks: 1
-  deselectButtonOnClick: 1
+  deselectButtonOnClick: 0
   disableButtonInterval: 0.4
   useOnPointerEnter: 0
   onPointerEnterDisableInterval: 0.4
@@ -26001,7 +26060,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 136843656}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 349327497}
+        m_MethodName: play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &1233532316
@@ -26393,7 +26463,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1196185564}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
 --- !u!4 &1444026770

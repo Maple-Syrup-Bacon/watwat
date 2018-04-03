@@ -13,8 +13,8 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         playerCount = 2;
-        playButton.onClick.AddListener(play);
-        playersButton.onClick.AddListener(updatePlayers);
+        // playButton.onClick.AddListener(play);
+        // playersButton.onClick.AddListener(updatePlayers);
     }
     public void play()
     {
@@ -24,6 +24,7 @@ public class MenuManager : MonoBehaviour
 
     public void updatePlayers()
     {
+        Debug.Log("CLICK");
         playerCount = playerCount == 4 ? 2 : playerCount + 1;
         playersLabel.text = "Players: " + playerCount.ToString();
     }

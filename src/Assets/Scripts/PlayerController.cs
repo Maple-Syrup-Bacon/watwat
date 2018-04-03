@@ -73,7 +73,6 @@ public class PlayerController : MonoBehaviour
     public RuntimeAnimatorController AnimatorController { get; set; }
     public bool dashDisabled { get; set; } = false;
     public _2dxFX_LightningBolt SuperSpeedSpriteEffect { get; set; }
-    public _2dxFX_PlasmaShield InvincibilitySpriteEffect { get; set; }
     public _2dxFX_Fire FireballSpriteEffect { get; set; }
 
     private Rewired.Player player;
@@ -145,9 +144,6 @@ public class PlayerController : MonoBehaviour
 
         SuperSpeedSpriteEffect = GetComponent<_2dxFX_LightningBolt>();
         SuperSpeedSpriteEffect.enabled = false;
-
-        InvincibilitySpriteEffect = GetComponent<_2dxFX_PlasmaShield>();
-        InvincibilitySpriteEffect.enabled = false;
 
         FireballSpriteEffect = GetComponent<_2dxFX_Fire>();
         FireballSpriteEffect.enabled = false;
@@ -439,6 +435,7 @@ public class PlayerController : MonoBehaviour
                 var instance = Instantiate(fireballProjectile, aimerTransform.position, fireballProjectile.transform.rotation);
                 instance.GetComponent<BasicProjectile>().Owner = transform;
                 instance.GetComponent<Rigidbody2D>().AddForce(aimerVector * lightProjectileSpeed, ForceMode2D.Impulse);
+                PowerupManager.instance.DisableFireball(this);
             }
             else
             {
@@ -478,9 +475,8 @@ public class PlayerController : MonoBehaviour
         if (!degrounded)
         {
             var start = transform.position;
-            start -= GetYExtend() * transform.up;
-
             var end = start;
+            end -= GetYExtend() * transform.up;
             end -= transform.up * groundCheckLength;
 
             Debug.DrawLine(start, end, Color.red);

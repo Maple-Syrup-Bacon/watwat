@@ -122,7 +122,7 @@ public class PowerupManager : MonoBehaviour
         switch (type)
         {
             case PowerupType.ExplodingFireball:
-                StartCoroutine(ExplodingFireball(player));
+                EnableFireball(player);
                 break;
 
             case PowerupType.Invincibility:
@@ -137,22 +137,6 @@ public class PowerupManager : MonoBehaviour
             default:
                 SuperSpeed(player);
                 break;
-        }
-    }
-
-    private IEnumerator ExplodingFireball(PlayerController player)
-    {
-        if (!player.HasFireball)
-        {
-            EnableFireball(player);
-            var playerID = player.playerID;
-            var rewiredPlayer = ReInput.players.GetPlayer(playerID);
-            while (!rewiredPlayer.GetButtonDown("Primary"))
-            {
-                yield return null;
-            }
-
-            DisableFireball(player);
         }
     }
 
@@ -182,7 +166,6 @@ public class PowerupManager : MonoBehaviour
         if (!player.HasInvincibility)
         {
             player.HasInvincibility = true;
-            player.InvincibilitySpriteEffect.enabled = true;
             GameManager.instance.PlayerLights[player.playerID].color = invincibilityColor;
             var effect = Instantiate(hasInvincibilityParticle, Vector3.zero, hasInvincibilityParticle.transform.rotation, player.transform);
             effect.transform.up = player.transform.up;
@@ -204,10 +187,6 @@ public class PowerupManager : MonoBehaviour
             player.HasSuperStrength = true;
             player.SetScale(player.transform.localScale * superStrengthSizeModifier);
             GameManager.instance.PlayerLights[player.playerID].color = superStrengthColor;
-            // var effect = Instantiate(hasSuperStrengthParticle, Vector3.zero, hasSuperStrengthParticle.transform.rotation, player.transform);
-            // effect.transform.up = player.transform.up;
-            // effect.transform.localPosition = Vector3.zero;
-            // activePlayerPowerupEffects[player.playerID] = effect;
         }
     }
 
@@ -277,7 +256,7 @@ public class PowerupManager : MonoBehaviour
     {
         player.HasSuperSpeed = false;
         player.SuperSpeedSpriteEffect.enabled = false;
-        ResetPlayerColor(player.playerID);
+        ResetPlayerLightColor(player.playerID);
         Destroy(superSpeedEffects[player.playerID]);
         superSpeedEffects[player.playerID] = null;
         hasSuperSpeedAudios[player.playerID].Stop();
@@ -287,16 +266,16 @@ public class PowerupManager : MonoBehaviour
     {
         player.HasSuperStrength = false;
         player.SetScale(Vector3.one);
-        ResetPlayerColor(player.playerID);
+        ResetPlayerLightColor(player.playerID);
         Destroy(superStrengthEffects[player.playerID]);
         superStrengthEffects[player.playerID] = null;
     }
 
-    private void DisableFireball(PlayerController player)
+    public void DisableFireball(PlayerController player)
     {
         player.HasFireball = false;
         player.FireballSpriteEffect.enabled = false;
-        ResetPlayerColor(player.playerID);
+        ResetPlayerLightColor(player.playerID);
         Destroy(fireballEffects[player.playerID]);
         fireballEffects[player.playerID] = null;
     }
@@ -304,13 +283,12 @@ public class PowerupManager : MonoBehaviour
     private void DisableInvincibility(PlayerController player)
     {
         player.HasInvincibility = false;
-        player.InvincibilitySpriteEffect.enabled = false;
-        ResetPlayerColor(player.playerID);
+        ResetPlayerLightColor(player.playerID);
         Destroy(invincibilitiesEffects[player.playerID]);
         invincibilitiesEffects[player.playerID] = null;
     }
 
-    private void ResetPlayerColor(int playerID)
+    private void ResetPlayerLightColor(int playerID)
     {
         GameManager.instance.PlayerLights[playerID].color = Color.white;
     }

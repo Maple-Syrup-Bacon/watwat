@@ -146,7 +146,7 @@ public class PowerupManager : MonoBehaviour
         {
             player.HasFireball = true;
             player.FireballSpriteEffect.enabled = true;
-            GameManager.instance.PlayerLights[player.playerID].color = fireballColor;
+            // GameManager.instance.PlayerLights[player.playerID].color = fireballColor;
             var effect = Instantiate(hasExplodingFireballParticle, Vector3.zero, hasExplodingFireballParticle.transform.rotation, player.transform);
             effect.transform.up = player.transform.up;
             effect.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
@@ -166,7 +166,7 @@ public class PowerupManager : MonoBehaviour
         if (!player.HasInvincibility)
         {
             player.HasInvincibility = true;
-            GameManager.instance.PlayerLights[player.playerID].color = invincibilityColor;
+            // GameManager.instance.PlayerLights[player.playerID].color = invincibilityColor;
             var effect = Instantiate(hasInvincibilityParticle, Vector3.zero, hasInvincibilityParticle.transform.rotation, player.transform);
             effect.transform.up = player.transform.up;
             effect.transform.localPosition = Vector3.zero;
@@ -186,7 +186,7 @@ public class PowerupManager : MonoBehaviour
         {
             player.HasSuperStrength = true;
             player.SetScale(player.transform.localScale * superStrengthSizeModifier);
-            GameManager.instance.PlayerLights[player.playerID].color = superStrengthColor;
+            // GameManager.instance.PlayerLights[player.playerID].color = superStrengthColor;
         }
     }
 
@@ -203,7 +203,7 @@ public class PowerupManager : MonoBehaviour
             player.HasSuperSpeed = true;
             player.dashDisabled = false;
             player.SuperSpeedSpriteEffect.enabled = true;
-            GameManager.instance.PlayerLights[player.playerID].color = superSpeedColor;
+            // GameManager.instance.PlayerLights[player.playerID].color = superSpeedColor;
             var effect = Instantiate(hasSuperSpeedParticle, Vector3.zero, hasSuperSpeedParticle.transform.rotation, player.transform);
             effect.transform.up = player.transform.up;
             effect.transform.localPosition = Vector3.zero;

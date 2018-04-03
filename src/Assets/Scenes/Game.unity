@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731725, g: 0.13414744, b: 0.12107873, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731725, g: 0.1341475, b: 0.12107855, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -377,7 +377,7 @@ Transform:
   - {fileID: 1506791411}
   - {fileID: 424031169}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &87539134
 GameObject:
@@ -2976,7 +2976,7 @@ Transform:
   - {fileID: 948484871}
   - {fileID: 1113831896}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &744631298
 GameObject:
@@ -5133,7 +5133,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &1333287508
 CircleCollider2D:
@@ -5865,64 +5865,6 @@ Transform:
   m_Father: {fileID: 726888589}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1576415604
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -14.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -3.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1398607332044848, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4259711588040206, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 97746355205444e36a8b249bb9b06acf, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1789616696
 Prefab:
   m_ObjectHideFlags: 0
@@ -10841,7 +10783,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1951108424
 GameObject:
@@ -11357,5 +11299,5 @@ Transform:
   - {fileID: 1918233775}
   - {fileID: 925841682}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

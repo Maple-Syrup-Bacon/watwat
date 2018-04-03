@@ -155,8 +155,6 @@ public class GameManager : MonoBehaviour
             PlayerLights[i] = playerInstance.transform.Find("Light").GetComponent<Light>();
             // PlayerLights[i].color = playerColors[i];
 
-            playerInstance.GetComponent<_2dxFX_PlasmaShield>()._ColorX = playerColors[i];
-
             Players[i] = playerController;
         }
     }

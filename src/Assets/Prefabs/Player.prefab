@@ -373,7 +373,7 @@ MonoBehaviour:
   damageTotal: 0
   score: 0
   isDead: 0
-  groundCheckLength: 0.2
+  groundCheckLength: 0.1
   movementSpeed: 250
   jumpForce: 500
   degroundedTime: 0.25

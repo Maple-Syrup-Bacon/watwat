@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
     private float invincibilityFrameTimer;
     private int lastDamagedByPlayerID = -1;
     private float lastDamageTime;
+    private int planetLayer;
 
     // Powerups
     public bool HasFireball { get; set; } = false;
@@ -147,6 +148,7 @@ public class PlayerController : MonoBehaviour
 
         FireballSpriteEffect = GetComponent<_2dxFX_Fire>();
         FireballSpriteEffect.enabled = false;
+        planetLayer = 1 << LayerMask.NameToLayer("Planet");
     }
 
     // Update is called once per frame
@@ -480,7 +482,12 @@ public class PlayerController : MonoBehaviour
             end -= transform.up * groundCheckLength;
 
             Debug.DrawLine(start, end, Color.red);
-            var ray = Physics2D.Linecast(start, end);
+            var ray = Physics2D.Linecast(start, end, planetLayer);
+
+            if (ray.collider != null && playerID == 1)
+            {
+                Debug.Log("RAY: " + ray.collider.tag + ", " + ray.collider.name);
+            }
 
             if (ray.collider != null && ray.collider.CompareTag("Planet"))
             {
@@ -508,7 +515,7 @@ public class PlayerController : MonoBehaviour
         var aimerAngle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
         aimerAngle -= 90f;
 
-        aimerTransform.position = transform.position + aimerVector;
+        aimerTransform.position = transform.position + (aimerVector * transform.lossyScale.y);
         aimerTransform.rotation = Quaternion.Euler(0, 0, aimerAngle);
     }
 
@@ -615,7 +622,10 @@ public class PlayerController : MonoBehaviour
 
     public void SetScale(Vector3 scale)
     {
+        var parent = transform.parent;
+        transform.parent = null;
         transform.localScale = scale;
+        transform.parent = parent;
     }
 
     public float GetYExtend()

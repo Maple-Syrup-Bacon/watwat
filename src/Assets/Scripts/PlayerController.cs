@@ -74,16 +74,35 @@ public class PlayerController : MonoBehaviour
     public bool dashDisabled { get; set; } = false;
     public _2dxFX_LightningBolt SuperSpeedSpriteEffect { get; set; }
     public _2dxFX_Fire FireballSpriteEffect { get; set; }
-
+    [SerializeField]
     private Rewired.Player player;
+    [SerializeField]
     private Rigidbody2D body;
+    [SerializeField]
     private Animator animator;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
     private ObjectGravity objectGravity;
+    [SerializeField]
     private Transform aimerTransform;
+    [SerializeField]
     private SpriteRenderer aimerSpriteRenderer;
+    [SerializeField]
+    private SpriteRenderer weaponIdleSpriteRenderer;
+    [SerializeField]
+    private SpriteRenderer weaponAttackSpriteRenderer;
+    private Transform weaponTransform;
+    private Transform weaponJoint;
+    [SerializeField]
+    private Sprite[] idleWeaponSprites;
+    [SerializeField]
+    private Sprite[] attackWeaponSprites;
+    private float weaponXRight;
+    private float weaponJointXRight;
+    [SerializeField]
     private TrailRenderer trailRenderer;
     private ParticleSystem.MainModule meleeParticlePrefabMain;
+    [SerializeField]
     private BoxCollider2D boxCollider;
 
     private Vector3 aimerVector;
@@ -98,6 +117,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private float sqrMaxSpeed;
     private bool attacking;
+    [SerializeField]
     private PlayerAttack playerAttack;
     private float attackTriggerXRight;
     private float attackTriggerXLeft;
@@ -118,21 +138,31 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        // body = GetComponent<Rigidbody2D>();
+        // animator = GetComponentInChildren<Animator>();
+        // spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Use this for initialization
     private void Start()
     {
         player = ReInput.players.GetPlayer(playerID);
-        aimerTransform = transform.GetChild(0);
-        playerAttack = aimerTransform.GetComponent<PlayerAttack>();
-        aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
+        // aimerTransform = transform.GetChild(0);
+        // playerAttack = aimerTransform.GetComponent<PlayerAttack>();
+        // aimerSpriteRenderer = aimerTransform.GetComponent<SpriteRenderer>();
         meleeParticlePrefabMain = meleeParticle.GetComponent<ParticleSystem>().main;
-        trailRenderer = GetComponent<TrailRenderer>();
-        boxCollider = GetComponent<BoxCollider2D>();
+        // trailRenderer = GetComponent<TrailRenderer>();
+        // boxCollider = GetComponent<BoxCollider2D>();
+
+        weaponTransform = weaponIdleSpriteRenderer.transform;
+        weaponJoint = weaponTransform.parent.transform;
+        weaponXRight = weaponTransform.localPosition.x;
+        weaponJointXRight = weaponJoint.localPosition.x;
+        weaponIdleSpriteRenderer.sprite = idleWeaponSprites[playerID];
+        weaponIdleSpriteRenderer.enabled = true;
+        weaponAttackSpriteRenderer.sprite = attackWeaponSprites[playerID];
+        weaponAttackSpriteRenderer.enabled = false;
+
         originalFixedDelta = Time.fixedDeltaTime;
         leftAnalogStick = new Vector2();
         sqrMaxSpeed = Mathf.Pow(maxSpeed, 2);
@@ -239,11 +269,19 @@ public class PlayerController : MonoBehaviour
             {
                 spriteRenderer.flipX = false;
                 attackTriggerPos.x = attackTriggerXRight;
+
+                weaponIdleSpriteRenderer.flipX = false;
+                weaponJoint.localPosition = new Vector3(weaponJointXRight, weaponJoint.localPosition.y, weaponJoint.localPosition.z);
+                weaponTransform.localPosition = new Vector3(weaponXRight, weaponTransform.localPosition.y, weaponTransform.localPosition.z);
             }
             else
             {
                 spriteRenderer.flipX = true;
                 attackTriggerPos.x = attackTriggerXLeft;
+
+                weaponIdleSpriteRenderer.flipX = true;
+                weaponJoint.localPosition = new Vector3(-weaponJointXRight, weaponJoint.localPosition.y, weaponJoint.localPosition.z);
+                weaponTransform.localPosition = new Vector3(-weaponXRight, weaponTransform.localPosition.y, weaponTransform.localPosition.z);
             }
         }
         else
@@ -371,6 +409,8 @@ public class PlayerController : MonoBehaviour
     {
         spriteRenderer.enabled = false;
         aimerSpriteRenderer.enabled = false;
+        weaponAttackSpriteRenderer.enabled = false;
+        weaponIdleSpriteRenderer.enabled = false;
         trailRenderer.enabled = false;
 
         yield return new WaitForSeconds(GameManager.instance.timeVisibleAfterDeath);
@@ -404,6 +444,7 @@ public class PlayerController : MonoBehaviour
             dashDisabled = false;
             spriteRenderer.enabled = true;
             aimerSpriteRenderer.enabled = true;
+            weaponIdleSpriteRenderer.enabled = true;
             trailRenderer.enabled = true;
 
             damageTotal = 0;
@@ -430,6 +471,7 @@ public class PlayerController : MonoBehaviour
         if (player.GetButtonDown("Primary") && nextMelee < Time.time)
         {
             nextMelee = Time.time + meleeCooldown;
+            StartCoroutine(WeaponAnimation());
 
             if (HasFireball)
             {
@@ -465,6 +507,19 @@ public class PlayerController : MonoBehaviour
 
         if (player.GetButtonDown("Secondary"))
         { }
+    }
+
+    private IEnumerator WeaponAnimation(){ 
+        weaponIdleSpriteRenderer.enabled = false;
+        weaponAttackSpriteRenderer.enabled = true;
+        var aimerAngle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
+        weaponJoint.rotation = Quaternion.Euler(0, 0, aimerAngle);
+        
+        yield return new WaitForSeconds(meleeCooldown);
+        
+        weaponIdleSpriteRenderer.enabled = true;
+        weaponAttackSpriteRenderer.enabled = false;
+        weaponJoint.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void GroundCheck()

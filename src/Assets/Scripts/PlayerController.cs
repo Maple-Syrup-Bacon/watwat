@@ -186,14 +186,7 @@ public class PlayerController : MonoBehaviour
     {
         if (player.GetButtonDown("Pause") && !GameManager.instance.GameOver)
         {
-            // GameManager.instance.TogglePause(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
-            GameManager.instance.IncreaseScore(playerID);
+            GameManager.instance.TogglePause(playerID);
         }
 
         if (isDead || GameManager.instance.Paused)

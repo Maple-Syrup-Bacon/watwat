@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using DoozyUI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -11,8 +13,7 @@ public class MenuManager : MonoBehaviour
     public TMP_Text winScoreLabel;
     public int[] winScores;
     public int defaultWinScoreIndex;
-
-    private int playerCount;
+    private int playerCount; 
 
     private void Start()
     {

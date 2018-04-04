@@ -273,6 +273,9 @@ public class PlayerController : MonoBehaviour
                 weaponIdleSpriteRenderer.flipX = false;
                 weaponJoint.localPosition = new Vector3(weaponJointXRight, weaponJoint.localPosition.y, weaponJoint.localPosition.z);
                 weaponTransform.localPosition = new Vector3(weaponXRight, weaponTransform.localPosition.y, weaponTransform.localPosition.z);
+                foreach(Transform go in weaponTransform){
+                    go.localPosition = new Vector3(weaponXRight - 0.5f, go.localPosition.y, go.localPosition.z);
+                }
             }
             else
             {
@@ -282,6 +285,9 @@ public class PlayerController : MonoBehaviour
                 weaponIdleSpriteRenderer.flipX = true;
                 weaponJoint.localPosition = new Vector3(-weaponJointXRight, weaponJoint.localPosition.y, weaponJoint.localPosition.z);
                 weaponTransform.localPosition = new Vector3(-weaponXRight, weaponTransform.localPosition.y, weaponTransform.localPosition.z);
+                foreach(Transform go in weaponTransform){
+                    go.localPosition = new Vector3(-weaponXRight + 0.5f, go.localPosition.y, go.localPosition.z);
+                }
             }
         }
         else

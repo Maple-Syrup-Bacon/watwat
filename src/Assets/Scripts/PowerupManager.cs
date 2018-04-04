@@ -30,6 +30,7 @@ public class PowerupManager : MonoBehaviour
     public GameObject hasSuperSpeedParticle;
     public GameObject hasSuperStrengthParticle;
     public GameObject hasInvincibilityParticle;
+    public GameObject fireballClubTorch;
 
     [Header("Colors")]
     public Color fireballColor;
@@ -50,6 +51,7 @@ public class PowerupManager : MonoBehaviour
     private float[] invincibilityTimers;
 
     private GameObject[] fireballEffects;
+    private GameObject[] torchFireballEffects;
     private GameObject[] superSpeedEffects;
     private GameObject[] superStrengthEffects;
     private GameObject[] invincibilitiesEffects;
@@ -83,6 +85,7 @@ public class PowerupManager : MonoBehaviour
         invincibilityTimers = new float[Utilities.NumberOfPlayers];
 
         fireballEffects = new GameObject[Utilities.NumberOfPlayers];
+        torchFireballEffects = new GameObject[Utilities.NumberOfPlayers];
         superSpeedEffects = new GameObject[Utilities.NumberOfPlayers];
         superStrengthEffects = new GameObject[Utilities.NumberOfPlayers];
         invincibilitiesEffects = new GameObject[Utilities.NumberOfPlayers];
@@ -152,6 +155,12 @@ public class PowerupManager : MonoBehaviour
             effect.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
             effect.transform.localPosition = new Vector3(0.0f, -player.GetYExtend(), 0.0f);
             fireballEffects[player.playerID] = effect;
+
+            var torchParent = player.transform.Find("WeaponJoint").Find("WeaponIdle");
+            var torchEffect = Instantiate(fireballClubTorch, torchParent.transform.position, fireballClubTorch.transform.rotation, torchParent);
+            torchEffect.transform.localPosition = new Vector3(-0.7f, 1.54f, 0f);
+            torchEffect.transform.Rotate(new Vector3(-90.0f, 0.0f, 0.0f));
+            torchFireballEffects[player.playerID] = torchEffect;
         }
     }
 
@@ -278,6 +287,8 @@ public class PowerupManager : MonoBehaviour
         ResetPlayerLightColor(player.playerID);
         Destroy(fireballEffects[player.playerID]);
         fireballEffects[player.playerID] = null;
+        Destroy(torchFireballEffects[player.playerID]);
+        torchFireballEffects[player.playerID] = null;
     }
 
     private void DisableInvincibility(PlayerController player)

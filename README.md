@@ -1,61 +1,55 @@
-## Team name
-Maple Syrup Bacon
+# Wickedly Awesome Transplanetary Warfare Amongst Terrestrials
 
-## Working game title
-Wicked Awesome Timewarped Wizard Ascending Tower
-* W.A.T.W.A.T
-* WATWAT
+A 2-4 player competitive 2D battle arcade inspired by Super Smash Bros.
 
-## Final game idea
+The players are fighting against each other in space using planets, powerups and gravity to their advantage. Who will emerge victorious?
 
-A 2D sidescrolling game about a wizard cursed by his rival. 
-The curse is Timewarped and time only moves when he moves (think SuperHot).
-The wizard must stop the curse before it consumes him by defeating his rival.
-The wizard goes up his rival's tower while encountering all of his rival's minions.
+## Features
 
-The level has a timer which also acts as a lifesource.
-The timer ticks down in correspondance with the timewarp and when you take damage, the timer goes down as well.
+* Insanely competitive gameplay
+* Powerups, powerups, powerups
+    * Exploding fireballs
+    * Super strength
+    * Super resistance
+    * Super speed
+* Planets that you can slingshot around
+* Whack your friends with bats
 
-## Stuff
-* 2.5D
-   * Maybe end up with pure 2D
-* Sidescroller
-   * Maybe skewed viewport
-* Spells
-   * Magic punch (Basic attack, low cooldown)
-   * Magic missile (Basic attack, low cooldown)
-   * Magic rope (ninja rope) (Utility, no cooldown)
-   * Shield (Defensive, medium cooldown)
-   * Explosive missile (Heavy attack, high cooldown)
-   * Mana/Energy/Fuel
-        * Charge spells
-   * Spell explosive force
-        * Push enemies back
-* Timewarped (Superhot ripoff)
-   * End-goal is to revert the timewarping
-* Multiple levels 
-   * Different parts of the tower
-   * Can select which level to play out from completed levels
-* Levels
-   * Moving platforms/obstacles
-* Enemies
-   * Stationary and mobile
-        * Magic turrets
-        * Enemy berserkers
-* Leveltimer
-   * Your lifesource
-        * Timer goes down X amount when you take damage
-   * Goes down in regards to timewarp
-   * Gain time from pickups
-        * Myabe dropeed by enimes
-   * Leaderboard?
-* Special movement ideas
-   * Wall jumping
-   * Force ragdoll (some sort of dodge)
-   * Double jump
-   * Ninja rope
+## Playing the game
 
-## Prototyping
+In order to play WATWAT you can either download the binary for your platform on our [Itch.io page](https://indexu.itch.io/watwat) or build it from source using Unity.
 
-* Is the timewarp idea worth pursuing?
-* Will people understand how the leveltimer works?
+### Controls
+
+The game requires you to use at least two Dual Analog Stick controllers.
+
+#### In-game
+
+* Move with Left Analog Stick
+* Jump with Cross (PS), A (XBox) or 2 (RumblePad).
+* Attack with Square (PS), X (XBox) or 1 (RumblePad).
+
+#### In menu
+
+* Select menu buttons with either the D-Pad or the Left Analog Stick.
+* "Click" with Cross (PS), A (XBox) or 2 (RumblePad).
+
+## Built With
+
+* [Unity 2018.1](https://unity3d.com/) - Game engine
+* [Rewired](https://assetstore.unity.com/packages/tools/utilities/rewired-21676) - Input manager
+* [Text Mesh Pro](https://assetstore.unity.com/packages/essentials/beta-projects/textmesh-pro-84126) - UI Text
+
+## Authors
+
+* [Birkir Brynjarsson](https://github.com/birkirbrynjarsson)
+* [Christian A. Jacobsen](https://github.com/ChristianJacobsen)
+* [Hilmar Tryggvason](https://github.com/Indexu)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Attributions
+
+// TODO

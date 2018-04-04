@@ -68,6 +68,17 @@ MonoBehaviour:
         m_Target: 0
         speed: 2
         m_Value: 0
+    - categoryName: WATWAT
+      itemNames:
+      - Avatars
+      - Countdown
+      - GameOverMenu
+      - MainMenu
+      - PauseMenu
+      isExpanded:
+        m_Target: 1
+        speed: 2
+        m_Value: 1
     categoryNames:
     - ~Custom Name~
     - Example 1 - SimpleScene
@@ -76,6 +87,7 @@ MonoBehaviour:
     - Example 4 - Simple UI
     - MyCategory
     - Uncategorized
+    - WATWAT
   DatabaseUIButtons:
     categories:
     - categoryName: Example 1 - SimpleScene

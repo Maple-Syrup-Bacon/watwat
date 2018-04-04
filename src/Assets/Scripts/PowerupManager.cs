@@ -223,7 +223,7 @@ public class PowerupManager : MonoBehaviour
             var y = UnityEngine.Random.Range(-borderBox.bounds.extents.y, borderBox.bounds.extents.y);
 
             PowerupType type;
-            var typeID = UnityEngine.Random.Range(1, 2);
+            var typeID = UnityEngine.Random.Range(0, 4);
 
             switch (typeID)
             {

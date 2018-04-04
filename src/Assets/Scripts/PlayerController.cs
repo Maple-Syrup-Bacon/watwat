@@ -184,7 +184,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (player.GetButtonDown("Pause"))
+        if (player.GetButtonDown("Pause") && !GameManager.instance.GameOver)
         {
             GameManager.instance.TogglePause(playerID);
         }

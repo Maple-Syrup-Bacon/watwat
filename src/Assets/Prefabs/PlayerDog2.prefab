@@ -562,10 +562,10 @@ MonoBehaviour:
   meleeParticle: {fileID: 100002, guid: ef61099bbf63943ed86ef60612f40425, type: 2}
   deathParticle: {fileID: 100018, guid: 8f4e1bf2e8330423b9550af9ad809ebd, type: 2}
   spawnParticles:
-  - {fileID: 1656260141094082, guid: fe95319199bc9482cad5ef7d2dd3d423, type: 2}
-  - {fileID: 1054200795469692, guid: cc8bddbee58a5406dbd48b717e858a31, type: 2}
   - {fileID: 1333250725429398, guid: ff719143503be42dd94e73a88fbbf448, type: 2}
-  - {fileID: 1927718648143958, guid: 956e32675be4b4fa68917d6c51f94da6, type: 2}
+  - {fileID: 1054200795469692, guid: cc8bddbee58a5406dbd48b717e858a31, type: 2}
+  - {fileID: 1656260141094082, guid: fe95319199bc9482cad5ef7d2dd3d423, type: 2}
+  - {fileID: 1927718648143958, guid: ba9a0f2ede4994742bfec501b45d415c, type: 2}
   dashParticles:
   - {fileID: 1127030775456926, guid: dce5df9e71fde4818b70ebb3354d5529, type: 2}
   - {fileID: 1922673611268636, guid: 0673f21c2e1494dc3a7622e4e7c5e3a6, type: 2}

@@ -48,7 +48,7 @@ The game requires you to use at least two Dual Analog Stick controllers.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Attributions
 

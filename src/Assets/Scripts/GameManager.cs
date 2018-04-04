@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Players")]
     public GameObject playerPrefab;
+    public Vector2[] initialSpawnPoints;
     public Sprite[] winSprites;
     public Sprite[] idleSprites;
     public Color[] playerColors;
@@ -51,7 +52,6 @@ public class GameManager : MonoBehaviour
     private TMP_Text[] scores;
     private Rewired.Player currentPausingPlayer;
     private SpriteRenderer winnerSprite;
-    private Button resumeButton;
     private EventSystem eventSystem;
 
     private void Awake()
@@ -75,6 +75,10 @@ public class GameManager : MonoBehaviour
     {
         UIManager.HideUiElement("GameOverMenu", "WATWAT", true);
         UIManager.HideUiElement("PauseMenu", "WATWAT", true);
+
+        Resume();
+
+        winScore = Utilities.WinScore;
 
         countdown.text = "3";
 
@@ -120,9 +124,7 @@ public class GameManager : MonoBehaviour
 
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
         {
-            var index = Random.Range(0, GameManager.instance.Planets.Length);
-
-            var playerInstance = Instantiate(playerPrefab, instance.Planets[index].transform.position, playerPrefab.transform.rotation);
+            var playerInstance = Instantiate(playerPrefab, initialSpawnPoints[i], playerPrefab.transform.rotation);
 
             var playerController = playerInstance.GetComponent<PlayerController>();
             playerController.playerID = i;
@@ -147,7 +149,6 @@ public class GameManager : MonoBehaviour
     {
         winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<SpriteRenderer>();
         eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
-        resumeButton = GameObject.Find("MasterCanvas/UIPauseMenu/Buttons/ResumeButton").GetComponent<Button>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
         countdown = GameObject.Find("MasterCanvas/UICountdown/Text").GetComponent<TMP_Text>();
 

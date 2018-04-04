@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731725, g: 0.1341475, b: 0.12107855, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731725, g: 0.13414744, b: 0.12107873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1797,7 +1797,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 700f2db47b5b840f0803a4bd6b1cfcb8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1f30ea4338ad4daeba933722a904907, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1867,7 +1867,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e1f30ea4338ad4daeba933722a904907, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5f955e89babbb4e579cc154dababb58c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10936,19 +10936,19 @@ MonoBehaviour:
   playerPrefab: {fileID: 1082833244860654, guid: 269b9d8844e924d44a6236be23ecf49b,
     type: 2}
   idleSprites:
+  - {fileID: 21300000, guid: 3dfce74f1640146c199c149dae6ebd00, type: 3}
+  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
   - {fileID: 21300000, guid: 90ab0dac731984f4b920210eb034b404, type: 3}
   - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
-  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
-  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
   playerColors:
-  - {r: 0.44705886, g: 0.76470596, b: 0.6627451, a: 1}
+  - {r: 0.33459416, g: 0.6743437, b: 0.9716981, a: 1}
   - {r: 0.9960785, g: 0.7960785, b: 0.18431373, a: 1}
-  - {r: 0.93725497, g: 0.6156863, b: 0.7176471, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.8745099, g: 0.81568635, b: 0.69411767, a: 1}
   animatorControllers:
+  - {fileID: 9100000, guid: 55b151419bfc54ee3b6963cb8a020eba, type: 2}
+  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
   - {fileID: 9100000, guid: 62778b4420b32465dba08b28ae91b084, type: 2}
-  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
-  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
   - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
   music:
   - {fileID: 8300000, guid: 3be3b9faff6064a5baa7560bd15563ac, type: 3}

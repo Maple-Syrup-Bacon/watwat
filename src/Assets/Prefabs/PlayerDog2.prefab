@@ -599,14 +599,14 @@ MonoBehaviour:
   weaponIdleSpriteRenderer: {fileID: 212991912390764764}
   weaponAttackSpriteRenderer: {fileID: 212908654121904088}
   idleWeaponSprites:
+  - {fileID: 21300000, guid: bd0f0643857dc4aed8283812bb7559f0, type: 3}
+  - {fileID: 21300000, guid: 40ee73494ca7645c28e107b54dd63307, type: 3}
   - {fileID: 21300000, guid: 2bc53071e236e4dce9a47c65dc0bfb8b, type: 3}
   - {fileID: 21300000, guid: 40ee73494ca7645c28e107b54dd63307, type: 3}
-  - {fileID: 21300000, guid: 40ee73494ca7645c28e107b54dd63307, type: 3}
-  - {fileID: 21300000, guid: 40ee73494ca7645c28e107b54dd63307, type: 3}
   attackWeaponSprites:
+  - {fileID: 21300000, guid: 50269554359ae489f8b30a170e80c4e5, type: 3}
+  - {fileID: 21300000, guid: 7ed044aa7f4854902afeae574df780c7, type: 3}
   - {fileID: 21300000, guid: dbe3e3f21b8c64176acbea85f9b49c74, type: 3}
-  - {fileID: 21300000, guid: 7ed044aa7f4854902afeae574df780c7, type: 3}
-  - {fileID: 21300000, guid: 7ed044aa7f4854902afeae574df780c7, type: 3}
   - {fileID: 21300000, guid: 7ed044aa7f4854902afeae574df780c7, type: 3}
   trailRenderer: {fileID: 96795105409615452}
   boxCollider: {fileID: 61792016003078984}

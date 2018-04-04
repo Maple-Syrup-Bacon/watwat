@@ -391,12 +391,10 @@ public class PlayerController : MonoBehaviour
             GameManager.instance.IncreaseScore(lastDamagedByPlayerID);
             lastDamagedByPlayerID = -1;
         }
-        else if (0 < score)
+        else
         {
-            score--;
+            GameManager.instance.DecrementScore(playerID);
         }
-
-        GameManager.instance.UpdateAvatars();
 
         EZCameraShake.CameraShaker.Instance.ShakeOnce(deathMagnitude, deathRoughness, deathFadeIn, deathFadeOut);
         SoundManager.PlaySound(death, deathVolume);
@@ -449,7 +447,7 @@ public class PlayerController : MonoBehaviour
 
             damageTotal = 0;
 
-            GameManager.instance.UpdateAvatars();
+            GameManager.instance.SetAvatarPercentage(playerID, (int)damageTotal);
         }
     }
 
@@ -663,7 +661,7 @@ public class PlayerController : MonoBehaviour
         body.AddForce(knockbackVec.normalized * knockbackForce, ForceMode2D.Impulse);
         Deground();
 
-        GameManager.instance.UpdateAvatars();
+        GameManager.instance.SetAvatarPercentage(playerID, (int)damageTotal);
     }
 
     public void SetGrounded(bool grounded)

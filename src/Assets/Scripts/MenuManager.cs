@@ -13,11 +13,12 @@ public class MenuManager : MonoBehaviour
     public TMP_Text winScoreLabel;
     public int[] winScores;
     public int defaultWinScoreIndex;
-    private int playerCount; 
+    private int playerCount;
 
     private void Start()
     {
         playerCount = 2;
+        Time.timeScale = 1;
     }
 
     public void Play()

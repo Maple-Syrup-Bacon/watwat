@@ -169,8 +169,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 'Win Score: 5'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4a13b1da895bc4a2a967e8570b6ed576, type: 2}
-  m_sharedMaterial: {fileID: 21491178213680126, guid: 4a13b1da895bc4a2a967e8570b6ed576,
+  m_fontAsset: {fileID: 11400000, guid: 750e5357046ec416496aab8ff6818937, type: 2}
+  m_sharedMaterial: {fileID: 21491178213680126, guid: 750e5357046ec416496aab8ff6818937,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -195,8 +195,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -561,8 +561,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: Quit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4a13b1da895bc4a2a967e8570b6ed576, type: 2}
-  m_sharedMaterial: {fileID: 21491178213680126, guid: 4a13b1da895bc4a2a967e8570b6ed576,
+  m_fontAsset: {fileID: 11400000, guid: 750e5357046ec416496aab8ff6818937, type: 2}
+  m_sharedMaterial: {fileID: 21491178213680126, guid: 750e5357046ec416496aab8ff6818937,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -587,8 +587,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 58
+  m_fontSizeBase: 58
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -35484,8 +35484,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 'Players: 2'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4a13b1da895bc4a2a967e8570b6ed576, type: 2}
-  m_sharedMaterial: {fileID: 21491178213680126, guid: 4a13b1da895bc4a2a967e8570b6ed576,
+  m_fontAsset: {fileID: 11400000, guid: 750e5357046ec416496aab8ff6818937, type: 2}
+  m_sharedMaterial: {fileID: 21491178213680126, guid: 750e5357046ec416496aab8ff6818937,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -35510,8 +35510,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

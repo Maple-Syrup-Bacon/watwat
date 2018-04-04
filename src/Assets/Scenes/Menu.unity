@@ -50778,7 +50778,7 @@ MonoBehaviour:
   targetParticleSystem: {fileID: 1361080746}
   targetUIElement: {fileID: 443210916}
   startDelay: 0
-  playOnAwake: 1
+  playOnAwake: 0
   stopInstantly: 0
   useCustomSortingLayerName: 0
   customSortingLayerName: Default

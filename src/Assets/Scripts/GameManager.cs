@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using Rewired.Integration.UnityUI;
 using EazyTools.SoundManager;
 using DoozyUI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -43,15 +44,12 @@ public class GameManager : MonoBehaviour
     public bool GameOver { get; set; } = false;
     public bool Paused { get; set; } = false;
 
-    private Rewired.Player player;
-    private UIElement pauseScreen;
     private RewiredStandaloneInputModule uiInputModule;
     // private TMP_Text timer;
     private TMP_Text countdown;
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
-    private Rewired.Player currentPausingPlayer;
-    private SpriteRenderer winnerSprite;
+    private Image winnerSprite;
     private EventSystem eventSystem;
 
     private void Awake()
@@ -73,6 +71,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        UIManager.HideUiElement("Background", "WATWAT", true);
         UIManager.HideUiElement("GameOverMenu", "WATWAT", true);
         UIManager.HideUiElement("PauseMenu", "WATWAT", true);
 
@@ -81,8 +80,6 @@ public class GameManager : MonoBehaviour
         winScore = Utilities.WinScore;
 
         countdown.text = "3";
-
-        UpdateAvatars();
 
         StartCoroutine(GameBeginCountdown());
         StartCoroutine(PlayMusic());
@@ -147,10 +144,13 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
-        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<SpriteRenderer>();
+        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<Image>();
         eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
         countdown = GameObject.Find("MasterCanvas/UICountdown/Text").GetComponent<TMP_Text>();
+
+        uiInputModule.UseAllRewiredGamePlayers = false;
+        uiInputModule.RewiredPlayerIds = new int[0];
 
         percentages = new TMP_Text[Utilities.NumberOfPlayers];
         scores = new TMP_Text[Utilities.NumberOfPlayers];
@@ -173,22 +173,27 @@ public class GameManager : MonoBehaviour
             percentages[i] = avatar.GetChild(0).GetComponent<TMP_Text>();
             scores[i] = avatar.GetChild(1).GetComponent<TMP_Text>();
         }
+
+        // Set Avatar numbers
+        for (var i = 0; i < Utilities.NumberOfPlayers; i++)
+        {
+            percentages[i].text = Players[i].damageTotal + "%";
+            scores[i].text = Players[i].score.ToString();
+        }
     }
 
     private void Pause()
     {
         Paused = true;
         Time.timeScale = 0;
+        UIManager.ShowUiElement("Background", "WATWAT", false);
         UIManager.ShowUiElement("PauseMenu", "WATWAT", false);
     }
 
-    public void UpdateAvatars()
+    public void SetAvatarPercentage(int playerID, int value)
     {
-        for (var i = 0; i < Utilities.NumberOfPlayers; i++)
-        {
-            percentages[i].text = Players[i].damageTotal + "%";
-            scores[i].text = Players[i].score.ToString();
-        }
+        percentages[playerID].text = Players[playerID].damageTotal + "%";
+        percentages[playerID].transform.DOShakePosition(0.25f, 50, 50);
     }
 
     public void IncreaseScore(int playerID)
@@ -199,21 +204,56 @@ public class GameManager : MonoBehaviour
         }
 
         Players[playerID].score++;
-        UpdateAvatars();
 
-        if (winScore <= Players[playerID].score)
+        StartCoroutine(IncreaseScoreAnimation(playerID));
+
+        if (!GameOver && winScore <= Players[playerID].score)
         {
             SoundManager.PlaySound(announcerGameOver);
             GameOver = true;
+            UIManager.ShowUiElement("Background", "WATWAT", false);
             UIManager.ShowUiElement("GameOverMenu", "WATWAT", false);
             winnerSprite.sprite = winSprites[playerID];
+            uiInputModule.UseAllRewiredGamePlayers = true;
         }
+    }
+
+    public void DecrementScore(int playerID)
+    {
+        if (GameOver || Players[playerID].score == 0)
+        {
+            return;
+        }
+
+        Players[playerID].score--;
+
+        StartCoroutine(IncreaseScoreAnimation(playerID));
+    }
+
+    private IEnumerator IncreaseScoreAnimation(int playerID)
+    {
+        yield return new WaitForSeconds(0.2f);
+        scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
+        scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
+        yield return new WaitForSeconds(0.5f);
+        scores[playerID].text = Players[playerID].score.ToString();
+    }
+
+    private IEnumerator DecreaseScoreAnimation(int playerID)
+    {
+        yield return new WaitForSeconds(0.2f);
+        scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
+        scores[playerID].transform.DOPunchRotation(new Vector3(10, 10, 10), 1f, 4, 0.5f);
+        scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
+        yield return new WaitForSeconds(0.5f);
+        scores[playerID].text = Players[playerID].score.ToString();
     }
 
     public void Resume()
     {
         Paused = false;
         Time.timeScale = 1;
+        UIManager.HideUiElement("Background", "WATWAT", false);
         UIManager.HideUiElement("PauseMenu", "WATWAT", false);
         uiInputModule.RewiredPlayerIds = new int[0];
     }

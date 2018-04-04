@@ -509,14 +509,15 @@ public class PlayerController : MonoBehaviour
         { }
     }
 
-    private IEnumerator WeaponAnimation(){ 
+    private IEnumerator WeaponAnimation()
+    {
         weaponIdleSpriteRenderer.enabled = false;
         weaponAttackSpriteRenderer.enabled = true;
         var aimerAngle = Mathf.Atan2(aimerVector.y, aimerVector.x) * Mathf.Rad2Deg;
         weaponJoint.rotation = Quaternion.Euler(0, 0, aimerAngle);
-        
+
         yield return new WaitForSeconds(meleeCooldown);
-        
+
         weaponIdleSpriteRenderer.enabled = true;
         weaponAttackSpriteRenderer.enabled = false;
         weaponJoint.localRotation = Quaternion.Euler(0, 0, 0);
@@ -534,7 +535,7 @@ public class PlayerController : MonoBehaviour
             var start = transform.position;
             var end = start;
             end -= GetYExtend() * transform.up;
-            end -= transform.up * groundCheckLength;
+            end -= transform.up.normalized * groundCheckLength;
 
             Debug.DrawLine(start, end, Color.red);
             var ray = Physics2D.Linecast(start, end, planetLayer);
@@ -680,6 +681,8 @@ public class PlayerController : MonoBehaviour
 
     public float GetYExtend()
     {
-        return (boxCollider.size.y / 2) * transform.localScale.y;
+        var yExtend = (boxCollider.size.y / 2) * transform.lossyScale.y;
+        yExtend -= boxCollider.offset.y * transform.lossyScale.y;
+        return yExtend;
     }
 }

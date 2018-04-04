@@ -21,12 +21,15 @@ public class Explosion : MonoBehaviour
 
     private CircleCollider2D circleCollider;
     private List<Rigidbody2D> hitBodies;
+    private Vector2 pos;
 
     private void Start()
     {
         circleCollider = GetComponent<CircleCollider2D>();
         EZCameraShake.CameraShaker.Instance.ShakeOnce(shakeMagnitude, shakeRoughness, shakeFadeIn, shakeFadeOut);
         hitBodies = new List<Rigidbody2D>();
+
+        pos = new Vector2(transform.position.x, transform.position.y);
 
         SoundManager.PlaySound(explosion, explosionVolume);
     }
@@ -39,7 +42,9 @@ public class Explosion : MonoBehaviour
         {
             hitBodies.Add(body);
 
-            var vec = other.transform.position - transform.position;
+            var otherVec = new Vector2(other.transform.position.x, other.transform.position.y);
+
+            var vec = otherVec - pos;
 
             var ratio = 0f;
 

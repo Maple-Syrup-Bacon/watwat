@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Rewired.Integration.UnityUI;
 using EazyTools.SoundManager;
+using DoozyUI;
 
 public class GameManager : MonoBehaviour
 {
@@ -40,13 +42,15 @@ public class GameManager : MonoBehaviour
     public bool Paused { get; set; } = false;
 
     private Rewired.Player player;
-    private CanvasGroup pauseScreen;
+    private UIElement pauseScreen;
     private RewiredStandaloneInputModule uiInputModule;
     // private TMP_Text timer;
     private TMP_Text countdown;
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
     private Rewired.Player currentPausingPlayer;
+    private Button resumeButton;
+    private EventSystem eventSystem;
 
     private void Awake()
     {
@@ -69,7 +73,6 @@ public class GameManager : MonoBehaviour
     {
         Resume();
 
-        // timer.text = timerValue.ToString();
         countdown.text = "3";
 
         UpdateAvatars();
@@ -161,15 +164,15 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
-        pauseScreen = GameObject.Find("Canvas/PauseScreen").GetComponent<CanvasGroup>();
+        eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
+        resumeButton = GameObject.Find("MasterCanvas/UIPauseMenu/Buttons/ResumeButton").GetComponent<Button>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
-        // timer = GameObject.Find("Canvas/Timer").GetComponent<TMP_Text>();
-        countdown = GameObject.Find("Canvas/Countdown").GetComponent<TMP_Text>();
+        countdown = GameObject.Find("MasterCanvas/UICountdown/Text").GetComponent<TMP_Text>();
 
         percentages = new TMP_Text[Utilities.NumberOfPlayers];
         scores = new TMP_Text[Utilities.NumberOfPlayers];
 
-        var avatars = GameObject.Find("Canvas/Avatars").transform;
+        var avatars = GameObject.Find("MasterCanvas/UIAvatars/Group").transform;
 
         if (Utilities.NumberOfPlayers == 2)
         {
@@ -193,7 +196,7 @@ public class GameManager : MonoBehaviour
     {
         Paused = true;
         Time.timeScale = 0;
-        pauseScreen.alpha = 1;
+        UIManager.ShowUiElement("PauseMenu", "WATWAT", false);
     }
 
     public void UpdateAvatars()
@@ -228,7 +231,7 @@ public class GameManager : MonoBehaviour
     {
         Paused = false;
         Time.timeScale = 1;
-        pauseScreen.alpha = 0;
+        UIManager.HideUiElement("PauseMenu", "WATWAT", false);
         uiInputModule.RewiredPlayerIds = new int[0];
     }
 

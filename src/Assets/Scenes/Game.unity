@@ -167,7 +167,7 @@ MonoBehaviour:
   elementName: PauseMenu
   LANDSCAPE: 1
   PORTRAIT: 1
-  startHidden: 0
+  startHidden: 1
   animateAtStart: 0
   disableWhenHidden: 0
   dontDisableCanvasWhenHidden: 0
@@ -6928,9 +6928,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 1823584171}
+    m_SelectOnDown: {fileID: 1823584171}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -10166,15 +10166,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 1359836913}
+    m_SelectOnDown: {fileID: 1406623717}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
+    m_HighlightedColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -12089,15 +12089,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 1406623717}
+    m_SelectOnDown: {fileID: 1184272896}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
+    m_HighlightedColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -13365,15 +13365,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 1184272896}
+    m_SelectOnDown: {fileID: 1359836913}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
+    m_HighlightedColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -16438,9 +16438,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_Mode: 4
+    m_SelectOnUp: {fileID: 916625505}
+    m_SelectOnDown: {fileID: 916625505}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -16635,7 +16635,7 @@ MonoBehaviour:
   elementName: GameOverMenu
   LANDSCAPE: 1
   PORTRAIT: 1
-  startHidden: 0
+  startHidden: 1
   animateAtStart: 0
   disableWhenHidden: 0
   dontDisableCanvasWhenHidden: 0
@@ -16963,7 +16963,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &1911548580
 MonoBehaviour:
@@ -17182,7 +17182,7 @@ MonoBehaviour:
   elementName: PauseMenu
   LANDSCAPE: 1
   PORTRAIT: 1
-  startHidden: 0
+  startHidden: 1
   animateAtStart: 0
   disableWhenHidden: 0
   dontDisableCanvasWhenHidden: 0
@@ -17510,7 +17510,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &1935860205
 GameObject:
@@ -22350,21 +22350,26 @@ MonoBehaviour:
   timerValue: 120
   playerPrefab: {fileID: 1082833244860654, guid: 269b9d8844e924d44a6236be23ecf49b,
     type: 2}
+  winSprites:
+  - {fileID: 21300000, guid: bf3d9c96bd0724e6880c6ed3a3eb85d3, type: 3}
+  - {fileID: 21300000, guid: aa730b313d4f64b04a531e867b5a6a86, type: 3}
+  - {fileID: 21300000, guid: 8cfa11b8dee974a42b0e8baadd92c800, type: 3}
+  - {fileID: 21300000, guid: 40a3146f085f34cde9a2d9023013ec72, type: 3}
   idleSprites:
+  - {fileID: 21300000, guid: 3dfce74f1640146c199c149dae6ebd00, type: 3}
+  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
+  - {fileID: 21300000, guid: 62fb9fdb3731b4eaa82f01108ab9d2f9, type: 3}
   - {fileID: 21300000, guid: 90ab0dac731984f4b920210eb034b404, type: 3}
-  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
-  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
-  - {fileID: 21300000, guid: 72bd85e05624f42dea674cc941ae1673, type: 3}
   playerColors:
-  - {r: 0.44705886, g: 0.76470596, b: 0.6627451, a: 1}
-  - {r: 0.9960785, g: 0.7960785, b: 0.18431373, a: 1}
-  - {r: 0.93725497, g: 0.6156863, b: 0.7176471, a: 1}
-  - {r: 0.8745099, g: 0.81568635, b: 0.69411767, a: 1}
+  - {r: 0.21960786, g: 0.6039216, b: 0.8705883, a: 1}
+  - {r: 0.9960785, g: 0.9568628, b: 0.21176472, a: 1}
+  - {r: 0.29411766, g: 0.8980393, b: 0.20000002, a: 1}
+  - {r: 1, g: 0.9803922, b: 0.95294124, a: 1}
   animatorControllers:
+  - {fileID: 9100000, guid: 55b151419bfc54ee3b6963cb8a020eba, type: 2}
+  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
+  - {fileID: 9100000, guid: a3d7c560659f640edb870dcb709ff700, type: 2}
   - {fileID: 9100000, guid: 62778b4420b32465dba08b28ae91b084, type: 2}
-  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
-  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
-  - {fileID: 9100000, guid: 86339108da2c14cc7b74c21ecc5f2863, type: 2}
   music:
   - {fileID: 8300000, guid: 3be3b9faff6064a5baa7560bd15563ac, type: 3}
   - {fileID: 8300000, guid: b6ada4a9cffa84514aa57b7ccd98b05e, type: 3}
@@ -22729,7 +22734,7 @@ MonoBehaviour:
   elementName: GameOverMenu
   LANDSCAPE: 1
   PORTRAIT: 1
-  startHidden: 0
+  startHidden: 1
   animateAtStart: 0
   disableWhenHidden: 0
   dontDisableCanvasWhenHidden: 0

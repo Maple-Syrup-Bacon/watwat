@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Players")]
     public GameObject playerPrefab;
+    public Sprite[] winSprites;
     public Sprite[] idleSprites;
     public Color[] playerColors;
     public RuntimeAnimatorController[] animatorControllers;
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
     private Rewired.Player currentPausingPlayer;
+    private SpriteRenderer winnerSprite;
     private Button resumeButton;
     private EventSystem eventSystem;
 
@@ -71,7 +73,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Resume();
+        UIManager.HideUiElement("GameOverMenu", "WATWAT", true);
+        UIManager.HideUiElement("PauseMenu", "WATWAT", true);
 
         countdown.text = "3";
 
@@ -94,25 +97,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayMusic());
     }
 
-    // private IEnumerator TickTimer()
-    // {
-    //     while (0 < timerValue)
-    //     {
-    //         yield return new WaitForSeconds(1);
-
-    //         timerValue -= 1;
-
-    //         timer.text = timerValue.ToString();
-    //     }
-
-    //     SoundManager.PlaySound(announcerGameOver);
-    //     GameOver = true;
-    //     countdown.gameObject.SetActive(true);
-    //     countdown.text = "GAME OVER";
-    //     yield return new WaitForSeconds(5.0f);
-    //     SceneManager.LoadScene(0);
-    // }
-
     private IEnumerator GameBeginCountdown()
     {
         var cix = 3;
@@ -127,8 +111,6 @@ public class GameManager : MonoBehaviour
 
         GameStarted = true;
         countdown.gameObject.SetActive(false);
-
-        // StartCoroutine(TickTimer());
     }
 
     private void SpawnPlayers()
@@ -156,7 +138,6 @@ public class GameManager : MonoBehaviour
             endColor.a = 0;
 
             PlayerLights[i] = playerInstance.transform.Find("Light").GetComponent<Light>();
-            // PlayerLights[i].color = playerColors[i];
 
             Players[i] = playerController;
         }
@@ -164,6 +145,7 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
+        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<SpriteRenderer>();
         eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
         resumeButton = GameObject.Find("MasterCanvas/UIPauseMenu/Buttons/ResumeButton").GetComponent<Button>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
@@ -222,8 +204,8 @@ public class GameManager : MonoBehaviour
         {
             SoundManager.PlaySound(announcerGameOver);
             GameOver = true;
-            countdown.gameObject.SetActive(true);
-            countdown.text = "GAME OVER";
+            UIManager.ShowUiElement("GameOverMenu", "WATWAT", false);
+            winnerSprite.sprite = winSprites[playerID];
         }
     }
 
@@ -247,7 +229,7 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause(int playerID)
     {
-        if (Paused)
+        if (Paused && uiInputModule.RewiredPlayerIds[0] == playerID)
         {
             Resume();
         }

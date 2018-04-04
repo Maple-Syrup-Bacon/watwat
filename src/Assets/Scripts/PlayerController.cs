@@ -391,7 +391,7 @@ public class PlayerController : MonoBehaviour
             GameManager.instance.IncreaseScore(lastDamagedByPlayerID);
             lastDamagedByPlayerID = -1;
         }
-        else
+        else if (0 < score)
         {
             score--;
         }

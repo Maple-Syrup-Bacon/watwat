@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text[] scores;
     private Image winnerSprite;
     private EventSystem eventSystem;
+    private bool[] playerScoreAnims;
 
     private void Awake()
     {
@@ -154,8 +155,9 @@ public class GameManager : MonoBehaviour
 
         percentages = new TMP_Text[Utilities.NumberOfPlayers];
         scores = new TMP_Text[Utilities.NumberOfPlayers];
+        playerScoreAnims = new bool[Utilities.NumberOfPlayers];
 
-        var avatars = GameObject.Find("MasterCanvas/UIAvatars/Group").transform;
+        var avatars = GameObject.Find("Canvas/UIAvatars/Group").transform;
 
         if (Utilities.NumberOfPlayers == 2)
         {
@@ -214,7 +216,7 @@ public class GameManager : MonoBehaviour
             UIManager.ShowUiElement("Background", "WATWAT", false);
             UIManager.ShowUiElement("GameOverMenu", "WATWAT", false);
             winnerSprite.sprite = winSprites[playerID];
-            uiInputModule.UseAllRewiredGamePlayers = true;
+            StartCoroutine(DelayGameOverInput());
         }
     }
 
@@ -227,26 +229,50 @@ public class GameManager : MonoBehaviour
 
         Players[playerID].score--;
 
-        StartCoroutine(IncreaseScoreAnimation(playerID));
+        StartCoroutine(DecreaseScoreAnimation(playerID));
     }
 
     private IEnumerator IncreaseScoreAnimation(int playerID)
     {
-        yield return new WaitForSeconds(0.2f);
-        scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
-        scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
-        yield return new WaitForSeconds(0.5f);
-        scores[playerID].text = Players[playerID].score.ToString();
+        StartCoroutine(UpdateScore(playerID));
+
+        if (!playerScoreAnims[playerID])
+        {
+            playerScoreAnims[playerID] = true;
+            yield return new WaitForSeconds(0.2f);
+            scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
+            scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
+            yield return new WaitForSeconds(1.1f);
+            playerScoreAnims[playerID] = false;
+        }
     }
 
     private IEnumerator DecreaseScoreAnimation(int playerID)
     {
-        yield return new WaitForSeconds(0.2f);
-        scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
-        scores[playerID].transform.DOPunchRotation(new Vector3(10, 10, 10), 1f, 4, 0.5f);
-        scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
+        StartCoroutine(UpdateScore(playerID));
+
+        if (!playerScoreAnims[playerID])
+        {
+            playerScoreAnims[playerID] = true;
+            yield return new WaitForSeconds(0.2f);
+            scores[playerID].transform.DOPunchScale(new Vector3(10, 10, 10), 1f, 4, 0.4f);
+            scores[playerID].transform.DOPunchRotation(new Vector3(10, 10, 10), 1f, 4, 0.5f);
+            scores[playerID].transform.DOJump(scores[playerID].transform.position, 200f, 1, 1f);
+            yield return new WaitForSeconds(1.1f);
+            playerScoreAnims[playerID] = false;
+        }
+    }
+
+    private IEnumerator UpdateScore(int playerID)
+    {
         yield return new WaitForSeconds(0.5f);
         scores[playerID].text = Players[playerID].score.ToString();
+    }
+
+    private IEnumerator DelayGameOverInput()
+    {
+        yield return new WaitForSeconds(1.5f);
+        uiInputModule.UseAllRewiredGamePlayers = true;
     }
 
     public void Resume()
@@ -278,6 +304,17 @@ public class GameManager : MonoBehaviour
         {
             Pause();
             uiInputModule.RewiredPlayerIds = new int[] { playerID };
+        }
+    }
+
+    public void HideUIEffects()
+    {
+        foreach (UIEffect effect in GameObject.FindObjectsOfType(typeof(UIEffect)))
+        {
+            if (!effect.transform.parent.name.Contains("Resume") && !effect.transform.parent.name.Contains("Rematch"))
+            {
+                effect.Hide();
+            }
         }
     }
 }

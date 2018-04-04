@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Players")]
     public GameObject playerPrefab;
+    public Vector2[] initialSpawnPoints;
+    public Sprite[] winSprites;
     public Sprite[] idleSprites;
     public Color[] playerColors;
     public RuntimeAnimatorController[] animatorControllers;
@@ -49,7 +51,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
     private Rewired.Player currentPausingPlayer;
-    private Button resumeButton;
+    private SpriteRenderer winnerSprite;
     private EventSystem eventSystem;
 
     private void Awake()
@@ -71,7 +73,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        UIManager.HideUiElement("GameOverMenu", "WATWAT", true);
+        UIManager.HideUiElement("PauseMenu", "WATWAT", true);
+
         Resume();
+
+        winScore = Utilities.WinScore;
 
         countdown.text = "3";
 
@@ -94,25 +101,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayMusic());
     }
 
-    // private IEnumerator TickTimer()
-    // {
-    //     while (0 < timerValue)
-    //     {
-    //         yield return new WaitForSeconds(1);
-
-    //         timerValue -= 1;
-
-    //         timer.text = timerValue.ToString();
-    //     }
-
-    //     SoundManager.PlaySound(announcerGameOver);
-    //     GameOver = true;
-    //     countdown.gameObject.SetActive(true);
-    //     countdown.text = "GAME OVER";
-    //     yield return new WaitForSeconds(5.0f);
-    //     SceneManager.LoadScene(0);
-    // }
-
     private IEnumerator GameBeginCountdown()
     {
         var cix = 3;
@@ -127,8 +115,6 @@ public class GameManager : MonoBehaviour
 
         GameStarted = true;
         countdown.gameObject.SetActive(false);
-
-        // StartCoroutine(TickTimer());
     }
 
     private void SpawnPlayers()
@@ -138,9 +124,7 @@ public class GameManager : MonoBehaviour
 
         for (var i = 0; i < Utilities.NumberOfPlayers; i++)
         {
-            var index = Random.Range(0, GameManager.instance.Planets.Length);
-
-            var playerInstance = Instantiate(playerPrefab, instance.Planets[index].transform.position, playerPrefab.transform.rotation);
+            var playerInstance = Instantiate(playerPrefab, initialSpawnPoints[i], playerPrefab.transform.rotation);
 
             var playerController = playerInstance.GetComponent<PlayerController>();
             playerController.playerID = i;
@@ -156,7 +140,6 @@ public class GameManager : MonoBehaviour
             endColor.a = 0;
 
             PlayerLights[i] = playerInstance.transform.Find("Light").GetComponent<Light>();
-            // PlayerLights[i].color = playerColors[i];
 
             Players[i] = playerController;
         }
@@ -164,8 +147,8 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
+        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<SpriteRenderer>();
         eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
-        resumeButton = GameObject.Find("MasterCanvas/UIPauseMenu/Buttons/ResumeButton").GetComponent<Button>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
         countdown = GameObject.Find("MasterCanvas/UICountdown/Text").GetComponent<TMP_Text>();
 
@@ -222,8 +205,8 @@ public class GameManager : MonoBehaviour
         {
             SoundManager.PlaySound(announcerGameOver);
             GameOver = true;
-            countdown.gameObject.SetActive(true);
-            countdown.text = "GAME OVER";
+            UIManager.ShowUiElement("GameOverMenu", "WATWAT", false);
+            winnerSprite.sprite = winSprites[playerID];
         }
     }
 
@@ -247,7 +230,7 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause(int playerID)
     {
-        if (Paused)
+        if (Paused && uiInputModule.RewiredPlayerIds[0] == playerID)
         {
             Resume();
         }

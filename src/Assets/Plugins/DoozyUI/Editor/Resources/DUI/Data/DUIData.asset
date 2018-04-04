@@ -71,6 +71,7 @@ MonoBehaviour:
     - categoryName: WATWAT
       itemNames:
       - Avatars
+      - Background
       - Countdown
       - GameOverMenu
       - MainMenu

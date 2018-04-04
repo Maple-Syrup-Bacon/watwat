@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     private TMP_Text[] percentages;
     private TMP_Text[] scores;
     private Rewired.Player currentPausingPlayer;
-    private SpriteRenderer winnerSprite;
+    private Image winnerSprite;
     private EventSystem eventSystem;
 
     private void Awake()
@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        UIManager.HideUiElement("Background", "WATWAT", true);
         UIManager.HideUiElement("GameOverMenu", "WATWAT", true);
         UIManager.HideUiElement("PauseMenu", "WATWAT", true);
 
@@ -147,10 +148,13 @@ public class GameManager : MonoBehaviour
 
     private void GetUIElements()
     {
-        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<SpriteRenderer>();
+        winnerSprite = GameObject.Find("MasterCanvas/UIGameOverMenu/Winner/Sprite").GetComponent<Image>();
         eventSystem = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<EventSystem>();
         uiInputModule = GameObject.FindGameObjectWithTag("EventSystem").GetComponent<Rewired.Integration.UnityUI.RewiredStandaloneInputModule>();
         countdown = GameObject.Find("MasterCanvas/UICountdown/Text").GetComponent<TMP_Text>();
+
+        uiInputModule.UseAllRewiredGamePlayers = false;
+        uiInputModule.RewiredPlayerIds = new int[0];
 
         percentages = new TMP_Text[Utilities.NumberOfPlayers];
         scores = new TMP_Text[Utilities.NumberOfPlayers];
@@ -179,6 +183,7 @@ public class GameManager : MonoBehaviour
     {
         Paused = true;
         Time.timeScale = 0;
+        UIManager.ShowUiElement("Background", "WATWAT", false);
         UIManager.ShowUiElement("PauseMenu", "WATWAT", false);
     }
 
@@ -201,12 +206,14 @@ public class GameManager : MonoBehaviour
         Players[playerID].score++;
         UpdateAvatars();
 
-        if (winScore <= Players[playerID].score)
+        if (!GameOver && winScore <= Players[playerID].score)
         {
             SoundManager.PlaySound(announcerGameOver);
             GameOver = true;
+            UIManager.ShowUiElement("Background", "WATWAT", false);
             UIManager.ShowUiElement("GameOverMenu", "WATWAT", false);
             winnerSprite.sprite = winSprites[playerID];
+            uiInputModule.UseAllRewiredGamePlayers = true;
         }
     }
 
@@ -214,6 +221,7 @@ public class GameManager : MonoBehaviour
     {
         Paused = false;
         Time.timeScale = 1;
+        UIManager.HideUiElement("Background", "WATWAT", false);
         UIManager.HideUiElement("PauseMenu", "WATWAT", false);
         uiInputModule.RewiredPlayerIds = new int[0];
     }
